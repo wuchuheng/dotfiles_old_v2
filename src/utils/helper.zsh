@@ -9,9 +9,8 @@
 function get_all_sub_dir_by_path() {
   local local_path=$1
   local sub_dir_list=($(ls -l $local_path | awk '/^d/ {print $NF}'))
-  echo ${sub_dir_list[@]}
+  echo "${sub_dir_list[@]}"
 }
-
 
 ##
 # Split a string by a symbol
@@ -23,7 +22,7 @@ function split_str() {
   local str=$1
   local symbol=$2
   local array=("${=str//${symbol}/ }")
-  echo ${array[@]}
+  echo "${array[@]}"
 }
 
 ##
@@ -38,13 +37,13 @@ function get_max_number_file_by_path() {
   local local_path=$1
   local max_number=0
   local file_list=($(ls -l $local_path | awk '/^-/ {print $NF}'))
-  for file in ${file_list[@]}; do
+  for file in "${file_list[@]}"; do
     local file_number=$(echo $file | awk -F '_' '{print $1}')
     if [[ $file_number -gt $max_number ]]; then
       max_number=$file_number
     fi
   done
-  echo $max_number
+  echo "${max_number}"
 }
 
 ##
@@ -58,7 +57,7 @@ function push_dir_to_test_conf() {
   local config_file=src/config/test_conf.zsh
   import @/${config_file}
   local is_include=1
-  for item in ${ALL_TEST_DIR[@]}; do
+  for item in "${ALL_TEST_DIR[@]}"; do
     if [[ "${item}" == "${test_dir}" ]]; then
       is_include=0
     fi
@@ -155,7 +154,7 @@ function get_all_file_by_path() {
     fi
   done
 
-  echo ${file_list[@]}
+  echo "${file_list[@]}"
 }
 
 ##
@@ -230,4 +229,37 @@ function get_previous_file() {
   done
 
   echo $previous_file
+}
+
+##
+# To get a runtime space while to run a test.
+#
+# @Use get_runtime_space_by_unit_test_name "get_a_part_of_code_test"
+# @Echo /Users/wuchuheng/dotfiles/src/runtime/test/unit_test/get_a_part_of_code_test
+##
+function get_runtime_space_by_unit_test_name() {
+  local test_name=$1
+  local runtimeDir="${APP_BASE_PATH}/src/runtime"
+  local test_file_name=$(get_file_name_exclude_path "${global_test_file}")
+  local BASE_PATH="${runtimeDir}/test/unit_test/${test_file_name}/${test_name}"
+  if [ ! -d "${BASE_PATH}" ]; then
+    mkdir -p "${BASE_PATH}"
+  fi
+
+  echo "${BASE_PATH}"
+}
+
+##
+# To get a file exclude the path
+#
+# @Use get_file_name_exclude_path "/1/2/3/file.sh"
+# @Echo file.sh
+##
+function get_file_name_exclude_path() {
+  local file=$1
+  local file_info=($(split_str ${file} "/"))
+  local file_info_len=${#file_info[@]}
+  local test_file_name=${file_info[file_info_len]}
+
+  echo "${test_file_name}"
 }

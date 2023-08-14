@@ -25,15 +25,14 @@ function test_handle() {
     declare -g global_pass_test_results=(); # collect all result of test.
     declare -g global_max_pass_tests_len=0; # get the max test name length.
     declare -g global_test_file=${APP_BASE_PATH}/${test_file}
-    source ${global_test_file}
+    source "${global_test_file}"
     if [ $global_test_file_is_pass -eq 0 ];then
-      printf "$(blob_bg_green_white_print " PASS ") ${test_file}\n"
+      printf "$(blob_bg_green_white_print " PASS ") ${test_file}"
       for ((i=1; i<=${#global_pass_test_name_items[@]}; i++)); do
   	    ((test_count++))
   	    printf "%s\n" "${global_pass_test_results[$i]}"
   	    str=`printf "  ✔ %-3s%-${global_max_pass_tests_len}s: %s\n"  $test_count "${global_pass_test_name_items[$i]}" "${global_pass_test_desc_items[$i]}"`
   	    green_print "$str"
-  	    printf "\n"
       done
       printf "\n"
     else
