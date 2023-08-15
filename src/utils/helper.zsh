@@ -73,25 +73,15 @@ EOF
 }
 
 ##
-# to get a bin from vendor by name
-##
-function get_vendor_bin_by_name() {
-  local name=$1
-  local tool=$(printf "%s/src/vendor/${name}/bin/${name}_%s" "${APP_BASE_PATH}" "$(get_OS_symbol)")
-
-  echo ${tool}
-}
-
-##
 # get absolute base_path
 #
 # @Use get_full_path "src/utils"
 # @Echo /Users/username/dotfiles/src/utils
 ##
-function get_full_path(){
+function get_full_path() {
   first_char="${1:0:1}"
   split_symbol=""
-  if [ $first_char != '/' ]; then
+  if [ "$first_char" != '/' ]; then
     split_symbol="/"
   fi
   echo "${APP_BASE_PATH}${split_symbol}$1"
@@ -207,28 +197,6 @@ function get_a_part_of_code() {
     fi
     ((cln++))
   done <<< "$result"
-}
-
-function get_previous_file() {
-  local previous_file=""
-  local i=${#FUNCSTACK}
-
-  while (( i > 1 )); do
-    local caller_function=${FUNCSTACK[i-1]}
-
-    if [[ $caller_function != "get_previous_file" ]]; then
-      local caller_lineno=${funcfiletrace[$caller_function]}
-
-      if [[ -n $caller_lineno ]]; then
-        previous_file=${caller_lineno%%:*}
-        break
-      fi
-    fi
-
-    ((i--))
-  done
-
-  echo $previous_file
 }
 
 ##
