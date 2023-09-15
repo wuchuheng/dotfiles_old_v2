@@ -10,7 +10,7 @@
 # Declare a global variable in zsh while runtime for APP_PATH
 typeset -g APP_BASE_PATH=$(pwd); source "${APP_BASE_PATH}"/src/utils/autoload.zsh || exit 1
 
-import @/src/handlers/test_handler.zsh
+import @/src/handlers/test_handler/test_handler.zsh
 import @/src/config/test_conf.zsh
 import @/src/utils/test_helper.zsh
 

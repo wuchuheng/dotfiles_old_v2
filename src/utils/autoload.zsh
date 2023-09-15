@@ -66,7 +66,6 @@ function get_OS_symbol() {
 
 import @/src/config/bin_register_conf.zsh
 
-
 # to load all bin tool
 for key value in ${(kv)BIN_REGISTER_CONF}; do
   function "${key}"() {
@@ -74,3 +73,5 @@ for key value in ${(kv)BIN_REGISTER_CONF}; do
     ${command} $@
   }
 done
+
+import @/src/config/const_conf.zsh

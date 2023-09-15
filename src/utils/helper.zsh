@@ -26,6 +26,52 @@ function split_str() {
 }
 
 ##
+# Split string with a symbol and save the result to list pointer.
+# @use split_str_with_point "<string>" "<symbol>" "<listPointer>"
+# @echo <void>
+# @code example
+#    declare -g result=()
+#    split_str_with_point "hello|world!" '|' 'result'
+#    echo "${result[@]}" #hello world
+##
+function split_str_with_point() {
+  local inputStr="$1"
+  local symbol="$2"
+  local listPointer="$3"
+  local charBuf=''
+  local firstCharInSymbol=${symbol:0:1}
+  local oldI="${i}"
+  for (( i = 1; i <= ${#inputStr}; i++ )); do
+    local currentChar=${inputStr[${i}]}
+    # if 发现一个字符与symbol的首字符匹配，则进行预测
+    if [[ "${currentChar}" == "${firstCharInSymbol}" ]]; then
+      local indexForNextStrInInputStr=$(expr ${i} - 1)
+      local nextStrInInputStr=${inputStr:${indexForNextStrInInputStr}:${#symbol}}
+      # if 当前已经预测预测到有满足条件的字符，则进行添项处理
+      if [[ "${nextStrInInputStr}" == "${symbol}" ]]; then
+        if [[ ${#charBuf} -gt 0 ]]; then
+          eval "$listPointer+=(\"${charBuf}\")"
+          charBuf=''
+        fi
+        # 移动游标到新的位置
+        i=$(expr ${i} + ${#symbol} - 1)
+      else
+        charBuf="${charBuf}${currentChar}"
+      fi
+      # else 当前字符不满足symbol特征则缓存进charBuf
+      else
+        charBuf="${charBuf}${currentChar}"
+    fi
+    # 如已经是最后的字符了且已经有缓存字符了，那么就创建一个项
+    if [[ "${i}" -eq "${#inputStr}" && "${#charBuf}" -gt 0 ]]; then
+      eval "$listPointer+=(\"${charBuf}\")"
+      break
+    fi
+  done
+  i="${oldI}"
+}
+
+##
 # To get the max number from a specific directory
 #
 # @Description the directory /foo/bar include the flowing files:
@@ -230,4 +276,33 @@ function get_file_name_exclude_path() {
   local test_file_name=${file_info[file_info_len]}
 
   echo "${test_file_name}"
+}
+
+_serializeSymbol=':xxx'
+##
+# @Use listEncode 'globalListPointer'
+# @Echo <string>
+##
+function listEncode() {
+  local globalListPointer="$1"
+  local result=''
+  eval "
+    for value in \${(v)${globalListPointer}[@]}; do
+      result=\"\${result}\${_serializeSymbol}\${value}\"
+    done
+  "
+  echo "$result"
+}
+
+##
+# @use listDecode "${result}" 'globalDecodeResultPointer'
+# @echo <void>
+##
+function listDecode() {
+  local encodeStr="$1"
+  local resultPointer="$2"
+  eval "
+    declare -g -a ${resultPointer}=()
+    split_str_with_point \"\${encodeStr}\" \"\${_serializeSymbol}\" \"${resultPointer}\"
+  "
 }
