@@ -1,5 +1,9 @@
 #!/usr/bin/env zsh
 
+if [[ -z ${_previous_source_file} ]]; then
+  _previous_source_file=''
+fi
+
 function import() {
   local RED='\033[0;31m'
   local NC='\033[0m'
@@ -7,7 +11,7 @@ function import() {
   local file_path=$1
   local fist_chart=${file_path:0:1}
   source_file=""
-  local previous_file=${funcfiletrace[2]}
+  local previous_file=${funcfiletrace[1]}
   local previous_dir="$(cd "$(dirname "${previous_file}")" && pwd)"
   case ${fist_chart} in
     # The @ symbol is equivalent to the project's root directory

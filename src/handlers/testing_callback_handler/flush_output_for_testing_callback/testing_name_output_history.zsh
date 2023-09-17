@@ -57,8 +57,6 @@ function updateHistoryOutputForTestingItem() {
   local itemPointer=$2
   # to update current test name information
   local changedItem=$(listEncode "${itemPointer}")
-  # TODO to remove this line before commit the code.
-  # echo ${changedItem}
   _globalIndexListForFlushOutput[$1]="${changedItem}"
   # to update the output terminal output string and flush the output in terminal.
   local testState=$(eval "echo \${${itemPointer}[1]}")

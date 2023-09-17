@@ -2,18 +2,15 @@
 
 typeset -g APP_BASE_PATH=$(pwd); source "${APP_BASE_PATH}"/src/utils/autoload.zsh || exit 1
 
-import @/src/utils/helper.zsh
-
-str=':xxxloading:xxxget_all_sub_dir_by_path_test:xxx28:xxx40:xxxTest if you can get all the subdirectories unser a specifc path:xxx2'
+import @/src/handlers/testing_callback_handler/global_current_test.zsh
 
 
-listDecode "${str}" 'result'
+${globalCurrentTest[setPassedStatus]} ${FALSE}
+${globalCurrentTest[getPassedStatus]}
 
-echo "${#result}"
+${globalCurrentTest[setName]} 'testName'
+${globalCurrentTest[getName]}
+globalDescPointer="test desc test desc"
+${globalCurrentTest[setDesc]} 'globalDescPointer'
+${globalCurrentTest[getDesc]}
 
-echo "${result[1]}"
-echo "${result[2]}"
-echo "${result[3]}"
-echo "${result[4]}"
-echo "${result[5]}"
-echo "${result[6]}"

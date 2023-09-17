@@ -2,7 +2,7 @@
 
 import @/src/utils/helper.zsh
 import @/src/utils/color_printf.zsh
-import ./../services/flush_output_in_terminal_service.zsh
+import ./../../services/flush_output_in_terminal_service.zsh
 
 ##
 # Handle test files
@@ -12,6 +12,7 @@ import ./../services/flush_output_in_terminal_service.zsh
 ##
 function test_handle() {
   local ALL_UNIT_TEST_FILES=($@)
+  # TODO 分离出新的模块，隐藏不必要暴露的数据
   declare -A -g globalAllTestResults=(
     [totalSuccessfulTests]=0
     [totalFailedTests]=0

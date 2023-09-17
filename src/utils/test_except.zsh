@@ -16,19 +16,19 @@ function except_str() {
   local file_info=($(split_str "${prev_file_line}" ':'))
   local prev_line=${file_info[2]}
   local prev_file=${file_info[1]}
-  if [[ ${globalCurrentTest[isPass]} -eq ${TRUE} && "$1" == "$2" ]]; then
-    globalCurrentTest[isPass]=${TRUE}
+  if [[ $(${globalCurrentTest[getPassedStatus]}) -eq ${TRUE} && "$1" == "$2" ]]; then
+    ${globalCurrentTest[setPassedStatus]} ${TRUE}
   else
-    globalCurrentTest[isPass]=${FALSE}
+    ${globalCurrentTest[setPassedStatus]} ${FALSE}
   fi
 
-  if [[ ${globalCurrentTest[isPass]} -eq ${TRUE} ]]; then
+  if [[ $(${globalCurrentTest[getPassedStatus]}) -eq ${TRUE} ]]; then
     return ${TRUE}
   else
     local relative_file=${prev_file:${#APP_BASE_PATH} + 1}
     local output=$(eval '
     printf "$(bg_red_print " FAIL ") ${relative_file}:${prev_line}\n"
-    printf "    $(pink_print ●) $(pink_print "${globalCurrentTest[name]}")\n"
+    printf "    $(pink_print ●) $(pink_print "$(${globalCurrentTest[getName]})")\n"
     printf "    Expected: $(green_print "$1")\n"
     printf "    Received: $(red_print "$2")\n"
     get_a_part_of_code ${prev_file} ${prev_line}
