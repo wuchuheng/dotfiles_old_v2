@@ -52,6 +52,5 @@ function flushOutputAfterTesting() {
     else
       eval " ${lastTestInformationPointer}[1]='failed' "
     fi
-    echo "pass paramiter: ${_lastTestInformationPointer[@]}"
     updateHistoryOutputForTestingItem "${lastIndexInTestInformation}" "${lastTestInformationPointer}"
 }
