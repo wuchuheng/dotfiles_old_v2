@@ -150,8 +150,8 @@ testing_callback_handle "get_a_part_of_code_test" "To test to get a part of conr
 
 function get_file_name_exclude_path_test() {
   local file=$(get_file_name_exclude_path /1/2/3/file)
-  except_str "$file" "file1"
-  except_str "$file" "file1"
+  except_str "$file" "file"
+  except_str "$file" "file"
 }
 
 testing_callback_handle "get_file_name_exclude_path_test" "To test get_file_name_exclude_path function"

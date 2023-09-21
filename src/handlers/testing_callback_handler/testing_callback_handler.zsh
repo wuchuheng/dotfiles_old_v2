@@ -25,5 +25,6 @@ function testing_callback_handle() {
       ${globalAllTestResults[incrementTotalSuccessfulTests]}
     else
       ${globalAllTestResults[incrementTotalFailedTests]}
+      pushToFlushOutput "\n"
     fi
 }
