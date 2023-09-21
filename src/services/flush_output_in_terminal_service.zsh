@@ -15,8 +15,8 @@ function _flush() {
     fi
   done
   # TODO 输出行
-  # echo -ne "\033[10000A\r\033[K${output}"
-  echo "${output}"
+  echo -ne "\033[10000A\r\033[K${output}"
+#  echo "${output}"
 }
 
 ##

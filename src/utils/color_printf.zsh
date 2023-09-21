@@ -19,6 +19,10 @@ function blob_bg_green_white_print() {
   printf "\e[1;97;102m%s\e[0m" "$1"
 }
 
+function blob_bg_red_white_print() {
+  printf "\e[1;97;101m%s\e[0m" "$1"
+}
+
 function bold_print() {
   printf "\e[1m$1\e[0m"
 }

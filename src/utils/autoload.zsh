@@ -4,6 +4,10 @@ if [[ -z ${_previous_source_file} ]]; then
   _previous_source_file=''
 fi
 
+if [[ -z ${_all_imported_source_files} ]]; then
+  declare -g -A _all_imported_source_files=()
+fi
+
 function import() {
   local RED='\033[0;31m'
   local NC='\033[0m'
@@ -37,11 +41,16 @@ function import() {
           source_file=${previous_dir}/${file_path}
         ;;
   esac
-  source "$source_file";
-  if [[ $? != 0 ]]; then
-    IFS=' ' read -r -a parts <<< $(caller 0)
-    printf "${RED}✖ ${timestamp} %s: line %s: %s ${NC} \n" ${parts[2]} ${parts[0]} "Failed to load $source_file, the file not found."
-    exit 1
+  ## to check the source_file is exist or not in _all_imported_source_files
+  if [[ ! -k _all_imported_source_files[$source_file] ]]; then
+    source "$source_file";
+    if [[ $? != 0 ]]; then
+      IFS=' ' read -r -a parts <<< $(caller 0)
+      printf "${RED}✖ ${timestamp} %s: line %s: %s ${NC} \n" ${parts[2]} ${parts[0]} "Failed to load $source_file, the file not found."
+      exit 1
+      else
+        _all_imported_source_files[${source_file}]='loaded'
+    fi
   fi
 }
 
