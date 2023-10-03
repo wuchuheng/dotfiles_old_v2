@@ -4,7 +4,7 @@
 # get_all_sub_dir_by_path # print the list of elements from cli base_path.
 #
 # @Use get_all_sub_dir_by_path "/foo/bar"
-# @Echo ("sub_path1", "sub_path2", "sub_path3")
+# @Echo <("sub_path1", "sub_path2", "sub_path3")>
 ##
 function get_all_sub_dir_by_path() {
   local local_path=$1

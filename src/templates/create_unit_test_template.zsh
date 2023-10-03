@@ -5,6 +5,7 @@
 ##
 declare -g APP_BASE_PATH=$(pwd)
 
+echo $APP_BASE_PATH; exit
 source src/utils/autoload.zsh || exit 1
 
 import @/src/utils/log.zsh
