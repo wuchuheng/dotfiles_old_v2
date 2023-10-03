@@ -3,10 +3,8 @@
 # 创建单元测试模板文件
 #
 ##
-declare -g APP_BASE_PATH=$(pwd)
 
-echo $APP_BASE_PATH; exit
-source src/utils/autoload.zsh || exit 1
+declare -g APP_BASE_PATH=$(pwd); source src/utils/autoload.zsh || exit 1
 
 import @/src/utils/log.zsh
 import @/src/utils/color_printf.zsh
