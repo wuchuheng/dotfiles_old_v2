@@ -14,7 +14,6 @@ function _flush() {
       output="${output}\n${globalFlushOutput[${i}]}"
     fi
   done
-  # TODO 输出行
   echo -ne "\033[10000A\r\033[K${output}"
 #  echo "${output}"
 }

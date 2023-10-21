@@ -13,27 +13,26 @@ VERSION_NUMBER="1.0.0"
 IS_FORCE_INSTALLATION=false
 
 # Parse command line options
-while [[ $# -gt 0 ]]
-do
-key="$1"
-case $key in
-    -h|--help)
-      import ./src/vendor/dotfile_bash_module/src/common/install/documentation.sh
-      exit 0
-    ;;
-    -v|--version)
-      log "SUCCESS"  "Profiles project version $VERSION_NUMBER"
-      exit 0
-    ;;
-    -f|--force)
-      IS_FORCE_INSTALLATION=true
-      shift
-    ;;
-    *)
-      log "SUCCESS"  "Invalid option: $1"
-      exit 1
-    ;;
-esac
+while [[ $# -gt 0 ]]; do
+  key="$1"
+  case $key in
+      -h|--help)
+        import ./src/vendor/dotfile_bash_module/src/common/install/documentation.sh
+        exit 0
+      ;;
+      -v|--version)
+        log "SUCCESS"  "Profiles project version $VERSION_NUMBER"
+        exit 0
+      ;;
+      -f|--force)
+        IS_FORCE_INSTALLATION=true
+        shift
+      ;;
+      *)
+        log "SUCCESS"  "Invalid option: $1"
+        exit 1
+      ;;
+  esac
 done
 
 IS_INSTALL_LOG_PATH=$DOTFILES_BASE_PATH/src/runtime/logs/is_install_log.sh

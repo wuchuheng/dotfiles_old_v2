@@ -4,9 +4,13 @@ typeset -g APP_BASE_PATH=$(pwd); source "${APP_BASE_PATH}"/src/utils/autoload.zs
 
 import @/src/handlers/global_current_test.zsh
 
-foo=1
-bar=2
+my_array=(
+  key1 value1
+  key2 value2
+  key3 value3
+)
 
-result=$((${foo} + ${bar}))
-
-echo ${result}
+# Iterate over the array with keys and values
+for key val in "${my_array[@]}"; do
+  echo "Key: $key, Value: $val"
+done

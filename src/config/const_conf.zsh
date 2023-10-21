@@ -11,3 +11,20 @@ FALSE=1
 function getRuntimeDirectory() {
   echo "${APP_BASE_PATH}/src/runtime"
 }
+
+function getCliDirectory() {
+  local cliDirectory="${APP_BASE_PATH}/src/cli"
+  if [[ -d "${cliDirectory}" ]]; then
+    mkdir -p "${cliDirectory}"
+  fi
+  echo "${cliDirectory}"
+}
+
+##
+# get the cli path
+# @Use getCliDirectory
+# @Echo <string path>
+##
+function getCliPath() {
+  echo "${APP_BASE_PATH}/src/cli";
+}

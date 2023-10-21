@@ -53,11 +53,29 @@ function log() {
       local left_msg="${symbol}${msg} "
       local addition_left_space_width=$(( $(wst "${left_msg}") - ${#left_msg} ))
       local right_space_width=$(( ${terminal_width} - ${#right_msg} - ${addition_left_space_width} ))
+
+      local greenColorNumber=32
+      local colorNumber=${greenColorNumber}
+      case "$1" in
+        "ERROR")
+            colorNumber=31
+          ;;
+        "SUCCESS")
+            colorNumber=${greenColorNumber}
+          ;;
+        "WARNING")
+            colorNumber=33
+          ;;
+        *)
+            colorNumber=${greenColorNumber}
+          ;;
+      esac
+
       if [[ $((${#left_msg} + ${#right_msg} + ${addition_left_space_width})) -le ${terminal_width} ]]; then
         local space_width=$((${terminal_width} - ${#right_msg} - ${addition_left_space_width} - ${#symbol}))
-        printf  "\033[0;32m\033[1m%s\033[0m%-${space_width}s\033[2m%s\033[0m\n" "${symbol}" "${msg} " "${right_msg}"
+        printf  "\033[0;${colorNumber}m\033[1m%s\033[0m%-${space_width}s\033[2m%s\033[0m\n" "${symbol}" "${msg} " "${right_msg}"
       else
-        printf  "\033[0;32m\033[1m%s\033[0m%s\033[2m%s\033[0m\n" "${symbol}" "${msg} " "${right_msg}"
+        printf  "\033[0;${colorNumber}m\033[1m%s\033[0m%s\033[2m%s\033[0m\n" "${symbol}" "${msg} " "${right_msg}"
       fi
   }
 
@@ -69,15 +87,17 @@ function log() {
        format_print "SUCCESS" "${message}"
       ;;
     "WARNING")
-      printf "${YELLOW}${WARNING_ICON} %s %s %s${NC}\n" "$timestamp" "$message"
+       format_print "WARNING" "${message}"
       ;;
     "ERROR")
-      local left_msg="\033[0;31m\033m[1mERROR\033[0m $message"
-      local right_msg="${timestamp} ${file_number}"
-      echo "${left_msg} ${right_msg}"
+       format_print "ERROR" "${message}"
       ;;
     *)
-       format_print "INFO" "${@}"
+       if [[ $# -eq 2 ]]; then
+         format_print "$1" "$2"
+       else
+         format_print "INFO" "${@}"
+       fi
       ;;
   esac
 }
