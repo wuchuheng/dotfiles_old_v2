@@ -11,7 +11,6 @@ get_input_cli_name CLI_NAME
 
 # check if the cli name is exist
 check_if_cli_name_is_exist "${CLI_NAME}"; ok=$?
-
 if [[ ${ok} -eq ${TRUE} ]]; then
     log ERROR "${CLI_NAME} is already exist."
     exit;
