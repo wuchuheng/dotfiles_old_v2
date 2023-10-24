@@ -11,5 +11,5 @@ tmp:
 create_unit_test:
 	zsh src/templates/create_unit_test_template.zsh
 
-# install:
-#     bash ./install.sh
+install:
+	bash src/bootstrap/bash_install_boot.sh
