@@ -80,9 +80,9 @@ function get_OS_symbol() {
 import @/src/config/bin_register_conf.zsh
 
 # to load all bin tool
-for key value in ${(kv)BIN_REGISTER_CONF}; do
-  function "${key}"() {
-    local command=$(printf "%s/%s" "${APP_BASE_PATH}" "${value}")
+for toolName toolPath in ${(@kv)BIN_REGISTER_CONF}; do
+  function "${toolName}"() {
+    local command=$(printf "%s/%s" "${APP_BASE_PATH}" "${toolPath}")
     ${command} $@
   }
 done
