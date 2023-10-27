@@ -11,5 +11,7 @@
 typeset -g APP_BASE_PATH=$(pwd); source "${APP_BASE_PATH}"/src/utils/autoload.zsh || exit 1
 
 import ../utils/log.zsh # {log}
+import ../utils/cli_helper.zsh # {get_sub_dir}
 
-log "hello"
+getCliDirList globalList
+
