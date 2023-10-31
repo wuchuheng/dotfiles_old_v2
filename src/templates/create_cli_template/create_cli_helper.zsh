@@ -66,9 +66,11 @@ EOF
 
 ##
 # get cli name from the cli directory that with a number.
-# @Use get_cli_name_from_cli_directory "<cli directory>" "<resultStrRef>"
+# @Use get_cli_name_from_number_cli_name "<cli directory>" "<resultStrRef>"
+# @Example get_cli_name_from_number_cli_name "1_tmp_cli" "<tmp_cli>"
 # @Return "<boolean>"
-function get_cli_name_from_cli_directory() {
+##
+function get_cli_name_from_number_cli_name() {
   local cliDirectory=$1
   local outputResultRefName=$2
   globalCliDirInfoListRef=()
@@ -97,7 +99,7 @@ function get_cli_installation_checker_provider_file_path() {
   local outputResultRefName=$2
 
   local cliNameRefName=$(generate_unique_var_name)
-  get_cli_name_from_cli_directory "${cliDirectory}" "${cliNameRefName}"
+  get_cli_name_from_number_cli_name "${cliDirectory}" "${cliNameRefName}"
   local cliName=$(get_str_from_ref "${cliNameRefName}")
 
   local CLI_PATH=$(getCliPath)
@@ -117,7 +119,7 @@ function get_cli_uninstallation_provider_file_path() {
   local outputResultRefName=$2
 
   local cliNameRefName=$(generate_unique_var_name)
-  get_cli_name_from_cli_directory "${cliDirectory}" "${cliNameRefName}"
+  get_cli_name_from_number_cli_name "${cliDirectory}" "${cliNameRefName}"
   local cliName=$(get_str_from_ref "${cliNameRefName}")
 
   local CLI_PATH=$(getCliPath)
@@ -138,7 +140,7 @@ function get_cli_installation_provider_file_path() {
   local outputResultRefName=$2
 
   local cliNameRefName=$(generate_unique_var_name)
-  get_cli_name_from_cli_directory "${cliDirectory}" "${cliNameRefName}"
+  get_cli_name_from_number_cli_name "${cliDirectory}" "${cliNameRefName}"
   local cliName=$(get_str_from_ref "${cliNameRefName}")
 
   local CLI_PATH=$(getCliPath)
@@ -150,14 +152,11 @@ function get_cli_installation_provider_file_path() {
 
 ##
 # init the directory
-# @Use _initCLIDirectory "<cli name>" "<out put cli path>" "<out put installation provider path>" "<out put uninstallation provider path>" "<installation checker provider path>"
+# @Use _initCLIDirectory "<cli name>" "<out put cli path>"
 ##
 function _initCLIDirectory() {
   local CLI_NAME=$1
   local numberCliNameRefName=$2
-  local G_INSTALLATION_PROVIDER_PATH_NAME=$3
-  local G_UNINSTALLATION_PROVIDER_PATH_NAME=$4
-  local G_INSTALLATION_CHECKER_PROVIDER_PATH_NAME=$5
 
   # init CLI directory.
   local CLI_PATH=$(getCliPath)
@@ -190,11 +189,6 @@ function _initCLIDirectory() {
   _checkDirectoryOrCreate "${INSTALLATION_CHECKER_PROVIDER_PATH}"
 
   assign_str_to_ref "${CLI_DIR_NAME}" "$numberCliNameRefName"
-  eval "
-      ${G_INSTALLATION_PROVIDER_PATH_NAME}='${INSTALLATION_PROVIDER_PATH}'
-      ${G_UNINSTALLATION_PROVIDER_PATH_NAME}='${UNINSTALLATION_PROVIDER_PATH}'
-      ${G_INSTALLATION_CHECKER_PROVIDER_PATH_NAME}='${INSTALLATION_CHECKER_PROVIDER_PATH}'
-  "
 }
 
 ##
@@ -257,35 +251,56 @@ EOF
 }
 
 ##
+# get the file path of bootloader for cli.
+# @Use get_cli_boot_file_path "<cli directory>" "<resultStrRef>"
+# @Return <boolean>
+##
+function get_cli_boot_file_path() {
+  local numberCliName=$1
+  local bootFileRefName=$2
+  local cliNameRef=$(generate_unique_var_name)
+  get_cli_name_from_number_cli_name "${numberCliName}" "${cliNameRef}"
+  local cliName=$(get_str_from_ref "${cliNameRef}")
+  local cliBootLoaderFile=$(getCliPath)/${numberCliName}/${cliName}_cli_bootloader.zsh
+
+  assign_str_to_ref "${cliBootLoaderFile}" "${bootFileRefName}"
+
+  return "${TRUE}"
+}
+
+##
 # crete cli
 # @Use create_cli "<cli name>"
 # @Echo <boolean>
 ##
 function create_cli() {
   local CLI_NAME=$1
-
   local numberCliNameRefName=$(generate_unique_var_name)
-  _initCLIDirectory "${CLI_NAME}" "${numberCliNameRefName}" "G_INSTALLATION_PROVIDER_PATH" "G_UNINSTALLATION_PROVIDER_PATH" "G_INSTALLATION_CHECKER_PROVIDER_PATH"
+  _initCLIDirectory "${CLI_NAME}" "${numberCliNameRefName}"
 
-  local CLI_PATH=${G_CLI_PATH}
-  local INSTALLATION_PROVIDER_PATH=${G_INSTALLATION_PROVIDER_PATH}
-  local UNINSTALLATION_PROVIDER_PATH=${G_UNINSTALLATION_PROVIDER_PATH}
-  local INSTALLATION_CHECKER_PROVIDER_PATH=${G_INSTALLATION_CHECKER_PROVIDER_PATH}
+  local numberCliName=$(get_str_from_ref "${numberCliNameRefName}")
 
   # Generate the cli installation provider file
-  local cliInstallationProviderFile=${INSTALLATION_PROVIDER_PATH}/${CLI_NAME}_cli_installation_provider.zsh
+  local cliInstallationProviderFileRef=$(generate_unique_var_name)
+  get_cli_installation_provider_file_path "${numberCliName}" "${cliInstallationProviderFileRef}"
+  local cliInstallationProviderFile=$(get_str_from_ref "${cliInstallationProviderFileRef}")
   _generateInstallationProvider "${cliInstallationProviderFile}" "${CLI_NAME}"
 
   # Generate the bootloader file for cli.
-  local numberCliName=$(get_str_from_ref "${numberCliNameRefName}")
-  local cliBootLoaderFile=$(getCliPath)/${numberCliName}/${CLI_NAME}_cli_bootloader.zsh
+  local cliBootLoaderFileRef=$(generate_unique_var_name)
+  get_cli_boot_file_path "${numberCliName}" "${cliBootLoaderFileRef}"
+  local cliBootLoaderFile=$(get_str_from_ref "${cliBootLoaderFileRef}")
   _generateCLIBootloaderFile "${cliBootLoaderFile}" "${CLI_NAME}"
 
   # Generate the cli uninstallation provider file
-  local cliUninstallationProviderFile=${UNINSTALLATION_PROVIDER_PATH}/${CLI_NAME}_cli_installation_provider.zsh
+  local cliUninstallationProviderFileRefName=$(generate_unique_var_name)
+  get_cli_uninstallation_provider_file_path "${numberCliName}" "${cliUninstallationProviderFileRefName}"
+  local cliUninstallationProviderFile=$(get_str_from_ref "${cliUninstallationProviderFileRefName}")
   _generateUninstallationProviderFile "${cliUninstallationProviderFile}" "${CLI_NAME}"
 
   # Generate the cli installation checker provider file.
-  local cliInstallationCheckerProviderFile=${INSTALLATION_CHECKER_PROVIDER_PATH}/${CLI_NAME}_cli_installation_checker_provider.zsh
+  local cliInstallationCheckerProviderFileRef=$(generate_unique_var_name)
+  get_cli_installation_checker_provider_file_path "${numberCliName}" "${cliInstallationCheckerProviderFileRef}"
+  local cliInstallationCheckerProviderFile=$(get_str_from_ref "${cliInstallationCheckerProviderFileRef}")
   _generateInstallationCheckerProviderFile "${cliInstallationCheckerProviderFile}" "${CLI_NAME}"
 }
