@@ -154,7 +154,7 @@ function get_cli_installation_provider_file_path() {
 ##
 function _initCLIDirectory() {
   local CLI_NAME=$1
-  local G_CLI_PATH_NAME=$2
+  local numberCliNameRefName=$2
   local G_INSTALLATION_PROVIDER_PATH_NAME=$3
   local G_UNINSTALLATION_PROVIDER_PATH_NAME=$4
   local G_INSTALLATION_CHECKER_PROVIDER_PATH_NAME=$5
@@ -189,8 +189,8 @@ function _initCLIDirectory() {
   local INSTALLATION_CHECKER_PROVIDER_PATH=$(dirname ${checkerFilePath})
   _checkDirectoryOrCreate "${INSTALLATION_CHECKER_PROVIDER_PATH}"
 
+  assign_str_to_ref "${CLI_DIR_NAME}" "$numberCliNameRefName"
   eval "
-      ${G_CLI_PATH_NAME}=${CLI_PATH}/${CLI_DIR_NAME}
       ${G_INSTALLATION_PROVIDER_PATH_NAME}='${INSTALLATION_PROVIDER_PATH}'
       ${G_UNINSTALLATION_PROVIDER_PATH_NAME}='${UNINSTALLATION_PROVIDER_PATH}'
       ${G_INSTALLATION_CHECKER_PROVIDER_PATH_NAME}='${INSTALLATION_CHECKER_PROVIDER_PATH}'
@@ -264,7 +264,9 @@ EOF
 function create_cli() {
   local CLI_NAME=$1
 
-  _initCLIDirectory "${CLI_NAME}" "G_CLI_PATH" "G_INSTALLATION_PROVIDER_PATH" "G_UNINSTALLATION_PROVIDER_PATH" "G_INSTALLATION_CHECKER_PROVIDER_PATH"
+  local numberCliNameRefName=$(generate_unique_var_name)
+  _initCLIDirectory "${CLI_NAME}" "${numberCliNameRefName}" "G_INSTALLATION_PROVIDER_PATH" "G_UNINSTALLATION_PROVIDER_PATH" "G_INSTALLATION_CHECKER_PROVIDER_PATH"
+
   local CLI_PATH=${G_CLI_PATH}
   local INSTALLATION_PROVIDER_PATH=${G_INSTALLATION_PROVIDER_PATH}
   local UNINSTALLATION_PROVIDER_PATH=${G_UNINSTALLATION_PROVIDER_PATH}
@@ -275,7 +277,8 @@ function create_cli() {
   _generateInstallationProvider "${cliInstallationProviderFile}" "${CLI_NAME}"
 
   # Generate the bootloader file for cli.
-  local cliBootLoaderFile=${CLI_PATH}/${CLI_NAME}_cli_bootloader.zsh
+  local numberCliName=$(get_str_from_ref "${numberCliNameRefName}")
+  local cliBootLoaderFile=$(getCliPath)/${numberCliName}/${CLI_NAME}_cli_bootloader.zsh
   _generateCLIBootloaderFile "${cliBootLoaderFile}" "${CLI_NAME}"
 
   # Generate the cli uninstallation provider file
