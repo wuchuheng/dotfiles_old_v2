@@ -20,7 +20,8 @@ function import() {
   case ${fist_chart} in
     # The @ symbol is equivalent to the project's root directory
     @)
-        source_file=${APP_BASE_PATH}${file_path:1}
+        # source_file=${APP_BASE_PATH}${file_path:1}
+        source_file=${file_path:2}
         ;;
     /)
 	# To load file from a absolute path in OS.
