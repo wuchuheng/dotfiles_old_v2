@@ -2,7 +2,7 @@
 
 _globalCachePath="$(getRuntimeDirectory)/cache"
 
-# to check the _globalCachePath directory is exist or not.
+# to check the _globalCachePath directory is existed or not.
 if [[ ! -d "$_globalCachePath" ]]; then
   mkdir -p "$_globalCachePath"
 fi
@@ -31,7 +31,6 @@ function setStringValueWithPointer() {
     echo \$value > "${_globalCachePath}/${keyName}"
   "
 }
-
 
 ##
 # to get the string with key.
