@@ -26,5 +26,5 @@ function getCliDirectory() {
 # @Echo <string path>
 ##
 function getCliPath() {
-  echo "${APP_BASE_PATH}/src/cli";
+  echo "src/cli";
 }

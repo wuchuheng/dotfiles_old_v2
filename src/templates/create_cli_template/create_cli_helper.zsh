@@ -61,7 +61,7 @@ function _generateInstallationProvider() {
 echo "Installing ${cliName} CLI cli tool..."
 # Write installation example code here
 EOF
-  log ' CREATE' "${providerFile:${#APP_BASE_PATH} + 1}"
+  log ' CREATE' "${providerFile}"
 }
 
 ##
@@ -207,7 +207,7 @@ function _generateCLIBootloaderFile() {
 # Add appropriate comments to explain the purpose and functionality of the file
 alias ${CLI_NAME}='echo "hello ${CLI_NAME}"'
 EOF
-  log ' CREATE' "${cliBootLoaderFile:${#APP_BASE_PATH} + 1}"
+  log ' CREATE' "${cliBootLoaderFile}"
 }
 
 ##
@@ -224,7 +224,7 @@ echo "Uninstalling $CLI_NAME CLI tool..."
 # Write uninstallation example code here
 
 EOF
-  log ' CREATE' "${cliUninstallationProviderFile:${#APP_BASE_PATH} + 1}"
+  log ' CREATE' "${cliUninstallationProviderFile}"
 }
 
 ##
@@ -245,7 +245,7 @@ log INFO "Checking if $CLI_NAME CLI tool is installed..."
 return "${TRUE}"
 
 EOF
-  log ' CREATE' "${installationCheckerProviderFile:${#APP_BASE_PATH} + 1}"
+  log ' CREATE' "${installationCheckerProviderFile}"
 
   return "${TRUE}"
 }
