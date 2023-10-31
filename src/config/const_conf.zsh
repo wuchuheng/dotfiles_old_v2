@@ -13,7 +13,7 @@ function getRuntimeDirectory() {
 }
 
 function getCliDirectory() {
-  local cliDirectory="${APP_BASE_PATH}/src/cli"
+  local cliDirectory="src/cli"
   if [[ -d "${cliDirectory}" ]]; then
     mkdir -p "${cliDirectory}"
   fi
