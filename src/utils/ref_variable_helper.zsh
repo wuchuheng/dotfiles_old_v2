@@ -11,6 +11,15 @@ function generate_unique_var_name() {
   local preNumberLine=${file_info[2]}
   local prefFile=${file_info[1]}
 
+  # remove the prefix of the APP_BASE_PATH in the ${prefFile}.
+  if [[ ${#prefFile} -gt ${#APP_BASE_PATH} ]]; then
+    local appBasePathLen=${#APP_BASE_PATH}
+    local prefixPath=${prefFile:0:${appBasePathLen}}
+    if [[ "${prefixPath}" == "${APP_BASE_PATH}" ]]; then
+      prefFile=${prefFile:${appBasePathLen} + 1}
+    fi
+  fi
+
   # to get current file
   # Replace '/' with '_' and '.' with '_'
   prefFile="${prefFile//\//_}"
@@ -24,17 +33,19 @@ function generate_unique_var_name() {
 
   # to check the variable globalRefNameList is already defined or not
   if [[ -z "${globalRefNameList}" ]]; then
-    typeset -g globalRefNameList=()
+    typeset -g -A globalRefNameList=()
   fi
 
   # to check the variable refName is exists or not in the globalRefNameList.
-  if [[ "${globalRefNameList[(ie)${refName}]}" -ne 0 ]]; then
+  if [[ -v globalRefNameList["$refName"] ]]; then
     # if exists then increment the value of refName
     local refNameLength=${#globalRefNameList}
     ((refNameLength++))
     refName="${refName}_${refNameLength}"
   fi
-  globalRefNameList+=("${refName}")
+
+  # record the new unique refName.
+  globalRefNameList[${refName}]="${refName}"
 
   echo "${refName}"
 }
