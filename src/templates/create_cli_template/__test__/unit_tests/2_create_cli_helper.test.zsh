@@ -5,12 +5,12 @@ import @/src/templates/create_cli_template/create_cli_helper.zsh #{getCliInstall
 import @/src/utils/test_except.zsh # {except_str}
 
 
-function getCliInstallationCheckerProviderFilePathTest() {
+function get_cli_installation_checker_provider_file_path_test() {
   globalCliInstallationCheckerProviderFilePath=''
-  getCliInstallationCheckerProviderFilePath "1_tmp_cli" globalCliInstallationCheckerProviderFilePath
-  local exceptStrValue="1_tmp_cli/tmp_cli_installation_checker_provider/tmp_cli_installation_checker_provider.zsh"
+  get_cli_installation_checker_provider_file_path "1_tmp_cli" globalCliInstallationCheckerProviderFilePath
+  local exceptStrValue="src/cli/1_tmp_cli/tmp_cli_installation_checker_provider/tmp_cli_installation_checker_provider.zsh"
   except_str "${exceptStrValue}" "${globalCliInstallationCheckerProviderFilePath}"
 }
 
-testing_callback_handle "getCliInstallationCheckerProviderFilePathTest" "Unit test src/templates/create_cli_template/__test__/unit_tests/2_create_cli_helper.test.zsh"
+testing_callback_handle "get_cli_installation_checker_provider_file_path_test" "Unit test src/templates/create_cli_template/__test__/unit_tests/2_create_cli_helper.test.zsh"
 
