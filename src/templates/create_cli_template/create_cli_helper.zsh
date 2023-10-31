@@ -3,6 +3,7 @@
 import ../../utils/helper.zsh # {get_all_sub_dir_by_path, split_str_with_point}
 import ../../utils/list_helper.zsh # {join}
 import ../../utils/log.zsh # {log}
+import @/src/utils/ref_variable_helper.zsh #{generate_unique_var_name, assign_str_to_ref, get_str_from_ref}
 
 ##
 # get the max number from file names belong a directory
@@ -11,7 +12,6 @@ import ../../utils/log.zsh # {log}
 # @return <number>
 ##
 function _getMaxNumber() {
-  local DIRECTORY_PATH=$1
   local MAX_NUMBER=0
   local cliPath=$(getCliPath)
   local directoryList=($(get_all_sub_dir_by_path "${cliPath}"))
@@ -65,12 +65,10 @@ EOF
 }
 
 ##
-# get the cli installation checker provider file path
-# @Use getCliInstallationCheckerProviderFilePath "<cli directory>" "resultStrRef"
-# @Example  getCliInstallationCheckerProviderFilePath "1_tmp_cli" "<1_tmp_cli/tmp_cli_installation_checker_provider/tmp_cli_installation_checker_provider.zsh>"
-# @Return <boolean>
-##
-function getCliInstallationCheckerProviderFilePath() {
+# get cli name from the cli directory that with a number.
+# @Use get_cli_name_from_cli_directory "<cli directory>" "<resultStrRef>"
+# @Return "<boolean>"
+function get_cli_name_from_cli_directory() {
   local cliDirectory=$1
   local outputResultRefName=$2
   globalCliDirInfoListRef=()
@@ -82,11 +80,70 @@ function getCliInstallationCheckerProviderFilePath() {
   join '_' globalCliDirInfoListRef globalCliNameTmp
 
   local cliName=${globalCliNameTmp}
+  assign_str_to_ref "${cliName}" "${outputResultRefName}"
 
-  local result=${cliDirectory}/${cliName}_installation_checker_provider/${cliName}_installation_checker_provider.zsh
-  eval "
-    ${outputResultRefName}=${result}
-  "
+  return "${TRUE}"
+}
+
+
+##
+# get the cli installation checker provider file path
+# @Use get_cli_installation_checker_provider_file_path "<cli directory>" "<resultStrRef>"
+# @Example  get_cli_installation_checker_provider_file_path "1_tmp_cli" "<1_tmp_cli/tmp_cli_installation_checker_provider/tmp_cli_installation_checker_provider.zsh>"
+# @Return <boolean>
+##
+function get_cli_installation_checker_provider_file_path() {
+  local cliDirectory=$1
+  local outputResultRefName=$2
+
+  local cliNameRefName=$(generate_unique_var_name)
+  get_cli_name_from_cli_directory "${cliDirectory}" "${cliNameRefName}"
+  local cliName=$(get_str_from_ref "${cliNameRefName}")
+
+  local CLI_PATH=$(getCliPath)
+  local result=${CLI_PATH}/${cliDirectory}/${cliName}_installation_checker_provider/${cliName}_installation_checker_provider.zsh
+  assign_str_to_ref "${result}" "${outputResultRefName}"
+
+  return "${TRUE}"
+}
+
+##
+# get the cli uninstallation provider file path
+# @Use get_cli_uninstallation_provider_file_path "<cli directory>" "<resultStrRef>"
+# @Example get_cli_uninstallation_provider_file_path "1_tmp_cli" "<1_tmp_cli/tmp_cli_uninstallation_provider/tmp_cli_uninstallation_provider.zsh>"
+# @Return <boolean>
+function get_cli_uninstallation_provider_file_path() {
+  local cliDirectory=$1
+  local outputResultRefName=$2
+
+  local cliNameRefName=$(generate_unique_var_name)
+  get_cli_name_from_cli_directory "${cliDirectory}" "${cliNameRefName}"
+  local cliName=$(get_str_from_ref "${cliNameRefName}")
+
+  local CLI_PATH=$(getCliPath)
+  local result=${CLI_PATH}/${cliDirectory}/${cliName}_uninstallation_provider/${cliName}_uninstallation_provider.zsh
+  assign_str_to_ref "${result}" "${outputResultRefName}"
+
+  return "${TRUE}"
+}
+
+##
+# get the file path of installation provider.
+# @Use get_cli_installation_provider_file_path "<cli directory>" "<resultStrRef>"
+# @Example get_cli_installation_provider_file_path "1_tmp_cli" "<1_tmp_cli/tmp_cli_installation_provider/tmp_cli_installation_provider.zsh>"
+# @Return <boolean>
+##
+function get_cli_installation_provider_file_path() {
+  local cliDirectory=$1
+  local outputResultRefName=$2
+
+  local cliNameRefName=$(generate_unique_var_name)
+  get_cli_name_from_cli_directory "${cliDirectory}" "${cliNameRefName}"
+  local cliName=$(get_str_from_ref "${cliNameRefName}")
+
+  local CLI_PATH=$(getCliPath)
+  local result=${CLI_PATH}/${cliDirectory}/${cliName}_installation_provider/${cliName}_installation_provider.zsh
+  assign_str_to_ref "${result}" "${outputResultRefName}"
 
   return "${TRUE}"
 }
@@ -97,32 +154,43 @@ function getCliInstallationCheckerProviderFilePath() {
 ##
 function _initCLIDirectory() {
   local CLI_NAME=$1
-  local CLI_PATH=$(getCliPath)
   local G_CLI_PATH_NAME=$2
   local G_INSTALLATION_PROVIDER_PATH_NAME=$3
   local G_UNINSTALLATION_PROVIDER_PATH_NAME=$4
   local G_INSTALLATION_CHECKER_PROVIDER_PATH_NAME=$5
 
+  # init CLI directory.
+  local CLI_PATH=$(getCliPath)
   if [[ ! -d "${CLI_PATH}" ]]; then
     mkdir -p "${CLI_PATH}"
   fi
+
   _getMaxNumber "${CLI_NAME}"; local newCliNumber=$(( $? + 1 ))
   local CLI_DIR_NAME=${newCliNumber}_${CLI_NAME}_cli
-  local CLI_PATH=${CLI_PATH}/${newCliNumber}_${CLI_NAME}_cli
 
-  local INSTALLATION_PROVIDER_PATH=${CLI_PATH}/${CLI_NAME}_cli_installation_provider
+  # check the directory to save the provider to install.
+  local installationProviderFilePathRefName=$(generate_unique_var_name)
+  get_cli_installation_provider_file_path "${CLI_DIR_NAME}" "${installationProviderFilePathRefName}"
+  local installationProviderFilePath=$(get_str_from_ref "${installationProviderFilePathRefName}")
+  local INSTALLATION_PROVIDER_PATH=$(dirname ${installationProviderFilePath})
   _checkDirectoryOrCreate "${INSTALLATION_PROVIDER_PATH}"
 
-  local UNINSTALLATION_PROVIDER_PATH=${CLI_PATH}/${CLI_NAME}_cli_uninstallation_provider
+  # check the directory to save the uninstallation provider
+  local uninstallationProviderFilePathRefName=$(generate_unique_var_name)
+  get_cli_uninstallation_provider_file_path "${CLI_DIR_NAME}" "${uninstallationProviderFilePathRefName}"
+  local uninstallationProviderFilePath=$(get_str_from_ref "${uninstallationProviderFilePathRefName}")
+  local UNINSTALLATION_PROVIDER_PATH=$(dirname ${uninstallationProviderFilePath})
   _checkDirectoryOrCreate "${UNINSTALLATION_PROVIDER_PATH}"
 
-  local cliInstallationProviderCheckerFilePath=''
-  getCliInstallationCheckerProviderFilePath "${CLI_DIR_NAME}" cliInstallationProviderCheckerFilePath
-  local INSTALLATION_CHECKER_PROVIDER_PATH=$(dirname ${cliInstallationProviderCheckerFilePath})
+  # check the directory to save the installation checker provider
+  local checkerFilePathRefName=$(generate_unique_var_name)
+  get_cli_installation_checker_provider_file_path "${CLI_DIR_NAME}" "${checkerFilePathRefName}"
+  local checkerFilePath=$(get_str_from_ref "${checkerFilePathRefName}")
+  local INSTALLATION_CHECKER_PROVIDER_PATH=$(dirname ${checkerFilePath})
   _checkDirectoryOrCreate "${INSTALLATION_CHECKER_PROVIDER_PATH}"
 
   eval "
-      ${G_CLI_PATH_NAME}=${CLI_PATH}
+      ${G_CLI_PATH_NAME}=${CLI_PATH}/${CLI_DIR_NAME}
       ${G_INSTALLATION_PROVIDER_PATH_NAME}='${INSTALLATION_PROVIDER_PATH}'
       ${G_UNINSTALLATION_PROVIDER_PATH_NAME}='${UNINSTALLATION_PROVIDER_PATH}'
       ${G_INSTALLATION_CHECKER_PROVIDER_PATH_NAME}='${INSTALLATION_CHECKER_PROVIDER_PATH}'
