@@ -9,15 +9,7 @@ FALSE=1
 # @Echo <string>
 ##
 function getRuntimeDirectory() {
-  echo "${APP_BASE_PATH}/src/runtime"
-}
-
-function getCliDirectory() {
-  local cliDirectory="src/cli"
-  if [[ -d "${cliDirectory}" ]]; then
-    mkdir -p "${cliDirectory}"
-  fi
-  echo "${cliDirectory}"
+  echo "src/runtime"
 }
 
 ##
@@ -27,4 +19,12 @@ function getCliDirectory() {
 ##
 function getCliPath() {
   echo "src/cli";
+}
+
+function getCliDirectory() {
+  local cliDirectory=$(getCliPath)
+  if [[ -d "${cliDirectory}" ]]; then
+    mkdir -p "${cliDirectory}"
+  fi
+  echo "${cliDirectory}"
 }
