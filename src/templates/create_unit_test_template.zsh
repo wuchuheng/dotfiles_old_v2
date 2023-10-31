@@ -47,6 +47,7 @@ cat > ${UNIT_TEST_FILE} << EOF
 #!/usr/bin/env zsh
 
 import @/src/handlers/testing_callback_handler/testing_callback_handler.zsh
+import @/src/utils/test_except.zsh # {except_str}
 
 # the demo testing
 function hello_world_callback_test() {

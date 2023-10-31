@@ -11,16 +11,58 @@ import ./list_helper.zsh # {join}
 function getCliDirList() {
   local globalListRefName=$1
   local listDir=($(get_all_sub_dir_by_path "$(getCliDirectory)"))
-  local -A hashMap
-  local key value
-  for cli in ${(@v)listDir}; do
+  local -A numberMapCli
+  local cliNumbers=()
+  # to get cli list
+  local cli
+  for cli in ${listDir[@]}; do
     globalListRef=()
     split_str_with_point "${cli}" "_" globalListRef
-    unset "globalListRef[1]"
+    local orderNo="${globalListRef[1]}"
+    globalListRef=("${globalListRef[@]:1}")
     globalStrRef=''
     join '_' globalListRef globalStrRef
-    echo "->${globalStrRef}"
-   #  hashMap[${globalListRef[1]}]=
-    unset globalListRef
+    numberMapCli[${orderNo}]="${globalStrRef}"
+    # to push new element to cliNumbers
+    cliNumbers+=("${orderNo}")
+
+    unset globalStrRef globalListRef
   done
+
+  # sort the cli list by number.
+  cliNumbers=($(echo "${cliNumbers[@]}" | tr ' ' '\n' | sort -n))
+  local cliNo
+  local result=()
+  for cliNo in "${cliNumbers[@]}"; do
+    result+=("${cliNo}_${numberMapCli[${cliNo}]}")
+  done
+
+  eval "
+    ${globalListRefName}=(\${result[@]})
+  "
+
+  return "${TRUE}"
 }
+
+##
+# get cli name by numberCliDir
+# @Use get_cli_name_by_number_cliDir "<numberCliDir>" "<outPutStrRef>"
+# @return "<boolean>"
+##
+function get_cli_name_by_number_cli_dir() {
+  local numberCliDir=$1
+  local outputStrRef=$2
+  globalListRef=()
+  split_str_with_point "${numberCliDir}" "_" globalListRef
+  globalListRef=("${globalListRef[@]:1}")
+  globalStrRef=''
+  join '_' globalListRef globalStrRef
+  unset globalListRef
+  eval "
+    ${outputStrRef}=\"${globalStrRef}\"
+  "
+  unset globalStrRef
+
+  return "${TRUE}"
+}
+
