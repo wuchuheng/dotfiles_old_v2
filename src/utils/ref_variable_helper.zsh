@@ -49,3 +49,18 @@ function generate_unique_var_name() {
 
   echo "${refName}"
 }
+
+##
+# assign the string value to the reference variable
+# @Use assign_str_to_ref "<string value>" "<reference name>"
+# @Return "<boolean>"
+##
+function assign_str_to_ref() {
+  local strValue="${1}"
+  local refName="${2}"
+  eval "
+    ${refName}=\"\${strValue}\"
+  "
+
+  return "${TRUE}"
+}
