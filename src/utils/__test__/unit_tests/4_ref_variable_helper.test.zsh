@@ -2,7 +2,7 @@
 
 import @/src/handlers/testing_callback_handler/testing_callback_handler.zsh
 import @/src/utils/test_except.zsh # {except_str}
-import @/src/utils/ref_variable_helper.zsh #{generate_unique_var_name, assign_str_to_ref}
+import @/src/utils/ref_variable_helper.zsh #{generate_unique_var_name, assign_str_to_ref, get_str_from_ref}
 
 # the demo testing
 function generate_unique_var_name_test() {
@@ -23,4 +23,14 @@ function assign_str_to_ref_test() {
   except_str "${exceptVal}" "${receiveValue}"
 }
 testing_callback_handle "assign_str_to_ref_test" "Unit test the function assign_str_to_ref_test"
+
+function get_str_from_ref_test() {
+  local strRefName=$( generate_unique_var_name )
+  local exceptVal="hello world"
+  assign_str_to_ref "${exceptVal}" "${strRefName}"
+  local receiveValue=$(get_str_from_ref "${strRefName}")
+  except_str "${exceptVal}" "${receiveValue}"
+
+}
+testing_callback_handle "get_str_from_ref_test" "Unit test the function get_str_from_ref_test"
 
