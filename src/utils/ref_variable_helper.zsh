@@ -64,3 +64,18 @@ function assign_str_to_ref() {
 
   return "${TRUE}"
 }
+
+##
+# get the string value from reference variable name.
+# @Use get_str_from_ref "<reference name>"
+# @Echo "<string value>"
+# @Return "<boolean>"
+##
+function get_str_from_ref() {
+  local refName="${1}"
+  eval "
+    echo \"\${${refName}}\"
+  "
+
+  return "${TRUE}"
+}
