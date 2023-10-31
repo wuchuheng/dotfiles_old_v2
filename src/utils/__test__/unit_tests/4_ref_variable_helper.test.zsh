@@ -12,7 +12,7 @@ function generate_unique_var_name_test() {
 }
 
 # call hello_world_test() function，and pass the testing callback with the testing name and testing description.
-testing_callback_handle "generate_unique_var_name_test" "Unit test src/utils/__test__/unit_tests/4_ref_variable_helper.test.zsh"
+testing_callback_handle "generate_unique_var_name_test" "Unit test generate_unique_var_name"
 
 function assign_str_to_ref_test() {
   local strRefName=$( generate_unique_var_name )
