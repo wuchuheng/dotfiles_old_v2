@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 ##
-# The bootstrap for unit test.
+# The bootloader to install all cli.
 #
 # @User wuchuheng<root@wuchuheng.com>
 # @Date 2023-10-25 02:18
