@@ -33,6 +33,7 @@ function split_str() {
 #    declare -g result=()
 #    split_str_with_point "hello|world!" '|' 'result'
 #    echo "${result[@]}" #hello world
+# @Return <void>
 ##
 function split_str_with_point() {
   local inputStr="$1"
@@ -193,57 +194,6 @@ function get_all_file_by_path() {
   echo "${file_list[@]}"
 }
 
-##
-# @desc 获取一个文件1-10行内容
-# @use  get_a_part_of_code "/Users/wuchuheng/dotfiles/tmp.sh" 5
-# @return
-#
-#    1  | readonly ALL_UNIT_TEST_FILES=(
-#    2  | utils/__test__/unit_tests/1_helper.test.sh
-#    3  | utils/__test__/unit_tests/2_helper.test.sh
-#    4  | utils/__test__/unit_tests/3_helper.test.sh
-# -> 5  | utils/__test__/unit_tests/4_helper.test.sh
-#    6  | utils/__test__/unit_tests/5_helper.test.sh
-#    7  | utils/__test__/unit_tests/6_helper.test.sh
-#    8  | utils/__test__/unit_tests/7_helper.test.sh
-#    9  | utils/__test__/unit_tests/8_helper.test.sh
-#    10 | utils/__test__/unit_tests/9_helper.test.sh
-#    11 | utils/__test__/unit_tests/10_helper.test.sh
-#
-##
-function get_a_part_of_code() {
-  local file=$1
-  local lineNumber=$2;
-  local allLine=$(wc -l ${file} | awk '{print $1}')
-  local intervalWidth=5 # 区间宽度
-  local intervalStart=$lineNumber # 区间开始坐标
-  local intervalEnd=$lineNumber # 区间结始坐标
-  for (( i=1; i <= 5; i++ )); do
-    if ((((intervalStart - 1)) > 0)) ; then
-      ((intervalStart--))
-    else
-      ((intervalEnd++))
-    fi
-    if (( ((intervalEnd + 1)) <= ${allLine} )); then
-      ((intervalEnd++))
-    else
-      if ((((intervalStart - 1)) > 0)) ; then
-        ((intervalStart--))
-      fi
-    fi
-  done
-  local result=`sed -n "${intervalStart},${intervalEnd}p" $file`
-  local cln=${intervalStart}
-  local lineNumberWidth=${#intervalEnd}
-  while IFS= read -r line; do
-    if (( cln == lineNumber )); then
-      printf " \033[0;31m\033[1m->\e[0m %-${lineNumberWidth}s | $line\n" $cln
-    else
-      printf "    %-${lineNumberWidth}s | $line\n" $cln
-    fi
-    ((cln++))
-  done <<< "$result"
-}
 
 ##
 # To get a runtime space while to run a test.
