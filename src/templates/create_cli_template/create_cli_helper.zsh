@@ -259,16 +259,15 @@ function _generateInstallationCheckerProviderFile() {
 
 import @/src/utils/log.zsh # {log}
 
-log INFO "Checking if $CLI_NAME CLI tool is installed..."
-
 ##
 # check the cli ${CLI_NAME} was installed or not.
 # @Use ${CLI_NAME}_installation_checker
 # @Return <boolean>
 ##
 function ${CLI_NAME}_cli_installation_checker() {
+  log INFO "Checking if $CLI_NAME CLI tool is installed..."
 
-  return "\${TRUE}"
+  return "\${FALSE}"
 }
 EOF
   log ' CREATE' "${installationCheckerProviderFile}"
