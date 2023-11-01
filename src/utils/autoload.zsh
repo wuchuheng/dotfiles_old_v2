@@ -141,14 +141,20 @@ function get_OS_symbol() {
   echo ${OS}
 }
 
+# to load the bin tools
 import @/src/config/bin_register_conf.zsh
-
-# to load all bin tool
 for toolName toolPath in ${(@kv)BIN_REGISTER_CONF}; do
   function "${toolName}"() {
     local command=$(printf "%s/%s" "${APP_BASE_PATH}" "${toolPath}")
     ${command} $@
   }
 done
+
+# load env config from .env
+import @/src/utils/load_env.zsh # {load_env}
+local localEnvFile=${APP_BASE_PATH}/.env
+if [[ -f ${localEnvFile} ]]; then
+  load_env "${localEnvFile}"
+fi
 
 import @/src/config/const_conf.zsh
