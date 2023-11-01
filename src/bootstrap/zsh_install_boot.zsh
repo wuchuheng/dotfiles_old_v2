@@ -16,11 +16,10 @@ import ../utils/ref_variable_helper.zsh # {generate_unique_var_name, get_str_fro
 import @/src/templates/create_cli_template/create_cli_helper.zsh #{get_cli_installation_provider_file_path}
 
 # get the cli list from cli directory.
-local cliDirList=();
-globalCliDirList=();
-getCliDirList globalCliDirList;
-cliDirList=("${globalCliDirList[@]}")
-unset globalCliDirList
+
+local cliDirListRef=$(generate_unique_var_name)
+getCliDirList ${cliDirListRef}
+local cliDirList=($(get_str_from_ref "${cliDirListRef}"));
 
 # to trigger the installation provider from cli dir
 for numberCliDirName in "${cliDirList[@]}"; do
