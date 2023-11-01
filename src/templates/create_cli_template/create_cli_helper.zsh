@@ -58,8 +58,18 @@ function _generateInstallationProvider() {
   cat > "${providerFile}" << EOF
 #!/usr/bin/env zsh
 
-echo "Installing ${cliName} CLI cli tool..."
-# Write installation example code here
+import @/src/utils/log.zsh # {log}
+
+##
+# the provider entry to install tmp cli
+# @return <boolean>
+##
+function ${cliName}_installation_provider() {
+  log INFO "Installing ${cliName} CLI cli tool..."
+
+  return "\${TRUE}"
+}
+
 EOF
   log ' CREATE' "${providerFile}"
 }

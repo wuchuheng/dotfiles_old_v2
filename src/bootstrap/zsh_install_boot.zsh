@@ -43,5 +43,8 @@ for numberCliDirName in "${cliDirList[@]}"; do
     get_cli_installation_provider_file_path "${numberCliDirName}" "${cliInstallationProviderFilePathRef}"
     local installProviderPath=$(get_str_from_ref "${cliInstallationProviderFilePathRef}")
     import "@/${installProviderPath}"
+
+    # trigger the installation provider.
+    ${cliName}_installation_provider
   fi
 done
