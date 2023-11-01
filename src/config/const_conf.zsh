@@ -9,7 +9,7 @@ FALSE=1
 # @Echo <string>
 ##
 function getRuntimeDirectory() {
-  echo "src/runtime"
+  echo "${APP_BASE_PATH}/src/runtime"
 }
 
 ##
@@ -18,7 +18,7 @@ function getRuntimeDirectory() {
 # @Echo <string path>
 ##
 function getCliPath() {
-  echo "src/cli";
+  echo "${APP_BASE_PATH}/src/cli";
 }
 
 function getCliDirectory() {
