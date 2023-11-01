@@ -238,7 +238,7 @@ function _generateInstallationCheckerProviderFile() {
   cat > "$installationCheckerProviderFile" << EOF
 #!/usr/bin/env zsh
 
-import @/src/utils/log_helper.zsh # {log}
+import @/src/utils/log.zsh # {log}
 
 log INFO "Checking if $CLI_NAME CLI tool is installed..."
 
