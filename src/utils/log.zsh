@@ -92,6 +92,12 @@ function log() {
     "ERROR")
        format_print "ERROR" "${message}"
       ;;
+    "DEBUG")
+       local envType=$(get_env_type)
+       if [[ ! ${envType} == 'prod' ]]; then
+         format_print "$1" "$2"
+       fi
+      ;;
     *)
        if [[ $# -eq 2 ]]; then
          format_print "$1" "$2"
@@ -107,4 +113,5 @@ function log() {
 # log "SUCCESS" "Installation completed successfully."
 # log "WARNING" "Some configuration files may have been overwritten."
 # log "ERROR" "Installation failed. Aborting." 
+# log "DEBUG" "Installation failed. Aborting."
 

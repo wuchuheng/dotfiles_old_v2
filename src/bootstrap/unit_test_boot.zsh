@@ -13,6 +13,8 @@ typeset -g APP_BASE_PATH=$(pwd); source "${APP_BASE_PATH}"/src/utils/autoload.zs
 import @/src/handlers/test_handler/test_handler.zsh
 import @/src/config/test_conf.zsh
 import @/src/utils/test_helper.zsh
+import @/src/utils/load_env.zsh # {set_env_type}
+set_env_type 'test'
 
 all_test_files=()
 for test_dir in "${ALL_TEST_DIR[@]}"; do

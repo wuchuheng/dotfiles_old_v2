@@ -14,6 +14,8 @@ import ../utils/log.zsh # {log}
 import ../utils/cli_helper.zsh # {get_sub_dir, get_cli_name_by_number_cli_dir}
 import ../utils/ref_variable_helper.zsh # {generate_unique_var_name, get_str_from_ref}
 import @/src/templates/create_cli_template/create_cli_helper.zsh #{get_cli_installation_provider_file_path}
+import @/src/utils/load_env.zsh # {set_env_type}
+set_env_type 'install'
 
 # get the cli list from cli directory.
 

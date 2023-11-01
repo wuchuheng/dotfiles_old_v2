@@ -10,7 +10,7 @@ import @/src/utils/log.zsh # {log}
 function load_env() {
   local env_file=$1
   if [ -f "$env_file" ]; then
-    log INFO "Loading environment variables from $env_file"
+    log DEBUG "Load the environment file: $env_file"
     source "${env_file}"
 
     # if t variable is existed
@@ -43,4 +43,33 @@ function get_env() {
     echo "${env_var_value}"
     return "${TRUE}"
   fi
+}
+
+##
+# set the env type
+# @Use set_env_type "<test, install, uninstall, prod>"
+# @Return <boolean>
+##
+function set_env_type() {
+  local envType=$1
+  local envTypeList=(test install uninstall prod)
+  # check the env type is existed in envTypeList
+  if [[ ! "${envTypeList[@]}" =~ "${envType}" ]]; then
+    log ERROR "The env type is not existed!"
+    return ${FALSE}
+  fi
+  typeset -g ENV_TYPE=${envType}
+  return ${TRUE}
+}
+
+##
+# get the env type
+# @Use get_env_type
+# @Echo '<test, prod, install, uninstall>'
+##
+function get_env_type() {
+  if [[ -z $ENV_TYPE ]]; then
+    echo "prod"
+  fi
+  echo ${ENV_TYPE}
 }
