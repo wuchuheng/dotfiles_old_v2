@@ -13,3 +13,6 @@ create_unit_test:
 
 install:
 	bash src/bootstrap/bash_install_boot.sh
+
+uninstall:
+	zsh src/bootstrap/zsh_uninstall_boot.zsh
