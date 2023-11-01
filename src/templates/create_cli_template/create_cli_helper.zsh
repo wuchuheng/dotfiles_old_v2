@@ -61,7 +61,7 @@ function _generateInstallationProvider() {
 import @/src/utils/log.zsh # {log}
 
 ##
-# the provider entry to install tmp cli
+# the provider entry to install ${cliName} cli
 # @return <boolean>
 ##
 function ${cliName}_installation_provider() {
@@ -226,12 +226,21 @@ EOF
 # @return <boolean>
 function _generateUninstallationProviderFile() {
   local cliUninstallationProviderFile=$1
-  local CLI_NAME=$2
+  local cliName=$2
   cat > "$cliUninstallationProviderFile" << EOF
 #!/usr/bin/env zsh
 
-echo "Uninstalling $CLI_NAME CLI tool..."
-# Write uninstallation example code here
+import @/src/utils/log.zsh # {log}
+
+##
+# the provider entry to uninstall ${cliName} cli
+# @return <boolean>
+##
+function ${cliName}_uninstallation_provider() {
+  log INFO "Uninstalling ${cliName} CLI cli tool..."
+
+  return "\${TRUE}"
+}
 
 EOF
   log ' CREATE' "${cliUninstallationProviderFile}"
