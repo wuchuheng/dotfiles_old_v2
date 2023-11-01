@@ -236,7 +236,7 @@ import @/src/utils/log.zsh # {log}
 # the provider entry to uninstall ${cliName} cli
 # @return <boolean>
 ##
-function ${cliName}_uninstallation_provider() {
+function ${cliName}_cli_uninstallation_provider() {
   log INFO "Uninstalling ${cliName} CLI cli tool..."
 
   return "\${TRUE}"
