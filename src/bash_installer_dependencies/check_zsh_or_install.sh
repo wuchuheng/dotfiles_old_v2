@@ -38,7 +38,7 @@ function _install_zsh_in_mac_os() {
 ##
 function check_zsh_or_install() {
   if _check_zsh_exit; then
-    log INFO "zsh is exist."
+    log INFO "zsh is existed."
     return "${TRUE}"
   fi
   log INFO "zsh is not exist, install zsh now."
