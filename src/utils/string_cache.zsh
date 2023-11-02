@@ -1,6 +1,8 @@
 #!/usr/bin/env zsh
 
-_globalCachePath="$(getRuntimeDirectory)/cache"
+typeset -g globalKeyMapValueCacheDirName='keyMapValueCache'
+
+_globalCachePath="$(getRuntimeDirectory)/${globalKeyMapValueCacheDirName}"
 
 # to check the _globalCachePath directory is existed or not.
 if [[ ! -d "$_globalCachePath" ]]; then
@@ -9,13 +11,25 @@ fi
 
 ##
 # to cache a string with key.
-# @Use setStringValue '<key name>' '<string>'
+# @Use setStringValue '<key name>' '<string>' '<cache space>'
 # @Echo <void>
 ##
 function setStringValue() {
   local keyName="$1"
   local value="$2"
-  echo "$value" > "${_globalCachePath}/${keyName}"
+  local cacheSpace=$3
+
+  local dirPath=${_globalCachePath}
+  # if the cacheSpace is not empty.
+  if [[ -n "$cacheSpace" ]]; then
+    dirPath="$(getRuntimeDirectory)/${cacheSpace}"
+    # to check the cache space directory is existed or not.
+    if [[ ! -d "$dirPath" ]]; then
+      mkdir -p "$dirPath"
+    fi
+  fi
+
+  echo "$value" > "${dirPath}/${keyName}"
 }
 
 ##
