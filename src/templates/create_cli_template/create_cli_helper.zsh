@@ -266,7 +266,7 @@ import @/src/utils/load_env.zsh #{get_env}
 # @Return <boolean>
 ##
 function ${CLI_NAME}_cli_installation_checker() {
-  log INFO "Checking if $CLI_NAME CLI tool is installed..."
+  log INFO "Checking if $CLI_NAME CLI tool was installed or note."
   local envType=\$(get_env_type)
   case \$envType in
       prod)
