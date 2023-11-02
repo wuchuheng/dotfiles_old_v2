@@ -64,14 +64,14 @@ import @/src/utils/log.zsh # {log}
 # the provider entry to install ${cliName} cli
 # @return <boolean>
 ##
-function ${cliName}_installation_provider() {
+function ${cliName}_cli_installation_provider() {
   log INFO "Installing ${cliName} CLI cli tool..."
 
   return "\${TRUE}"
 }
 
 EOF
-  log ' CREATE' "${providerFile}"
+  log ' CREATE' "${providerFile:${#APP_BASE_PATH} + 1}"
 }
 
 ##
@@ -217,7 +217,7 @@ function _generateCLIBootloaderFile() {
 # Add appropriate comments to explain the purpose and functionality of the file
 alias ${CLI_NAME}='echo "hello ${CLI_NAME}"'
 EOF
-  log ' CREATE' "${cliBootLoaderFile}"
+  log ' CREATE' "${cliBootLoaderFile:${#APP_BASE_PATH} + 1}"
 }
 
 ##
@@ -243,7 +243,7 @@ function ${cliName}_cli_uninstallation_provider() {
 }
 
 EOF
-  log ' CREATE' "${cliUninstallationProviderFile}"
+  log ' CREATE' "${cliUninstallationProviderFile:${#APP_BASE_PATH} + 1}"
 }
 
 ##
@@ -258,6 +258,7 @@ function _generateInstallationCheckerProviderFile() {
 #!/usr/bin/env zsh
 
 import @/src/utils/log.zsh # {log}
+import @/src/utils/load_env.zsh #{get_env}
 
 ##
 # check the cli ${CLI_NAME} was installed or not.
@@ -266,11 +267,24 @@ import @/src/utils/log.zsh # {log}
 ##
 function ${CLI_NAME}_cli_installation_checker() {
   log INFO "Checking if $CLI_NAME CLI tool is installed..."
-
-  return "\${FALSE}"
+  local envType=\$(get_env_type)
+  case \$envType in
+      prod)
+        return "\${TRUE}"
+      ;;
+      install)
+        return "\${FALSE}"
+      ;;
+      uninstall)
+        return "\${TRUE}"
+      ;;
+      *)
+        return "\${TRUE}"
+      ;;
+  esac
 }
 EOF
-  log ' CREATE' "${installationCheckerProviderFile}"
+  log ' CREATE' "${installationCheckerProviderFile:${#APP_BASE_PATH} + 1}"
 
   return "${TRUE}"
 }
