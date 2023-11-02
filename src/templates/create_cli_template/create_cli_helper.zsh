@@ -208,14 +208,21 @@ function _initCLIDirectory() {
 ##
 function _generateCLIBootloaderFile() {
   local cliBootLoaderFile=$1
-  local CLI_NAME=$2
+  local cliName=$2
   cat > "$cliBootLoaderFile" << EOF
 #!/usr/bin/env zsh
 
-# This is the entry file for ${CLI_NAME} CLI tool
+# This is the entry file for ${cliName} CLI tool
 # Write the main logic of the CLI tool here
 # Add appropriate comments to explain the purpose and functionality of the file
-alias ${CLI_NAME}='echo "hello ${CLI_NAME}"'
+
+import @/src/utils/log.zsh #{log}
+
+function ${cliName}_cli_boot() {
+  alias ${cliName}='echo "hello ${cliName}"'
+  log INFO "Loaded ${cliName} cli."
+}
+
 EOF
   log ' CREATE' "${cliBootLoaderFile:${#APP_BASE_PATH} + 1}"
 }
@@ -300,7 +307,7 @@ function get_cli_boot_file_path() {
   local cliNameRef=$(generate_unique_var_name)
   get_cli_name_from_number_cli_name "${numberCliName}" "${cliNameRef}"
   local cliName=$(get_str_from_ref "${cliNameRef}")
-  local cliBootLoaderFile=$(getCliPath)/${numberCliName}/${cliName}_cli_bootloader.zsh
+  local cliBootLoaderFile=$(getCliPath)/${numberCliName}/${cliName}_bootloader.zsh
 
   assign_str_to_ref "${cliBootLoaderFile}" "${bootFileRefName}"
 
