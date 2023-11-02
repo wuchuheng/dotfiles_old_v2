@@ -27,7 +27,7 @@ for numberCliDirName in "${cliDirList[@]}"; do
   local cliInstallationCheckerProviderFilePathRef=$(generate_unique_var_name)
   get_cli_installation_checker_provider_file_path "${numberCliDirName}" "${cliInstallationCheckerProviderFilePathRef}"
   local cliInstallationCheckerProviderFilePath=$(get_str_from_ref "${cliInstallationCheckerProviderFilePathRef}")
-  import "@/${cliInstallationCheckerProviderFilePath}"
+  import "${cliInstallationCheckerProviderFilePath}"
 
   # get cli name without number.
   local cliNameRef=$(generate_unique_var_name)
@@ -42,7 +42,7 @@ for numberCliDirName in "${cliDirList[@]}"; do
     local cliUninstallationProviderFilePathRef=$(generate_unique_var_name)
     get_cli_uninstallation_provider_file_path "${numberCliDirName}" "${cliUninstallationProviderFilePathRef}"
     local uninstallProviderPath=$(get_str_from_ref "${cliUninstallationProviderFilePathRef}")
-    import "@/${uninstallProviderPath}"
+    import "${uninstallProviderPath}"
 
     # trigger the installation provider.
     ${cliName}_uninstallation_provider

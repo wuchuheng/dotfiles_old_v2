@@ -28,7 +28,7 @@ for numberCliDirName in "${cliDirList[@]}"; do
   local cliInstallationCheckerProviderFilePathRef=$(generate_unique_var_name)
   get_cli_installation_checker_provider_file_path "${numberCliDirName}" "${cliInstallationCheckerProviderFilePathRef}"
   local cliInstallationCheckerProviderFilePath=$(get_str_from_ref "${cliInstallationCheckerProviderFilePathRef}")
-  import "@/${cliInstallationCheckerProviderFilePath}"
+  import "${cliInstallationCheckerProviderFilePath}"
 
   # get cli name without number.
   local cliNameRef=$(generate_unique_var_name)
@@ -43,7 +43,7 @@ for numberCliDirName in "${cliDirList[@]}"; do
     local cliInstallationProviderFilePathRef=$(generate_unique_var_name)
     get_cli_installation_provider_file_path "${numberCliDirName}" "${cliInstallationProviderFilePathRef}"
     local installProviderPath=$(get_str_from_ref "${cliInstallationProviderFilePathRef}")
-    import "@/${installProviderPath}"
+    import "${installProviderPath}"
 
     # trigger the installation provider.
     ${cliName}_installation_provider
