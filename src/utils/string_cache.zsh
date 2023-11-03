@@ -60,6 +60,8 @@ function setStringValueWithPointer() {
 ##
 # to get the string with key.
 # @Use getStringValue '<key name>' '<space name>'
+# @Echo <value>
+# @Return <boolean> true: the key is existed, false: the key is not existed.
 ##
 function getStringValue() {
   local keyName="$1"
@@ -73,5 +75,20 @@ function getStringValue() {
       mkdir -p "$dirPath"
     fi
   fi
-  cat "${dirPath}/${keyName}"
+
+  local cacheFile="${dirPath}/${keyName}"
+  # if the cache file is not existed. then return false.
+  if [[ ! -f ${cacheFile} ]]; then
+    echo ''
+    return ${FALSE}
+  fi
+  local cacheValue=$(cat ${cacheFile})
+  # if the cache value is empty. then return false.
+  if [[ -z "$cacheValue" ]]; then
+    echo ''
+    return ${FALSE}
+  fi
+
+  echo "${cacheValue}"
+  return ${TRUE}
 }
