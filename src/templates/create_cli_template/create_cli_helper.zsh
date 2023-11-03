@@ -3,6 +3,7 @@
 import ../../utils/helper.zsh # {get_all_sub_dir_by_path, split_str_with_point}
 import ../../utils/list_helper.zsh # {join}
 import ../../utils/log.zsh # {log}
+import ./generate_cli_common_helper_file.zsh # {generateCLICommonHelperFile}
 import @/src/utils/ref_variable_helper.zsh #{generate_unique_var_name, assign_str_to_ref, get_str_from_ref}
 
 ##
@@ -315,14 +316,6 @@ function get_cli_boot_file_path() {
   return "${TRUE}"
 }
 
-##
-# generate a common cli helper file.
-# @Use _generateCLICommonHelperFile "<the number cli name>"
-# @Return <boolean>
-##
-function _generateCLICommonHelperFile() {
-
-}
 
 ##
 # crete cli
@@ -361,5 +354,5 @@ function create_cli() {
   _generateInstallationCheckerProviderFile "${cliInstallationCheckerProviderFile}" "${CLI_NAME}"
 
   # generate the cli_common_helper file.
-
+  generateCLICommonHelperFile "${numberCliName}"
 }
