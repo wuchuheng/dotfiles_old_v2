@@ -37,4 +37,16 @@ jobs:
 
       - name: Run commands on macOS
         run: |
-          echo 'Mac OS'
+          git log
+  macos-arm:
+    runs-on: macos-11.0
+    strategy:
+      arch: [arm64]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run commands on macOS ARM
+        run: |
+          echo "marc os arm"
