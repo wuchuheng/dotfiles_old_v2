@@ -13,6 +13,14 @@ function getRuntimeDirectory() {
 }
 
 ##
+# get the runtime directory for cli
+# @Use getCliRuntimeDirectory
+# @Echo <string>
+function getCliRuntimeDirectory() {
+  echo "$(getRuntimeDirectory)/cli_runtime"
+}
+
+##
 # get the cli path
 # @Use getCliDirectory
 # @Echo <string path>
