@@ -1,0 +1,40 @@
+name: OS-specific Jobs
+
+on: [push, pull_request]
+
+jobs:
+  centos8:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run commands on CentOS 8
+        run: |
+          docker pull centos:8
+          docker run --rm -v $PWD:/workdir -w /workdir centos:8 bash -c "
+            echo 'hello centos 8'
+          "
+
+  ubuntu:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run commands on Ubuntu
+        run: |
+          echo 'ubuntu'
+
+  macos:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run commands on macOS
+        run: |
+          echo 'Mac OS'
