@@ -4,7 +4,7 @@ import ../vendor/dotfile_bash_module/src/utils/log.sh # {log}
 import ../vendor/dotfile_bash_module/src/utils/cache.sh # {save_cache}
 
 ##
-# check the zsh is exist or not.
+# check the zsh is existed or not.
 # @Use _check_zsh_exit
 # @Return <boolean>
 ##
@@ -32,7 +32,7 @@ function _install_zsh_in_mac_os() {
 }
 
 ##
-# check the zsh is exist or install.
+# check the zsh is existed or install.
 # @Use check_zsh_or_install
 # @Return <boolean>
 ##
