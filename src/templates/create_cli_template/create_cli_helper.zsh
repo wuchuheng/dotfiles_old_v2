@@ -316,6 +316,15 @@ function get_cli_boot_file_path() {
 }
 
 ##
+# generate a common cli helper file.
+# @Use _generateCLICommonHelperFile "<the number cli name>"
+# @Return <boolean>
+##
+function _generateCLICommonHelperFile() {
+
+}
+
+##
 # crete cli
 # @Use create_cli "<cli name>"
 # @Echo <boolean>
@@ -350,4 +359,7 @@ function create_cli() {
   get_cli_installation_checker_provider_file_path "${numberCliName}" "${cliInstallationCheckerProviderFileRef}"
   local cliInstallationCheckerProviderFile=$(get_str_from_ref "${cliInstallationCheckerProviderFileRef}")
   _generateInstallationCheckerProviderFile "${cliInstallationCheckerProviderFile}" "${CLI_NAME}"
+
+  # generate the cli_common_helper file.
+
 }
