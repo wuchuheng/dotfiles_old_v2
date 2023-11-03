@@ -59,9 +59,19 @@ function setStringValueWithPointer() {
 
 ##
 # to get the string with key.
-# @Use getStringValue '<key name>'
+# @Use getStringValue '<key name>' '<space name>'
 ##
 function getStringValue() {
   local keyName="$1"
-  cat "${_globalCachePath}/${keyName}"
+  local cacheSpace=$2
+  local dirPath=${_globalCachePath}
+  # if the cacheSpace is not empty.
+  if [[ -n "$cacheSpace" ]]; then
+    dirPath="$(getRuntimeDirectory)/${cacheSpace}"
+    # to check the cache space directory is existed or not.
+    if [[ ! -d "$dirPath" ]]; then
+      mkdir -p "$dirPath"
+    fi
+  fi
+  cat "${dirPath}/${keyName}"
 }
