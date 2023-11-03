@@ -34,15 +34,26 @@ function setStringValue() {
 
 ##
 # to cache a string with key and string pointer.
-# @Use setStringValueWithPointer '<key name>' '<string pointer>'
+# @Use setStringValueWithPointer '<key name>' '<string pointer>' '<space name>'
 # @Echo <void>
 ##
 function setStringValueWithPointer() {
   local keyName="$1"
   local stringPointer="$2"
+  local cacheSpace=$3
+  local dirPath=${_globalCachePath}
+  # if the cacheSpace is not empty.
+  if [[ -n "$cacheSpace" ]]; then
+    dirPath="$(getRuntimeDirectory)/${cacheSpace}"
+    # to check the cache space directory is existed or not.
+    if [[ ! -d "$dirPath" ]]; then
+      mkdir -p "$dirPath"
+    fi
+  fi
+
   eval "
     local value=\$(echo \$${stringPointer})
-    echo \$value > "${_globalCachePath}/${keyName}"
+    echo \$value > "${dirPath}/${keyName}"
   "
 }
 
