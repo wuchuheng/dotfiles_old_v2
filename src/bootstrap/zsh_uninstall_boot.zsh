@@ -12,6 +12,7 @@ typeset -g APP_BASE_PATH=$(pwd); source src/utils/autoload.zsh || exit 1
 import ../utils/ref_variable_helper.zsh # {generate_unique_var_name, get_str_from_ref}
 import @/src/templates/create_cli_template/create_cli_helper.zsh #{get_cli_uninstallation_provider_file_path}
 import ./boot_helper.zsh # { check_cli_by_number_dir }
+import @/src/services/insert_dotfile_config_into_zshrc_service.zsh #{checkIfDotfileConfigIsInZshrcService, removeDotfileConfigFromZshrcService}
 import @/src/utils/load_env.zsh # {set_env_type}
 set_env_type 'uninstall'
 
@@ -43,3 +44,11 @@ for numberCliDirName in "${cliDirList[@]}"; do
     ${cliName}_uninstallation_provider
   fi
 done
+
+# remove the dotfile configuration into the ~/.zshrc
+if [[ $(checkIfDotfileConfigIsInZshrcService) -eq ${TRUE} ]]; then
+  removeDotfileConfigFromZshrcService
+fi
+
+# start bash
+bash
