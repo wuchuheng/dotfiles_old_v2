@@ -46,9 +46,19 @@ function setStringWithPointerTest() {
   local exceptValue='hello world'
   local exceptValueRef=$(generate_unique_var_name)
   assign_str_to_ref "${exceptValue}" "${exceptValueRef}"
-  local keyName="setStringValueTestKey"
+  local keyName="setStringValueTestKey1"
   setStringValueWithPointer "${keyName}" "${exceptValueRef}" "${spaceDir}"
   local targetFile="src/runtime/${spaceDir}/${keyName}"
   except_str "${exceptValue}" "$(cat ${targetFile})"
 }
 testing_callback_handle "setStringWithPointerTest" "Unit test src/utils/__test__/unit_tests/5_string_cache.test.zsh"
+
+function get_string_value_with_space_test() {
+  local spaceDir='test/keyMapValueCacheTest/spaceTestDir'
+  local exceptedValue='hello world'
+  local keyName='getStringValueTestKey2'
+  echo ${exceptedValue} > src/runtime/${spaceDir}/${keyName}
+  local receiveValue=$( getStringValue ${keyName} "${spaceDir}" )
+  except_str "${exceptedValue}" "${receiveValue}"
+}
+testing_callback_handle "get_string_value_with_space_test" "Unit test src/utils/__test__/unit_tests/5_string_cache.test.zsh"
