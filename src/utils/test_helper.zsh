@@ -18,11 +18,11 @@ function get_test_files() {
   local type_str=''
   local result=()
   case  ${path_type} in
-    'installed_tests')
-      type_str='installed_tests'
+    'installation_tests')
+      type_str='installation_tests'
     ;;
-    'uninstalled_tests')
-      type_str='uninstalled_tests'
+    'uninstallation_tests')
+      type_str='uninstallation_tests'
     ;;
     'unit_tests')
       type_str='unit_tests'
