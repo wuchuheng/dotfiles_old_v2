@@ -120,6 +120,7 @@ function import() {
 
 ##
 # To get the OS symbol
+# @Echo darwin_arm64
 ##
 function get_OS_symbol() {
   local OS=''
