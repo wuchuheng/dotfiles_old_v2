@@ -13,7 +13,7 @@ import @/src/utils/helper.zsh
 # 输出confirm
 printf "$(green_print '  Please enter a unit testing file name you want to create')\n"
 printf "$(green_print '  For example: src/utils/helper.zsh')\n"
-printf "$(green_print '  The unit testing file: src/utils/__test__/unit_tests/01_helper_test.sh will be to generated')\n"
+printf "$(green_print '  The unit testing file: src/utils/__test__/unit_tests/01_helper_test.zsh will be to generated')\n"
 # To input the file name to create a new unit test file
 read -r "UNIT_TEST_FILE?$(green_print '  💪 To input the file name to create a new unit test file:')"
 
