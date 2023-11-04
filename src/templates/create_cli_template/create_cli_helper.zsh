@@ -66,6 +66,9 @@ import @/src/utils/log.zsh # {log}
 # @return <boolean>
 ##
 function ${cliName}_cli_installation_provider() {
+  # if you want to stop the installation, set isInstallBrokenRef to \${TRUE}
+  local isInstallBrokenRef=\$1
+
   log INFO "Installing ${cliName} CLI cli tool..."
 
   return "\${TRUE}"

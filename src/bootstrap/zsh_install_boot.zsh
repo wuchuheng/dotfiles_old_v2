@@ -42,7 +42,12 @@ for numberCliDirName in "${cliDirList[@]}"; do
     local cliName=$(get_str_from_ref "${cliNameRef}")
 
     # trigger the installation provider.
-    ${cliName}_installation_provider
+    local isInstallBrokenRef=$(generate_unique_var_name)
+    ${cliName}_installation_provider "${isInstallBrokenRef}"
+    local isInstallBroken=$(get_str_from_ref "${isInstallBrokenRef}")
+    if [[ ${isInstallBroken} -eq ${TRUE} ]]; then
+      break;
+    fi
   fi
 done
 
