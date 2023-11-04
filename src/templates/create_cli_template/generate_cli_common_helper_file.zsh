@@ -95,3 +95,26 @@ EOF
 
   log CREATE "${cliHelperLibraryFile:${#APP_BASE_PATH} + 1}"
 }
+
+##
+# get cli name from the cli directory that with a number.
+# @Use get_cli_name_from_number_cli_name "<cli directory>" "<resultStrRef>"
+# @Example get_cli_name_from_number_cli_name "1_tmp_cli" "<tmp_cli>"
+# @Return "<boolean>"
+##
+function get_cli_name_from_number_cli_name() {
+  local cliDirectory=$1
+  local outputResultRefName=$2
+  globalCliDirInfoListRef=()
+  split_str_with_point  "${cliDirectory}" '_' globalCliDirInfoListRef
+  # remove the first element of the globalCliDirInfoListRef
+  globalCliDirInfoListRef=("${globalCliDirInfoListRef[@]:1}")
+
+  globalCliNameTmp=''
+  join '_' globalCliDirInfoListRef globalCliNameTmp
+
+  local cliName=${globalCliNameTmp}
+  assign_str_to_ref "${cliName}" "${outputResultRefName}"
+
+  return "${TRUE}"
+}
