@@ -18,7 +18,7 @@ function generateCLICommonHelperFile() {
   cat > "${cliHelperLibraryFile}" << EOF
 #!/usr/bin/env zsh
 
-import src/utils/string_cache.zsh #{setStringValue, setStringValueWithPointer, getStringValue}
+import @/src/utils/string_cache.zsh #{setStringValue, setStringValueWithPointer, getStringValue}
 
 ##
 # get the cli runtime space.
