@@ -5,7 +5,6 @@ on: [push, pull_request]
 jobs:
   centos8:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -14,6 +13,7 @@ jobs:
         run: |
           docker pull centos:8
           docker run --rm -v $PWD:/workdir -w /workdir centos:8 bash -c "
+          sudo yum -y install make
           make show_os_type
           "
 
@@ -39,7 +39,7 @@ jobs:
         run: |
           make show_os_type
   macos-arm:
-    runs-on: macos-11.0
+    runs-on: macos-13-xlarge
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
