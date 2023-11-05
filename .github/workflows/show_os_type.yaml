@@ -1,9 +1,9 @@
 name: OS-specific Jobs
 
 on:
-  branches:
-    show_os_type
-
+  push:
+    branches:
+      - show_os_type
 
 jobs:
   centos8:
