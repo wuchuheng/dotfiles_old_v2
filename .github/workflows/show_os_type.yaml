@@ -16,7 +16,7 @@ jobs:
           rm -rf /etc/yum.repos.d/*
           cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
           cat /etc/yum.repos.d/CentOS-Base.repo 
-          yun clean all
+          yum clean all
           yum update -y
           yum install -y make
           make show_os_type
