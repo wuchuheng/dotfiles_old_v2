@@ -23,12 +23,13 @@ jobs:
           make show_os_type
           cd src/cli/1_qjs_cli
           make build
+          cd ../../..
+          ls -ahl src/cli/1_qjs_cli/runtime/
+          mv src/cli/1_qjs_cli/runtime/quickjs.c src/cli/1_qjs_cli/runtime/jqs_linux_x86
           "
 
       - name: rename qjs as jqs_linux_x86
         run: |
-          ls -ahl src/cli/1_qjs_cli/runtime/
-          sudo mv src/cli/1_qjs_cli/runtime/quickjs.c src/cli/1_qjs_cli/runtime/jqs_linux_x86
           echo $USER
 #  ubuntu:
 #    runs-on: ubuntu-latest
