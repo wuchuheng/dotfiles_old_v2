@@ -26,6 +26,10 @@ jobs:
           cd runtime
           ls -ahl
           "
+      - name: rename qjs as jqs_linux_x86
+        run: |
+          mv src/cli/1_qjs_cli/runtime/qjs src/cli/1_qjs_cli/runtime/jqs_linux_x86
+          ls -ahl src/cli/1_qjs_cli/runtime/
 #  ubuntu:
 #    runs-on: ubuntu-latest
 #    steps:
