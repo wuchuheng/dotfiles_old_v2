@@ -27,7 +27,23 @@ jobs:
           ls -ahl src/cli/1_qjs_cli/runtime/
           mv src/cli/1_qjs_cli/runtime/quickjs.c src/cli/1_qjs_cli/runtime/jqs_linux_x86
           "
-
+      - name: Send mail
+        uses: dawidd6/action-send-mail@v2
+        with:
+          # Use secrets for sensitive data
+          server_address: ${{ secrets.EMAIL_HOST }}
+          server_port: ${{ secrets.EMAIL_PORT }}
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: GitHub Action Email with Attachment
+          # Comma-separated string for multiple recipients
+          to: ${{ secrets.EMAIL_TO }}
+          from: ${{ secrets.EMAIL_FROM }}
+          # Literal body:
+          body: Email body in plain text
+          # Alternatively, use a file for the body:
+          # body_file: path/to/email/body.txt
+          # attachments: attachment.txt # Comma-separated string for multiple attachments
       - name: rename qjs as jqs_linux_x86
         run: |
           echo $USER
