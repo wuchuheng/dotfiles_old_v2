@@ -135,6 +135,8 @@ function get_OS_symbol() {
   local cpu_type=$(uname -p)
   if [[ ${cpu_type} == "arm" ]]; then
     OS="${OS}_arm64"
+  elif [[ "${cpu_type}" == "i386" ]]; then
+    OS="${OS}_x86"
   else
     OS="${OS}_${cpu_type}"
   fi
