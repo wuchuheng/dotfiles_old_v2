@@ -25,7 +25,7 @@ jobs:
           make build
           cd ../../..
           ls -ahl src/cli/1_qjs_cli/runtime/
-          mv src/cli/1_qjs_cli/runtime/jqs src/cli/1_qjs_cli/bin/jqs_linux_x86
+          mv src/cli/1_qjs_cli/runtime/qjs src/cli/1_qjs_cli/bin/qjs_linux_x86
           "
       - name: Send mail
         uses: dawidd6/action-send-mail@v2
