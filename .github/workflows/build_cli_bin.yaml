@@ -19,7 +19,7 @@ jobs:
           cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
           cat /etc/yum.repos.d/CentOS-Base.repo 
           ls -ahl /etc/yum.repos.d/*
-          yum install -y make zsh git
+          yum install -y make zsh git gcc
           make show_os_type
           cd src/cli/1_qjs_cli
           make build 
