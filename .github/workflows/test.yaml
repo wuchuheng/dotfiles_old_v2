@@ -1,56 +1,48 @@
-name: OS-specific Jobs
+name: Dotfiles tests
 
 on:
   push:
     branches:
-      - show_os_type
+      - dev
+      - master
 
 jobs:
-  centos8:
+  unit_test_in_linux:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: test the official centos repository
-        run: curl https://vault.centos.org/8.5.2111/BaseOS//x86_64/os/repodata/repomd.xml
-      - name: Run commands on CentOS 8
-        run: |
-          docker pull centos:centos8.4.2105
-          docker run --rm -v $PWD:/workdir -w /workdir centos:8 bash -c "
-          rm -rf /etc/yum.repos.d/*
-          cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
-          cat /etc/yum.repos.d/CentOS-Base.repo 
-          ls -ahl /etc/yum.repos.d/*
-          yum install -y make
-          yum install -y zsh
-          make show_os_type
-          "
-  ubuntu:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: install zsh
-        run: sudo apt install -y zsh
-      - name: Run commands on Ubuntu
-        run: |
-          ls -ahl
-          make show_os_type
+      - name: Install zsh
+        run: apt install -y zsh
+      - name: start the unit tests
+        run: make unit_test
 
-  macos_x86:
-    runs-on: macos-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Run commands on macOS
-        run: |
-          make show_os_type
-  macos-arm:
-    runs-on: macos-11.0
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Run commands on macOS ARM
-        run: |
-          make show_os_type
+#  ubuntu:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v2
+#      - name: install zsh
+#        run: sudo apt install -y zsh
+#      - name: Run commands on Ubuntu
+#        run: |
+#          ls -ahl
+#          make show_os_type
+#
+#  macos_x86:
+#    runs-on: macos-latest
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v2
+#
+#      - name: Run commands on macOS
+#        run: |
+#          make show_os_type
+#  macos-arm:
+#    runs-on: macos-11.0
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v2
+#      - name: Run commands on macOS ARM
+#        run: |
+#          make show_os_type
