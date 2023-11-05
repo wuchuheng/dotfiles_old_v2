@@ -22,15 +22,14 @@ jobs:
           yum install -y make zsh git gcc
           make show_os_type
           cd src/cli/1_qjs_cli
-          make build 
-          cd runtime
-          ls -ahl
+#          make build
           "
+
       - name: rename qjs as jqs_linux_x86
         run: |
           ls -ahl src/cli/1_qjs_cli/runtime/
-          mv src/cli/1_qjs_cli/runtime/qjs src/cli/1_qjs_cli/runtime/jqs_linux_x86
-          ls -ahl src/cli/1_qjs_cli/runtime/
+          echo $USER
+          sudo mv src/cli/1_qjs_cli/runtime/quickjs.c src/cli/1_qjs_cli/runtime/jqs_linux_x86
 #  ubuntu:
 #    runs-on: ubuntu-latest
 #    steps:
