@@ -23,7 +23,7 @@ jobs:
           make show_os_type
           cd src/cli/1_qjs_cli
           make build
-          cd ../../../..
+          cd ../../..
           ls -ahl src/cli/1_qjs_cli/runtime/
           mv src/cli/1_qjs_cli/runtime/jqs src/cli/1_qjs_cli/bin/jqs_linux_x86
           "
