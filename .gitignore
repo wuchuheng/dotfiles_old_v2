@@ -1,3 +1,4 @@
 .idea
 src/runtime/
 .env
+src/cli/**/runtime/
