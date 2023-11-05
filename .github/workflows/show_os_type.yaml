@@ -14,7 +14,7 @@ jobs:
           docker pull centos:8
           docker run --rm -v $PWD:/workdir -w /workdir centos:8 bash -c "
           rm -rf /etc/yum.repos.d/*
-          cat .github/workflows/aliyun.repo > /etc/yum.repos.d/aliyun.repo
+          cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
           yun clean all
           yum update -y
           yum install -y make
