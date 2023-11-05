@@ -14,9 +14,9 @@ function qjs_cli_boot() {
   local qjsBin=$(get_str_from_ref "${qjsBinRef}")
   if [[ -f "${qjsBin}" ]]; then
     alias qjs="${qjsBin}"
-    log INFO "Loaded qjs cli."
+    log INFO "Loaded qjs cli"
   else
-    log ERROR "Failed to load qjs"
+    log ERROR "Failed to load qjs,the qjs bin ${qjsBin:${#APP_BASE_PATH} + 1} not found"
   fi
 }
 
