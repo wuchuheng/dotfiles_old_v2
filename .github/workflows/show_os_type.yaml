@@ -1,6 +1,8 @@
 name: OS-specific Jobs
 
-on: [push, pull_request]
+on:
+  branches:
+    chore:show_os_type
 
 jobs:
   centos8:
