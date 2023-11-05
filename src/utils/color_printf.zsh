@@ -15,6 +15,10 @@ function bg_green_print() {
   printf "${BOLD}${BLACK}${BG_GREEN}%s\e[0m" "$1"
 }
 
+function blob_bg_green_gray_print() {
+  printf "\e[1;90;102m%s\e[0m" "$1"
+}
+
 function blob_bg_green_white_print() {
   printf "\e[1;97;102m%s\e[0m" "$1"
 }

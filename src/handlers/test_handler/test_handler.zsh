@@ -18,7 +18,7 @@ function test_handle() {
   for test_file in "${ALL_UNIT_TEST_FILES[@]}"; do
     local currentTestFile=${APP_BASE_PATH}/${test_file}
     # to set the flush output for current test file.
-    local testFileLog=$(printf "$(blob_bg_green_white_print ' TESTING... ') ${test_file}")
+    local testFileLog=$(printf "$(blob_bg_green_gray_print ' TESTING... ') ${test_file}")
     pushToFlushOutput "${testFileLog}"
     local flushOutputItemIndex=$(getFlushOutputLength)
     # to test current test file.
@@ -26,9 +26,9 @@ function test_handle() {
     # to changed output status for current test file.
     local currentTestStatus=$(${globalCurrentTest[getPassedStatus]})
     if [[ ${currentTestStatus} == ${TRUE} ]]; then
-      testFileLog=$(printf "$(blob_bg_green_white_print ' PASSED ') ${test_file}")
+      testFileLog=$(printf "$(blob_bg_green_gray_print ' PASSED ') ${test_file}")
     else
-      testFileLog=$(printf "$(blob_bg_red_white_print ' FAILED ') ${test_file}")
+      testFileLog=$(printf "$(blob_bg_red_gray_print ' FAILED ') ${test_file}")
     fi
     _globalOutputPointer="${testFileLog}"
     updateOutput "${flushOutputItemIndex}" "_globalOutputPointer"
