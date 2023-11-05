@@ -2,7 +2,7 @@ name: OS-specific Jobs
 
 on:
   branches:
-    chore:show_os_type
+    show_os_type
 
 
 jobs:
