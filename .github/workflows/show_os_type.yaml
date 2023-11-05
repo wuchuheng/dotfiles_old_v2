@@ -4,6 +4,7 @@ on:
   branches:
     chore:show_os_type
 
+
 jobs:
   centos8:
     runs-on: ubuntu-latest

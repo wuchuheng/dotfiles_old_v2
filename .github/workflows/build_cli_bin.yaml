@@ -3,7 +3,7 @@ name: Build qjs binary
 on:
   push:
     branches:
-      - build:cli_bin
+      - build_cli_bin
 
 jobs:
   build_linux_x86:
