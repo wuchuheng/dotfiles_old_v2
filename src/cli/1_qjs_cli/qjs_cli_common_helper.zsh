@@ -93,3 +93,13 @@ function get_qjs_bin() {
   fi
 }
 
+##
+# save the installed state
+# @param $1 <boolean>
+# @use set_installed_state <boolean>
+# @return <boolean>
+##
+function set_installed_state() {
+  local state=$1
+}
+
