@@ -8,7 +8,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
+      - name: test the official centos repository
+        run: curl https://vault.centos.org/8.5.2111/BaseOS//x86_64/os/repodata/repomd.xml
       - name: Run commands on CentOS 8
         run: |
           docker pull centos:centos8.4.2105
