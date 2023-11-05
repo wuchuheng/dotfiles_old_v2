@@ -3,6 +3,8 @@ create_cli:
 
 tmp:
 	zsh src/tmp.zsh
+show_os_type:
+	zsh src/bootstrap/show_os_boot.zsh
 
 # Create a unit testing file.
 create_unit_test:

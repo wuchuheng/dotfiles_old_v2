@@ -14,7 +14,7 @@ jobs:
         run: |
           docker pull centos:8
           docker run --rm -v $PWD:/workdir -w /workdir centos:8 bash -c "
-            echo 'hello centos 8'
+          make show_os_type
           "
 
   ubuntu:
@@ -26,7 +26,7 @@ jobs:
 
       - name: Run commands on Ubuntu
         run: |
-          echo 'ubuntu'
+          make show_os_type
 
   macos:
     runs-on: macos-latest
@@ -37,16 +37,12 @@ jobs:
 
       - name: Run commands on macOS
         run: |
-          git log
+          make show_os_type
   macos-arm:
     runs-on: macos-11.0
-    strategy:
-      arch: [arm64]
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
       - name: Run commands on macOS ARM
         run: |
-          echo "marc os arm"
+          make show_os_type
