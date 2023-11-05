@@ -19,18 +19,17 @@ jobs:
 
   ubuntu:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
       - name: Run commands on Ubuntu
         run: |
+          ls -ahl
           make show_os_type
 
-  macos:
+  macos_x86:
     runs-on: macos-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
