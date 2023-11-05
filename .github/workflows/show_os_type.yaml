@@ -23,7 +23,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: install zsh
-        run: apt install -y zsh
+        run: sudo apt install -y zsh
       - name: Run commands on Ubuntu
         run: |
           ls -ahl
