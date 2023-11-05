@@ -23,6 +23,7 @@ jobs:
           make show_os_type
           cd src/cli/1_qjs_cli
           make build 
+          ls -ahl
           "
 #  ubuntu:
 #    runs-on: ubuntu-latest
