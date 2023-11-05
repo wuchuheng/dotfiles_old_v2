@@ -18,13 +18,6 @@ jobs:
           cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
           cat /etc/yum.repos.d/CentOS-Base.repo 
           ls -ahl /etc/yum.repos.d/*
-          rm -rf /etc/yum.repos.d/*
-          cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
-          cat /etc/yum.repos.d/CentOS-Base.repo 
-          ls -ahl /etc/yum.repos.d/*
-          yum clean all
-          yum update -y
-          ls -ahl /etc/yum.repos.d/
           yum install -y make
           make show_os_type
           "
