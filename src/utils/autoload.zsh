@@ -136,7 +136,7 @@ function get_OS_symbol() {
   if [[ ${cpu_type} == "arm" ]]; then
     OS="${OS}_arm64"
   elif [[ "${cpu_type}" == "i386" ]]; then
-    OS="${OS}_x86"
+    OS="${OS}_x86_64"
   else
     OS="${OS}_${cpu_type}"
   fi
