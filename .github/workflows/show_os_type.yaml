@@ -13,7 +13,7 @@ jobs:
         run: |
           docker pull centos:8
           docker run --rm -v $PWD:/workdir -w /workdir centos:8 bash -c "
-          yum -y install make
+          yum install -y make
           make show_os_type
           "
 
