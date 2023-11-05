@@ -13,11 +13,13 @@ jobs:
         run: |
           docker pull centos:8
           docker run --rm -v $PWD:/workdir -w /workdir centos:8 bash -c "
-          yum update
-          yum install -y make;
+          rm -rf /etc/yum.repos.d/*
+          cat .github/workflows/aliyun.repo > /etc/yum.repos.d/aliyun.repo
+          yun clean all
+          yum update -y
+          yum install -y make
           make show_os_type
           "
-
   ubuntu:
     runs-on: ubuntu-latest
     steps:
