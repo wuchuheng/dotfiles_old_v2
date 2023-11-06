@@ -26,7 +26,7 @@ jobs:
       - name: Install zsh
         run: sudo apt install -y zsh
       - mame: update subodules
-        rund: git submodule update
+        run: git submodule update
       - name: start the unit tests
         run: make install
 
@@ -49,7 +49,7 @@ jobs:
       - name: Install zsh
         run: brew install zsh
       - mame: update subodules
-        rund: git submodule update
+        run: git submodule update
       - name: start the unit tests
         run: make install
 
