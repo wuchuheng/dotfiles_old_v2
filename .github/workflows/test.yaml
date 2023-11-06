@@ -17,6 +17,17 @@ jobs:
       - name: start the unit tests
         run: make unit_test
 
+  installation_in_linux:
+    needs: unit_test_in_linux
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Install zsh
+        run: sudo apt install -y zsh
+      - name: start the unit tests
+        run: make install
+
   unit_test_in_macos_x86:
     runs-on: macos-latest
     steps:
@@ -26,6 +37,17 @@ jobs:
         run: brew install zsh
       - name: start the unit tests
         run: make unit_test
+
+  installation_in_macos_x86:
+    needs: unit_test_in_macos_x86
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Install zsh
+        run: brew install zsh
+      - name: start the unit tests
+        run: make install
 
 #  macos-arm:
 #    runs-on: macos-11.0
