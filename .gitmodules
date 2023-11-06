@@ -1,0 +1,3 @@
+[submodule "src/vendor/dotfile_bash_module"]
+	path = src/vendor/dotfile_bash_module
+	url = git@github.com:wuchuheng/dotfile_bash_module.git
