@@ -1,3 +1,0 @@
-[submodule "src/vendor/tmp"]
-	path = src/vendor/tmp
-	url = git@github.com:wuchuheng/dotfile_bash_module.git
