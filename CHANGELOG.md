@@ -32,4 +32,8 @@
 ## 0.0.38
 - fix: issue for v0.0.38
 - fix: fix dome issues v0.0.38
+- 
+## 0.0.39
+- fix: issue for v0.0.39
+- fix: fix dome issues v0.0.39
 
