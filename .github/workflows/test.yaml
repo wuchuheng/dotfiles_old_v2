@@ -38,7 +38,8 @@ jobs:
           cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
           cat /etc/yum.repos.d/CentOS-Base.repo 
           ls -ahl /etc/yum.repos.d/*
-          yum install -y make zsh
+          yum install -y make zsh git
+          git submodule update --init
           make install
           "
   unit_test_on_ubuntu:
