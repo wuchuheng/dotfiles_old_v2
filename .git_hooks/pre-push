@@ -1,0 +1,55 @@
+#!/bin/bash
+
+while read local_ref local_sha remote_ref remote_sha
+do
+    # Check if we are pushing tags
+    if [[ $local_ref == refs/tags/* ]]
+    then
+        # Extract the tag name
+        tag_name=${local_ref#refs/tags/}
+
+        # Check if tag name fits the pattern
+        if ! [[ $tag_name =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]
+        then
+            echo "Tag name $tag_name does not match the pattern 'vX.Y.Z'"
+            exit 1
+        fi
+
+        # get the CHANGELOG.md from curreng tag name.
+        # Navigate to the root of the repository
+        REPO_ROOT=$(git rev-parse --show-toplevel)
+        cd "$REPO_ROOT"
+
+        # Get the contents of the CHANGELOG.md at the given tag
+        CHANGELOG_CONTENT=$(git show "$tag_name:CHANGELOG.md")
+        lastTagNameInChangeLog=$( echo "${CHANGELOG_CONTENT}" | grep '## ' | tail -n 1 | cut -d ' ' -f 2 )
+        echo "Check the tag name: ${tag_name}."
+
+        # Check if the CHANGELOG.md has the change log for tag name
+        if ! [[ "${tag_name}" == "v${lastTagNameInChangeLog}" ]]; then
+            echo "Tag name $tag_name was not existed in CHANGELOG.md', please to add the change log for the tag name ${tag_name}. look like the belowing code:"
+            cat <<EOF
+## ${tag_name:1}
+- feat: add some features for ${tag_name}
+- fix: fix some issue for ${tag_name}
+- chore: something unimportan.
+
+EOF
+            exit 1
+        fi
+    fi
+done
+
+exit 0
+#!/bin/bash
+
+# Pre-push hook to check the tag format and if it exists in the CHANGELOG.md
+
+# Get the name of the tag being pushed, if any
+TAG_NAME=$(git tag --contains HEAD)
+
+# echo "${TAG_NAME}"
+# No tag is being pushed, exit
+# [ -z "$TAG_NAME" ] && exit 0
+
+# Place the tag checking code here (same as in the previous script)
