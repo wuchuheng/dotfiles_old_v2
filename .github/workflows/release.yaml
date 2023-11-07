@@ -105,7 +105,7 @@ jobs:
         run: | 
           projectName=$(basename $PWD)
           echo "TAR_FILE=${projectName}-${GITHUB_REF#refs/tags/}.tar.gz" >> $GITHUB_ENV
-          echo "ZIP_FILE=${projectName}-${GITHUB_REF#refs/tags/}.tar.gz" >> $GITHUB_ENV
+          echo "ZIP_FILE=${projectName}-${GITHUB_REF#refs/tags/}.zip" >> $GITHUB_ENV
 
       - name: Create Release Archive
         run: |
