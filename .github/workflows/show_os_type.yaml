@@ -19,8 +19,7 @@ jobs:
           cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
           cat /etc/yum.repos.d/CentOS-Base.repo 
           ls -ahl /etc/yum.repos.d/*
-          yum install -y make
-          yum install -y zsh
+          yum install -y make zsh
           make show_os_type
           "
   ubuntu:
