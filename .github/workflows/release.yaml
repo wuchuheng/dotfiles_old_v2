@@ -1,11 +1,11 @@
-#name: Release the project.
-#
-#on:
-#  push:
-#    tags:
-#      - v*
-#
-#jobs:
+name: Release the project.
+
+on:
+  push:
+    tags:
+      - v*
+
+jobs:
 #  unit_test_on_centos:
 #    runs-on: ubuntu-latest
 #    steps:
@@ -87,18 +87,17 @@
 #      - name: start the unit tests
 #        run: make install
 
-#  release:
-##    needs:
-##      - installation_on_ubuntu
-##      - installation_on_macos_x86
-##      - installation_on_centos
-#    runs-on: ubuntu-latest
-#    permissions:
-#      contents: write
-#      issues: write
-#    steps:
-#      - name: Checkout code
-#        uses: actions/checkout@v2
+  release:
+#    needs:
+#      - installation_on_ubuntu
+#      - installation_on_macos_x86
+#      - installation_on_centos
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 #      - name: fetch all submodule
 #        run: git submodule update --init
 #      - name: Create Release Archive
@@ -106,21 +105,12 @@
 #          tarFile=../project-name-${GITHUB_REF#refs/tags/}.tar.gz
 #          tar -zcvf ${tarFile} .
 #          mv ${tarFile} .
-##          zip -r project-name-${GITHUB_REF#refs/tags/}.zip ./
-#      - name: Create Release
-#        id: create_release
-#        uses: actions/create-release@v1
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
-#        with:
-#          tag_name: ${{ github.ref }}
-#          release_name: Release ${{ github.ref }}
-#          body: |
-#            Changes in this Release
-#            - First Change
-#            - Second Change
-#          draft: false
-#          prerelease: false
+#          zip -r project-name-${GITHUB_REF#refs/tags/}.zip ./
+      - name: Create Release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "project-name-${GITHUB_REF#refs/tags/}.tar.gz"
+          bodyFile: "CHANGELOG.md"
 
 #      - name: Upload Release Asset Tarball
 #        uses: actions/upload-release-asset@v1
@@ -150,36 +140,3 @@
 #      - name: Run commands on macOS ARM
 #        run: |
 #          make show_os_type
-
-on:
-  push:
-    # Sequence of patterns matched against refs/tags
-    tags:
-      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
-
-name: Create Release
-
-jobs:
-  build:
-    name: Create Release
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      issues: write
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          body: |
-            Changes in this Release
-            - First Change
-            - Second Change
-          draft: false
-          prerelease: false
