@@ -98,13 +98,13 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-#      - name: fetch all submodule
-#        run: git submodule update --init
-#      - name: Create Release Archive
-#        run: |
-#          tarFile=../project-name-${GITHUB_REF#refs/tags/}.tar.gz
-#          tar -zcvf ${tarFile} .
-#          mv ${tarFile} .
+      - name: fetch all submodule
+        run: git submodule update --init
+      - name: Create Release Archive
+        run: |
+          tarFile=../project-name-${GITHUB_REF#refs/tags/}.tar.gz
+          tar -zcvf ${tarFile} .
+          mv ${tarFile} .
 #          zip -r project-name-${GITHUB_REF#refs/tags/}.zip ./
       - name: Create Release
         uses: ncipollo/release-action@v1
