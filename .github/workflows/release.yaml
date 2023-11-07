@@ -114,10 +114,11 @@ jobs:
           zipFile=../${ZIP_FILE}
           zip -r ${zipFile} ./
           mv ${zipFile} .
+          mv ${tarFile} .
       - name: Create Release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "${{ env.TAR_FILE }},${{env.ZIP_FILE}}"
+          artifacts: "${{ env.TAR_FILE }},${{ env.ZIP_FILE }}"
           bodyFile: "CHANGELOG.md"
 
 #      - name: Upload Release Asset Tarball
