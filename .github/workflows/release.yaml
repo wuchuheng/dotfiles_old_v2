@@ -121,26 +121,6 @@ jobs:
           artifacts: "${{ env.TAR_FILE }},${{ env.ZIP_FILE }}"
           bodyFile: "CHANGELOG.md"
 
-#      - name: Upload Release Asset Tarball
-#        uses: actions/upload-release-asset@v1
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        with:
-#          upload_url: ${{ steps.create_release.outputs.upload_url }}
-#          asset_path: ./project-name-${GITHUB_REF#refs/tags/}.tar.gz
-#          asset_name: project-name-${GITHUB_REF#refs/tags/}.tar.gz
-#          asset_content_type: application/gzip
-#
-#      - name: Upload Release Asset Zip
-#        uses: actions/upload-release-asset@v1
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        with:
-#          upload_url: ${{ steps.create_release.outputs.upload_url }}
-#          asset_path: ./project-name-${GITHUB_REF#refs/tags/}.zip
-#          asset_name: project-name-${GITHUB_REF#refs/tags/}.zip
-#          asset_content_type: application/zip
-
 #  macos-arm:
 #    runs-on: macos-11.0
 #    steps:
