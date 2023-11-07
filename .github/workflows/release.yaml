@@ -100,16 +100,20 @@ jobs:
         uses: actions/checkout@v3
       - name: fetch all submodule
         run: git submodule update --init
+      - name: Set tar file name
+        id: vars
+        run: echo "TAR_FILE=project-name-${GITHUB_REF#refs/tags/}.tar.gz" >> $GITHUB_ENV
+
       - name: Create Release Archive
         run: |
-          tarFile=../project-name-${GITHUB_REF#refs/tags/}.tar.gz
+          tarFile=../${TAR_FILE}
           tar -zcvf ${tarFile} .
           mv ${tarFile} .
 #          zip -r project-name-${GITHUB_REF#refs/tags/}.zip ./
       - name: Create Release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "project-name-${GITHUB_REF#refs/tags/}.tar.gz"
+          artifacts: "${{ env.TAR_FILE }}"
           bodyFile: "CHANGELOG.md"
 
 #      - name: Upload Release Asset Tarball
