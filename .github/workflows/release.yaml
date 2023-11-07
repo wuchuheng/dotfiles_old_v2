@@ -100,10 +100,9 @@ jobs:
         run: git submodule update --init
       - name: Create Release Archive
         run: |
-          pwd
-          ls -ahl
+          cd .. 
           echo "${GITHUB_REF#refs/tags/}"
-          tar -zcvf project-name-${GITHUB_REF#refs/tags/}.tar.gz ./* ./.*
+          tar -zcvf project-name-${GITHUB_REF#refs/tags/}.tar.gz dotfiles
           ls -ahl
 #          zip -r project-name-${GITHUB_REF#refs/tags/}.zip ./
       - name: Create Release
