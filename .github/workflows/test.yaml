@@ -7,7 +7,7 @@ on:
       - master
 
 jobs:
-  unit_test_in_linux:
+  unit_test_on_ubuntu:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -17,7 +17,7 @@ jobs:
       - name: start the unit tests
         run: make unit_test
 
-  installation_in_linux:
+  installation_on_ubuntu:
     needs: unit_test_in_linux
     runs-on: ubuntu-latest
     steps:
@@ -30,7 +30,7 @@ jobs:
       - name: start the unit tests
         run: make install
 
-  unit_test_in_macos_x86:
+  unit_test_on_macos_x86:
     runs-on: macos-latest
     steps:
       - name: Checkout code
@@ -40,7 +40,7 @@ jobs:
       - name: start the unit tests
         run: make unit_test
 
-  installation_in_macos_x86:
+  installation_on_macos_x86:
     needs: unit_test_in_macos_x86
     runs-on: macos-latest
     steps:
