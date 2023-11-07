@@ -17,3 +17,7 @@
 ## 0.0.33
 - fix: fix dome issues.
 
+## 0.0.34
+- fix: fix dome issues.
+- fix: fix dome issues.
+
