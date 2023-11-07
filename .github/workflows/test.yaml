@@ -18,7 +18,7 @@ jobs:
         run: make unit_test
 
   installation_on_ubuntu:
-    needs: unit_test_on_linux
+    needs: unit_test_on_ubuntu
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
