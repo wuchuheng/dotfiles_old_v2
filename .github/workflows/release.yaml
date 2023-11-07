@@ -100,7 +100,12 @@ jobs:
         run: git submodule update --init
       - name: Create Release Archive
         run: |
-          tar -zcvf ../project-name-${GITHUB_REF#refs/tags/}.tar.gz --exclude='*.tar.gz'  .
+          docker pull centos:centos8.4.2105
+          docker run --rm -v $PWD:/workdir -w /workdir centos:8 bash -c "
+            tar -zcvf ../project-name-${GITHUB_REF#refs/tags/}.tar.gz .
+          "
+#          ls -ahl
+#          tar -zcvf ../project-name-${GITHUB_REF#refs/tags/}.tar.gz .
 #          zip -r project-name-${GITHUB_REF#refs/tags/}.zip ./
       - name: Create Release
         id: create_release
