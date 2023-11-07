@@ -101,6 +101,7 @@ jobs:
       - name: Create Release Archive
         run: |
           pwd
+          ls -ahl
           echo "${GITHUB_REF#refs/tags/}"
           tar -zcvf project-name-${GITHUB_REF#refs/tags/}.tar.gz ./
           ls -ahl
