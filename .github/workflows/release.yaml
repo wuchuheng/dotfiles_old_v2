@@ -102,7 +102,7 @@ jobs:
         run: |
           docker pull centos:centos8.4.2105
           docker run --rm -v $PWD:/workdir -w /workdir centos:8 bash -c "
-            tar -zcvf project-name-${GITHUB_REF#refs/tags/}.tar.gz ./* ./.*
+            tar -zcvf project-name-${GITHUB_REF#refs/tags/}.tar.gz .
           "
           ls -ahl
 #          tar -zcvf project-name-${GITHUB_REF#refs/tags/}.tar.gz ./* ./.*
