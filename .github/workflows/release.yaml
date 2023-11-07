@@ -102,7 +102,7 @@ jobs:
         run: |
           pwd
           echo "${GITHUB_REF#refs/tags/}"
-          tar -czvf project-name-${GITHUB_REF#refs/tags/}.tar.gz ./
+          tar -zcvf project-name-${GITHUB_REF#refs/tags/}.tar.gz ./
           ls -ahl
 #          zip -r project-name-${GITHUB_REF#refs/tags/}.zip ./
       - name: Create Release
