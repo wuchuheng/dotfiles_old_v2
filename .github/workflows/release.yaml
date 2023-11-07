@@ -1,0 +1,143 @@
+name: Dotfiles tests
+
+on:
+  push:
+    tags:
+      - v*
+
+jobs:
+#  unit_test_on_centos:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v2
+#      - name: Run commands on CentOS 8
+#        run: |
+#          docker pull centos:centos8.4.2105
+#          docker run --rm -v $PWD:/workdir -w /workdir centos:8 bash -c "
+#          rm -rf /etc/yum.repos.d/*
+#          cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
+#          cat /etc/yum.repos.d/CentOS-Base.repo
+#          ls -ahl /etc/yum.repos.d/*
+#          yum install -y make zsh
+#          make unit_test
+#          "
+#
+#  installation_on_centos:
+#    needs: unit_test_on_centos
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v2
+#      - name: Run commands on CentOS 8
+#        run: |
+#          docker pull centos:centos8.4.2105
+#          docker run --rm -v $PWD:/workdir -w /workdir centos:8 bash -c "
+#          rm -rf /etc/yum.repos.d/*
+#          cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
+#          cat /etc/yum.repos.d/CentOS-Base.repo
+#          ls -ahl /etc/yum.repos.d/*
+#          yum install -y make zsh git
+#          git submodule update --init
+#          make install
+#          "
+#  unit_test_on_ubuntu:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v2
+#      - name: Install zsh
+#        run: sudo apt install -y zsh
+#      - name: start the unit tests
+#        run: make unit_test
+#
+#  installation_on_ubuntu:
+#    needs: unit_test_on_ubuntu
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v2
+#      - name: Install zsh
+#        run: sudo apt install -y zsh
+#      - name: update submodules
+#        run: git submodule update --init
+#      - name: start the unit tests
+#        run: make install
+#
+#  unit_test_on_macos_x86:
+#    runs-on: macos-latest
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v2
+#      - name: Install zsh
+#        run: brew install zsh
+#      - name: start the unit tests
+#        run: make unit_test
+#
+#  installation_on_macos_x86:
+#    needs: unit_test_on_macos_x86
+#    runs-on: macos-latest
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v2
+#      - name: Install zsh
+#        run: brew install zsh
+#      - name: update submodules
+#        run: git submodule update --init
+#      - name: start the unit tests
+#        run: make install
+
+  release:
+#    needs:
+#      - installation_on_ubuntu
+#      - installation_on_macos_x86
+#      - installation_on_centos
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: fetch all submodule
+        run: git submodule update --init
+      - name: Create Release Archive
+        run: |
+          tar -czvf project-name-${GITHUB_REF#refs/tags/}.tar.gz ./
+          zip -r project-name-${GITHUB_REF#refs/tags/}.zip ./
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset Tarball
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./project-name-${GITHUB_REF#refs/tags/}.tar.gz
+          asset_name: project-name-${GITHUB_REF#refs/tags/}.tar.gz
+          asset_content_type: application/gzip
+
+      - name: Upload Release Asset Zip
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./project-name-${GITHUB_REF#refs/tags/}.zip
+          asset_name: project-name-${GITHUB_REF#refs/tags/}.zip
+          asset_content_type: application/zip
+
+#  macos-arm:
+#    runs-on: macos-11.0
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v2
+#      - name: Run commands on macOS ARM
+#        run: |
+#          make show_os_type
