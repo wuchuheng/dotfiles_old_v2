@@ -1,4 +1,4 @@
-name: Dotfiles tests
+name: Release the project.
 
 on:
   push:
@@ -100,7 +100,9 @@ jobs:
         run: git submodule update --init
       - name: Create Release Archive
         run: |
+          pwd
           tar -czvf project-name-${GITHUB_REF#refs/tags/}.tar.gz ./
+          ls -ahl
 #          zip -r project-name-${GITHUB_REF#refs/tags/}.zip ./
       - name: Create Release
         id: create_release
