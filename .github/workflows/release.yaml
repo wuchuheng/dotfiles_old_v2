@@ -87,11 +87,8 @@ jobs:
 #      - name: start the unit tests
 #        run: make install
 
-  release:
-#    needs:
-#      - installation_on_ubuntu
-#      - installation_on_macos_x86
-#      - installation_on_centos
+  build:
+    name: Create Release
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -99,14 +96,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: fetch all submodule
-        run: git submodule update --init
-      - name: Create Release Archive
-        run: |
-          tarFile=../project-name-${GITHUB_REF#refs/tags/}.tar.gz
-          tar -zcvf ${tarFile} .
-          mv ${tarFile} .
-#          zip -r project-name-${GITHUB_REF#refs/tags/}.zip ./
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -121,6 +110,41 @@ jobs:
             - Second Change
           draft: false
           prerelease: false
+
+#  release:
+##    needs:
+##      - installation_on_ubuntu
+##      - installation_on_macos_x86
+##      - installation_on_centos
+#    runs-on: ubuntu-latest
+#    permissions:
+#      contents: write
+#      issues: write
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v2
+#      - name: fetch all submodule
+#        run: git submodule update --init
+#      - name: Create Release Archive
+#        run: |
+#          tarFile=../project-name-${GITHUB_REF#refs/tags/}.tar.gz
+#          tar -zcvf ${tarFile} .
+#          mv ${tarFile} .
+##          zip -r project-name-${GITHUB_REF#refs/tags/}.zip ./
+#      - name: Create Release
+#        id: create_release
+#        uses: actions/create-release@v1
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+#        with:
+#          tag_name: ${{ github.ref }}
+#          release_name: Release ${{ github.ref }}
+#          body: |
+#            Changes in this Release
+#            - First Change
+#            - Second Change
+#          draft: false
+#          prerelease: false
 
 #      - name: Upload Release Asset Tarball
 #        uses: actions/upload-release-asset@v1
