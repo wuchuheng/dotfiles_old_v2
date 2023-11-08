@@ -13,7 +13,7 @@ FALSE=1
 # @return TRUE|FALSE
 ##
 function log() {
-  printf  "\033[0;32mINFO\033[1mINFO %s\n" "${@}"
+  printf  "\033[0;32mINFO\033[0m %s\n" "${@}"
 }
 ##
 # check the cli existed or not
