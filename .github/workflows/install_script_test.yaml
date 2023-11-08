@@ -5,10 +5,21 @@ on:
     branches:
       - tmp
 jobs:
-  curl_download_on_ubuntu:
+  curl_download_on_centOS:
     runs-on: ubuntu-latest
-    name: "Download: download dotfiles by curl on Ubuntu"
+    name: curl download on CentOS
     steps:
-      - name: Run commands on Ubuntu
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Run commands on CentOS 8
         run: |
-          sh -c "$(curl -fsSL https://raw.githubusercontent.com/wuchuheng/dotfiles/tmp/src/tools/install.sh)"
+          docker pull centos:centos8.4.2105
+          docker run --rm -v $PWD:/workdir -w /workdir centos:8 bash -c "
+            rm -rf /etc/yum.repos.d/*
+            cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
+            cat /etc/yum.repos.d/CentOS-Base.repo 
+            ls -ahl /etc/yum.repos.d/*
+            cd; make tmp; cd tmp
+            sh -c "$(curl -fsSL https://raw.githubusercontent.com/wuchuheng/dotfiles/tmp/src/tools/install.sh)"
+            ls -ahl
+          "
