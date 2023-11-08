@@ -48,3 +48,7 @@
 ## 0.0.44
 - fix: issue for v0.0.44
 - fix: fix dome issues v0.0.44
+
+## 0.0.45
+- feat:  🎉add the pip line to release on github
+- fix: :bug: fix some issues v0.0.45 
