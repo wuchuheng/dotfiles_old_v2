@@ -18,7 +18,7 @@ jobs:
             rm -rf /etc/yum.repos.d/*
             cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
             cat /etc/yum.repos.d/CentOS-Base.repo 
-            ls -ahl /etc/yum.repos.d/*
+            yum install -y git
             cd; mkdir tmp; cd tmp
             sh -c \"$(curl -fsSL https://raw.githubusercontent.com/wuchuheng/dotfiles/tmp/src/tools/install.sh)\"
             ls -ahl
