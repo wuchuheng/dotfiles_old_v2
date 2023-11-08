@@ -58,7 +58,7 @@ function download_by_curl() {
     curl -L -o "${compressedFile}" "$url"
 
     log "decompress ${compressedFile} with tar"
-    tar -zxvf "${compressedFile}" "${SAVED_DIRECTORY}"
+    tar -zxvf "${compressedFile}" -C "${SAVED_DIRECTORY}"
 
     log "Remove ${compressedFile}"
     rm -rf "${compressedFile}"
