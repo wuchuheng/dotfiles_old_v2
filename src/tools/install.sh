@@ -34,7 +34,7 @@ function cli_exits() {
 # @return TRUE|FALSE
 ##
 function download_by_git() {
-  git clone https://${DOTFILES_REP} ${SAVED_DIRECTORY} "${SAVED_DIRECTORY}"
+  git clone https://${DOTFILES_REP} "${SAVED_DIRECTORY}"
   git checkout "${VERSION}"
 }
 
