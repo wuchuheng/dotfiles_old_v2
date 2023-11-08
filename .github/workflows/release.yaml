@@ -115,6 +115,10 @@ jobs:
           zip -r ${zipFile} ./
           mv ${zipFile} .
           mv ${tarFile} .
+      - name: Set change log
+        run: |
+          echo "version: ${GITHUB_REF#refs/tags/}"
+          .github/workflows/get_change_log.sh "${GITHUB_REF#refs/tags/}"
       - name: Create Release
         uses: ncipollo/release-action@v1
         with:
