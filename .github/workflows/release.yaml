@@ -118,12 +118,13 @@ jobs:
       - name: Set change log
         run: |
           echo "version: ${GITHUB_REF#refs/tags/}"
-          .github/workflows/get_change_log.sh "${GITHUB_REF#refs/tags/}" > CHANGELOG.md
+          .github/workflows/get_change_log.sh "${GITHUB_REF#refs/tags/}" > tmp.log
+          cat tmp.log
       - name: Create Release
         uses: ncipollo/release-action@v1
         with:
           artifacts: "${{ env.TAR_FILE }},${{ env.ZIP_FILE }}"
-          bodyFile: "CHANGELOG.md"
+          bodyFile: "tmp.log"
 
 #  macos-arm:
 #    runs-on: macos-11.0

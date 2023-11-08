@@ -44,3 +44,7 @@
 ## 0.0.43
 - fix: issue for v0.0.43
 - fix: fix dome issues v0.0.43
+
+## 0.0.44
+- fix: issue for v0.0.44
+- fix: fix dome issues v0.0.44
