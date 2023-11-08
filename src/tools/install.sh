@@ -36,7 +36,6 @@ function cli_exits() {
 function download_by_git() {
   log "Fetch the repository from ${DOTFILES_REP} by git."
   git clone https://${DOTFILES_REP} "${SAVED_DIRECTORY}"
-  git checkout "${VERSION}"
 }
 
 ##
@@ -47,24 +46,33 @@ function download_by_git() {
 function download_by_curl() {
   # check unzip or tar exit.
   if ! cli_exits tar && ! cli_exits unzip; then
+    log "Please install tar or unzip"
     return "${FALSE}"
   fi
 
   if cli_exits tar; then
     local compressedFile="dotfiles-${VERSION}.tar.gz"
+
     local url="${DOTFILES_REP}/releases/download/v0.0.45/dotfiles-${VERSION}.tar.gz"
-    log "Fetch the dotfiles from ${url}"
-    curl -o "${compressedFile}" "$url"
-    log "Decompress ${compressedFile}"
+    log "Fetch the dotfiles from ${url} by curl"
+    curl -L -o "${compressedFile}" "$url"
+
+    log "decompress ${compressedFile} with tar"
     tar -zxvf "${compressedFile}"
+
+    log "Remove ${compressedFile}"
     rm -rf "${compressedFile}"
   elif cli_exits unzip; then
     local compressedFile="dotfiles-${VERSION}.zip"
+
     local url="${DOTFILES_REP}/releases/download/v0.0.45/dotfiles-${VERSION}.zip"
-    log "Fetch the dotfiles from ${url}"
-    curl -o "${compressedFile}" "$url"
-    local compressedFile="dotfiles-${VERSION}.zip"
+    log "Fetch the dotfiles from ${url} by curl"
+    curl -L -o "${compressedFile}" "$url"
+
+    log "decompress ${compressedFile} with unzip"
     unzip "${compressedFile}"
+
+    log "Remove ${compressedFile}"
     rm -rf "${compressedFile}"
   fi
 
