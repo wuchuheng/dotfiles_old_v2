@@ -4,8 +4,10 @@ result=''
 TRUE=0
 FALSE=1
 isTextLog="${FALSE}"
-while IFS= read -r line
-do
+while IFS= read -r line || [[ -n "$line" ]]; do
+  if [[ "${isTextLog}" -eq "${TRUE}" ]]; then
+    result="${result}${line}\n"
+  fi
   if [[ "${line}" == "## ${tagName}" ]]; then
     isTextLog="${TRUE}"
     continue
@@ -13,10 +15,6 @@ do
     if [[ "${line}" == "##"* ]]; then
       isTextLog="${FALSE}"
     fi
-  fi
-
-  if [[ "${isTextLog}" -eq "${TRUE}" ]]; then
-    result="${result}${line}\n"
   fi
 done < "CHANGELOG.md"
 

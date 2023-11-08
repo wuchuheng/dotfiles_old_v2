@@ -118,7 +118,7 @@ jobs:
       - name: Set change log
         run: |
           echo "version: ${GITHUB_REF#refs/tags/}"
-          .github/workflows/get_change_log.sh "${GITHUB_REF#refs/tags/}"
+          .github/workflows/get_change_log.sh "${GITHUB_REF#refs/tags/}" > CHANGELOG.md
       - name: Create Release
         uses: ncipollo/release-action@v1
         with:
