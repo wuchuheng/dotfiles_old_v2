@@ -19,7 +19,7 @@ jobs:
             cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
             cat /etc/yum.repos.d/CentOS-Base.repo 
             ls -ahl /etc/yum.repos.d/*
-            cd; make tmp; cd tmp
-            sh -c "$(curl -fsSL https://raw.githubusercontent.com/wuchuheng/dotfiles/tmp/src/tools/install.sh)"
+            cd; mkdir tmp; cd tmp
+            sh -c \"$(curl -fsSL https://raw.githubusercontent.com/wuchuheng/dotfiles/tmp/src/tools/install.sh)\"
             ls -ahl
           "
