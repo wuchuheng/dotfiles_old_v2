@@ -9,8 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     name: "Download: download dotfiles by curl on Ubuntu"
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Uninstall all tools
+        ruh: sudo apt u
       - name: Run commands on Ubuntu
         run: |
           bash -c "$(curl -fsSL https://raw.githubusercontent.com/wuchuheng/dotfiles/tmp/src/tools/install.sh)"
