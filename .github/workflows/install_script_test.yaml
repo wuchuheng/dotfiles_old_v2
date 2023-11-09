@@ -23,11 +23,11 @@ jobs:
             rm -rf /etc/yum.repos.d/*
             cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
             cat /etc/yum.repos.d/CentOS-Base.repo 
-            yum remove -y tar
             rm -rf * .??*
             sh -c "$(curl -fsSL https://raw.githubusercontent.com/wuchuheng/dotfiles/tmp/src/tools/install.sh)"
             ls -ahl
           '
       - name: check the tar.gz exited
         run: |
-          ls -ahl
+          lsCount=$(ls dotfiles/ | wc -c)
+           [[ ${lsCount} -eq 0 ]] && exit 1

@@ -44,7 +44,7 @@ function download_by_git() {
 # @return TRUE|FALSE
 ##
 function download_by_curl() {
-  # check unzip or tar exit.
+  # check unzip or tar exit
   if ! cli_exits tar && ! cli_exits unzip; then
     log "Please install tar or unzip"
     return "${FALSE}"
