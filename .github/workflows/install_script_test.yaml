@@ -49,13 +49,14 @@ jobs:
           
           
 
+
   wget_download_on_centOS:
     runs-on: ubuntu-latest
     name: wget download on CentOS
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: Asserting the result of a successful download by curl
+      - name: Asserting the result of a successful download by wget
         continue-on-error: true
         run: |
           docker pull centos:centos8.4.2105

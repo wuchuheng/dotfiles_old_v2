@@ -56,7 +56,7 @@ function check_tar_unzip_exits() {
 # @print <string>
 ##
 function get_download_tar_url() {
-    echo "${DOTFILES_REP}/releases/download/${VERSION}/dotfiles-${VERSION}.tar.gz"
+    echo "https://${DOTFILES_REP}/releases/download/${VERSION}/dotfiles-${VERSION}.tar.gz"
 }
 
 ##
@@ -83,7 +83,7 @@ function get_zip_file_name() {
 # @print <string>
 ##
 function get_download_zip_url() {
- echo "${DOTFILES_REP}/releases/download/${VERSION}/dotfiles-${VERSION}.zip"
+ echo "https://${DOTFILES_REP}/releases/download/${VERSION}/dotfiles-${VERSION}.zip"
 }
 
 ##
