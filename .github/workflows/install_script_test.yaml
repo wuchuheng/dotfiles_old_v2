@@ -80,7 +80,7 @@ jobs:
       - name: Asserting the result of a failed download by wget
         run: |
           docker run --rm -v $PWD:/workdir -w /workdir ${CENTOS_VERSION} bash -c "
-            rm -rf /etc/yum.repos.d/*
+            rm -rf /etc/yum.repos.d/* && mkdir -p /etc/yum.repos.d/
             touch /etc/yum.repos.d/CentOS-Base.repo && echo "create /etc/yum.repos.d/CentOS-Base.repo"
             cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
             cat /etc/yum.repos.d/CentOS-Base.repo 
