@@ -15,7 +15,7 @@ jobs:
         id: vars
         run: |
           echo "WORK_DIR=workdir" >> $GITHUB_ENV
-      - name: Run commands on CentOS 8
+      - name: Download dotfiles by Curl
         continue-on-error: true
         run: |
           docker pull centos:centos8.4.2105
@@ -27,9 +27,23 @@ jobs:
             sh -c "$(curl -fsSL https://raw.githubusercontent.com/wuchuheng/dotfiles/tmp/src/tools/install.sh)"
             ls -ahl
           '
-      - name: check the tar.gz exited
-        run: |
           lsCount=$(ls dotfiles/ | wc -c)
           echo "ls count: ${lsCount}"
-          [ "${lsCount}" -eq 69 ] && exit 1
+          [ "${lsCount}" -eq 0 ] && exit 1
+          echo "PASS"
+      - name: Asserting the result of a failed download by curl
+        run: |
+          docker pull centos:centos8.4.2105
+          docker run --rm -v $PWD:/workdir -w /workdir centos:8 bash -c '
+            rm -rf /etc/yum.repos.d/*
+            cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
+            cat /etc/yum.repos.d/CentOS-Base.repo 
+            rm -rf * .??*
+            yum remove -y curl
+            sh -c "$(curl -fsSL https://raw.githubusercontent.com/wuchuheng/dotfiles/tmp/src/tools/install.sh)"
+            ls -ahl
+          '
+          lsCount=$(ls dotfiles/ | wc -c)
+          echo "ls count: ${lsCount}"
+          [ "${lsCount}" -eq 0 ] && exit 0
           echo "PASS"
