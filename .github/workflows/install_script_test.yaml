@@ -16,7 +16,6 @@ jobs:
         uses: actions/checkout@v3
       - name: Asserting the result of a successful download by curl
         run: |
-          docker pull centos:centos8.4.2105
           docker run --rm -v $PWD:/workdir -w /workdir centos:8 bash -c "
             rm -rf /etc/yum.repos.d/*
             cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
@@ -55,7 +54,6 @@ jobs:
         uses: actions/checkout@v3
       - name: Asserting the result of a successful download by wget
         run: |
-          docker pull centos:centos8.4.2105
           docker run --rm -v $PWD:/workdir -w /workdir centos:8 bash -c "
             rm -rf /etc/yum.repos.d/*
             cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
@@ -70,4 +68,20 @@ jobs:
           echo "ls count: ${lsCount}"
           [ "${lsCount}" -eq 0 ] && exit 1
           echo "PASS"
-
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Asserting the result of a failed download by wget
+        run: |
+          docker run --rm -v $PWD:/workdir -w /workdir centos:8 bash -c "
+            rm -rf /etc/yum.repos.d/*
+            cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
+            cat /etc/yum.repos.d/CentOS-Base.repo 
+            rm -rf /usr/bin/curl # remove curl
+            rm -rf * .??*
+            wget -O- ${INSTALLATION_URL} | sh
+            ls -ahl
+          "
+          lsCount=$(ls dotfiles/ | wc -c)
+          echo "ls count: ${lsCount}"
+          [ "${lsCount}" -eq 0 ] || exit 1
+          echo "PASS"
