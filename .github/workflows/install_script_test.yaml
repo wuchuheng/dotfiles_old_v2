@@ -12,7 +12,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
       - name: Asserting the result of a successful download by curl
-        continue-on-error: true
         run: |
           docker pull centos:centos8.4.2105
           docker run --rm -v $PWD:/workdir -w /workdir centos:8 bash -c '
@@ -57,7 +56,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
       - name: Asserting the result of a successful download by wget
-        continue-on-error: true
         run: |
           docker pull centos:centos8.4.2105
           docker run --rm -v $PWD:/workdir -w /workdir centos:8 bash -c '
