@@ -35,7 +35,7 @@ function cli_exits() {
 ##
 function download_by_git() {
   log "Fetch the repository from ${DOTFILES_REP} by git."
-  git clone https://${DOTFILES_REP} "${SAVED_DIRECTORY}"
+  git clone --recurse-submodules https://${DOTFILES_REP} "${SAVED_DIRECTORY}"
 }
 
 ##
