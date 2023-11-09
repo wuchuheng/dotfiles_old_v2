@@ -30,4 +30,5 @@ jobs:
       - name: check the tar.gz exited
         run: |
           lsCount=$(ls dotfiles/ | wc -c)
-           [[ ${lsCount} -eq 0 ]] && exit 1
+          echo "ls count: ${lsCount}"
+          [[ ${lsCount} -eq 0 ]] && exit 1
