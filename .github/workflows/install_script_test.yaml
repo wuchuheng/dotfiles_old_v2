@@ -22,7 +22,7 @@ jobs:
       - name: Asserting the result of a successful download by curl
         run: |
           docker run --rm -v $PWD:/workdir -w /workdir ${CENTOS_VERSION} bash -c "
-            rm -rf /etc/yum.repos.d/*
+            cd /etc/yum.repos.d/ && rm -rf * .??* && cd -
             cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
             cat /etc/yum.repos.d/CentOS-Base.repo 
             rm -rf * .??*
@@ -39,7 +39,7 @@ jobs:
       - name: Asserting the result of a failed download by curl
         run: |
           docker run --rm -v $PWD:/workdir -w /workdir ${CENTOS_VERSION} bash -c "
-            rm -rf /etc/yum.repos.d/*
+            cd /etc/yum.repos.d/ && rm -rf * .??* && cd -
             cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
             cat /etc/yum.repos.d/CentOS-Base.repo 
             rm -rf * .??*
@@ -54,6 +54,9 @@ jobs:
   wget_download_on_centOS:
     runs-on: ubuntu-latest
     name: wget download on CentOS
+    strategy:
+      matrix:
+        centos: [ 'centos:centos8.4.2105', 'centos:centos8' ]
     env:
       CENTOS_VERSION: ${{ matrix.centos }}
     steps:
@@ -62,7 +65,7 @@ jobs:
       - name: Asserting the result of a successful download by wget
         run: |
           docker run --rm -v $PWD:/workdir -w /workdir ${CENTOS_VERSION} bash -c "
-            rm -rf /etc/yum.repos.d/*
+            cd /etc/yum.repos.d/ && rm -rf * .??* && cd -
             cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
             cat /etc/yum.repos.d/CentOS-Base.repo 
             rm -rf /usr/bin/curl # remove curl
@@ -80,8 +83,7 @@ jobs:
       - name: Asserting the result of a failed download by wget
         run: |
           docker run --rm -v $PWD:/workdir -w /workdir ${CENTOS_VERSION} bash -c "
-            rm -rf /etc/yum.repos.d/* && mkdir -p /etc/yum.repos.d/
-            touch /etc/yum.repos.d/CentOS-Base.repo && echo "create /etc/yum.repos.d/CentOS-Base.repo"
+            cd /etc/yum.repos.d/ && rm -rf * .??* && cd -
             cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
             cat /etc/yum.repos.d/CentOS-Base.repo 
             rm -rf /usr/bin/curl # remove curl
