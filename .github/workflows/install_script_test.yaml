@@ -63,7 +63,7 @@ jobs:
             rm -rf /etc/yum.repos.d/*
             cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
             cat /etc/yum.repos.d/CentOS-Base.repo 
-            yum remove -y curl
+            rm -rf /usr/bin/curl # remove curl
             yum install -y wget
             rm -rf * .??*
             sh -c "$(wget -O- https://raw.githubusercontent.com/wuchuheng/dotfiles/tmp/src/tools/install.sh)"
