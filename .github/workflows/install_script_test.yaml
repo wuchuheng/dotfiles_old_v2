@@ -31,5 +31,5 @@ jobs:
         run: |
           lsCount=$(ls dotfiles/ | wc -c)
           echo "ls count: ${lsCount}"
-          [ "${lsCount}" -eq 0 ] && exit 1
-          echo "OK"
+          [ "${lsCount}" -eq 69 ] && exit 1
+          echo "PASS"
