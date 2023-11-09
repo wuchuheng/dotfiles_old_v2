@@ -31,6 +31,9 @@ jobs:
           echo "ls count: ${lsCount}"
           [ "${lsCount}" -eq 0 ] && exit 1
           echo "PASS"
+
+      - name: Checkout code
+        uses: actions/checkout@v3
       - name: Asserting the result of a failed download by curl
         run: |
           docker pull centos:centos8.4.2105
