@@ -130,7 +130,7 @@ function download_by_wget() {
   check_tar_unzip_exits || return "${FALSE}"
 
   if cli_exits tar; then
-    local compressedFile=$(get_download_tar_url)
+    local compressedFile=$(get_tar_file_name)
     local url=$(get_download_tar_url)
     log "Fetch the dotfiles from ${url} by wget"
     wget -O "${compressedFile}" "${url}"
