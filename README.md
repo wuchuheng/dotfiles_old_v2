@@ -8,6 +8,13 @@
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/wuchuheng/dotfiles/tmp/src/tools/install.sh)"
 ```
 
+OR
+
+```bashpro shell script
+sh -c "$(wget -O- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+```
+
+
 ### Prerequisites
 
 What things you need to install the software and how to install them.

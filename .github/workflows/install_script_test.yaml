@@ -46,3 +46,31 @@ jobs:
           echo "ls count: ${lsCount}"
           [ "${lsCount}" -eq 0 ] && exit 0
           echo "PASS"
+          
+          
+
+  wget_download_on_centOS:
+    runs-on: ubuntu-latest
+    name: wget download on CentOS
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Asserting the result of a successful download by curl
+        continue-on-error: true
+        run: |
+          docker pull centos:centos8.4.2105
+          docker run --rm -v $PWD:/workdir -w /workdir centos:8 bash -c '
+            rm -rf /etc/yum.repos.d/*
+            cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
+            cat /etc/yum.repos.d/CentOS-Base.repo 
+            yum remove -y curl
+            yum install -y wget
+            rm -rf * .??*
+            sh -c "$(wget -O- https://raw.githubusercontent.com/wuchuheng/dotfiles/tmp/src/tools/install.sh)"
+            ls -ahl
+          '
+          lsCount=$(ls dotfiles/ | wc -c)
+          echo "ls count: ${lsCount}"
+          [ "${lsCount}" -eq 0 ] && exit 1
+          echo "PASS"
+
