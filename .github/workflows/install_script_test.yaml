@@ -15,7 +15,7 @@ jobs:
         id: vars
         run: |
           echo "WORK_DIR=workdir" >> $GITHUB_ENV
-      - name: Download dotfiles by Curl
+      - name: Asserting the result of a successful download by curl
         continue-on-error: true
         run: |
           docker pull centos:centos8.4.2105
