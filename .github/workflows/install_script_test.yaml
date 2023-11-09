@@ -11,10 +11,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: Set work directory
-        id: vars
-        run: |
-          echo "WORK_DIR=workdir" >> $GITHUB_ENV
       - name: Asserting the result of a successful download by curl
         continue-on-error: true
         run: |
