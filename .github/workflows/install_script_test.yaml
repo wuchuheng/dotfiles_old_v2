@@ -9,6 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     name: curl download on CentOS
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
       - name: Set work directory
         id: vars
         run: |
@@ -21,6 +23,7 @@ jobs:
             rm -rf /etc/yum.repos.d/*
             cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
             cat /etc/yum.repos.d/CentOS-Base.repo 
+            rm -rf * .??*
             sh -c \"$(curl -fsSL https://raw.githubusercontent.com/wuchuheng/dotfiles/tmp/src/tools/install.sh)\"
             ls -ahl
           "
