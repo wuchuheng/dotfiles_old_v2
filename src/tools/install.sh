@@ -53,7 +53,7 @@ function download_by_curl() {
   if cli_exits tar; then
     local compressedFile="dotfiles-${VERSION}.tar.gz"
 
-    local url="${DOTFILES_REP}/releases/download/v0.0.45/dotfiles-${VERSION}.tar.gz"
+    local url="${DOTFILES_REP}/releases/download/${VERSION}/dotfiles-${VERSION}.tar.gz"
     log "Fetch the dotfiles from ${url} by curl"
     curl -L -o "${compressedFile}" "$url"
 
@@ -65,7 +65,7 @@ function download_by_curl() {
   elif cli_exits unzip; then
     local compressedFile="dotfiles-${VERSION}.zip"
 
-    local url="${DOTFILES_REP}/releases/download/v0.0.45/dotfiles-${VERSION}.zip"
+    local url="${DOTFILES_REP}/releases/download/${VERSION}/dotfiles-${VERSION}.zip"
     log "Fetch the dotfiles from ${url} by curl"
     curl -L -o "${compressedFile}" "$url"
 
