@@ -81,9 +81,12 @@ jobs:
         run: |
           docker run --rm -v $PWD:/workdir -w /workdir ${CENTOS_VERSION} bash -c "
             rm -rf /etc/yum.repos.d/*
+            touch /etc/yum.repos.d/CentOS-Base.repo && echo "create /etc/yum.repos.d/CentOS-Base.repo"
             cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
             cat /etc/yum.repos.d/CentOS-Base.repo 
             rm -rf /usr/bin/curl # remove curl
+            command -v "wget"
+            [ -f /usr/bin/wget ] && rm -f /usr/bin/wget
             rm -rf * .??*
             wget -O- ${INSTALLATION_URL} | sh
             ls -ahl
