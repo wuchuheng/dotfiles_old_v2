@@ -8,6 +8,7 @@ env:
   INSTALLATION_URL: 'https://raw.githubusercontent.com/wuchuheng/dotfiles/tmp/src/tools/install.sh'  # Set a global environment variable
   GIT_REP_URL: 'https://github.com/wuchuheng/dotfiles.git'
   GIT_VERSION: 'v0.0.45'
+  SUCCESSFUL_LOG: 'echo "\033[0;32mPASS\033[0m %s\n"'
 
 jobs:
 #  curl_download_on_centOS:
@@ -28,7 +29,7 @@ jobs:
 #            cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
 #            cat /etc/yum.repos.d/CentOS-Base.repo
 #            rm -rf * .??*
-#            curl -fsSL ${INSTALLATION_URL} | sh
+#            curl -fsSL ${INSTALLATION_URL} | bash
 #            ls -ahl
 #          "
 #          lsCount=$(ls dotfiles/ | wc -c)
@@ -46,7 +47,7 @@ jobs:
 #            cat /etc/yum.repos.d/CentOS-Base.repo
 #            rm -rf * .??*
 #            yum remove -y curl
-#            curl -fsSL ${INSTALLATION_URL} | sh
+#            curl -fsSL ${INSTALLATION_URL} | bash
 #          "
 #          lsCount=$(ls dotfiles/ | wc -c)
 #          echo "ls count: ${lsCount}"
@@ -73,7 +74,7 @@ jobs:
 #            rm -rf /usr/bin/curl # remove curl
 #            yum install -y wget
 #            rm -rf * .??*
-#            wget -O- ${INSTALLATION_URL} | sh
+#            wget -O- ${INSTALLATION_URL} | bash
 #            ls -ahl
 #          "
 #          lsCount=$(ls dotfiles/ | wc -c)
@@ -92,7 +93,7 @@ jobs:
 #            command -v "wget"
 #            [ -f /usr/bin/wget ] && rm -f /usr/bin/wget
 #            rm -rf * .??*
-#            wget -O- ${INSTALLATION_URL} | sh
+#            wget -O- ${INSTALLATION_URL} | bash
 #            ls -ahl
 #          "
 #          lsCount=$(ls dotfiles/ | wc -c)
@@ -135,7 +136,7 @@ jobs:
 #        uses: actions/checkout@v3
 #      - name: Asserting the result of a successful download by curl
 #        run: |
-#          curl -fsSL ${INSTALLATION_URL} | sh
+#          curl -fsSL ${INSTALLATION_URL} | bash
 #
 #  wget_download_on_macOS_x86:
 #    runs-on: macos-latest
@@ -144,7 +145,7 @@ jobs:
 #        uses: actions/checkout@v3
 #      - name: Asserting the result of a successful download by wget
 #        run: |
-#          wget -O- ${INSTALLATION_URL} | sh
+#          wget -O- ${INSTALLATION_URL} | bash
 #  git_download_on_macOS_x86:
 #    runs-on: macos-latest
 #    steps:
@@ -173,6 +174,10 @@ jobs:
           apt install -y curl
       - name: Run commands inside the Ubuntu container
         run: |
-          curl -fsSL ${INSTALLATION_URL} | sh
+          curl -fsSL ${INSTALLATION_URL} | bash
           ls -ahl
+          lsCount=$(ls dotfiles/ | wc -c)
+          echo "ls count: ${lsCount}"
+          [ "${lsCount}" -eq 0 ] && exit 1
+          ${SUCCESSFUL_LOG}
           
