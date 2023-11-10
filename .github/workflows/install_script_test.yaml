@@ -158,7 +158,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        image: [ 'node:14', 'node:15' ]
+        image: [ 'ubuntu:23.10']
     env:
       CENTOS_VERSION: ${{ matrix.centos }}
     container:
@@ -167,7 +167,8 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
-      - name: Run commands inside the Docker container
+      - name: Run commands inside the Ubuntu container
         run: |
-          node --version
-          npm --version
+          curl -fsSL ${INSTALLATION_URL} | sh
+          ls -ahl
+          
