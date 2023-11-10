@@ -167,6 +167,10 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
+      - name: Install curl
+        run: |
+          apt update;
+          apt install -y curl
       - name: Run commands inside the Ubuntu container
         run: |
           curl -fsSL ${INSTALLATION_URL} | sh
