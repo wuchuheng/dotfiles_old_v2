@@ -35,9 +35,9 @@ jobs:
 #          lsCount=$(ls dotfiles/ | wc -c)
 #          echo "ls count: ${lsCount}"
 #          [ "${lsCount}" -eq 0 ] && exit 1
-#          echo "PASS"
-#
-#      - name: Checkout code
+#          echo "${SUCCESSFUL_LOG}"
+  #
+  #      - name: Checkout code
 #        uses: actions/checkout@v3
 #      - name: Asserting the result of a failed download by curl
 #        run: |
@@ -52,9 +52,9 @@ jobs:
 #          lsCount=$(ls dotfiles/ | wc -c)
 #          echo "ls count: ${lsCount}"
 #          [ "${lsCount}" -eq 0 ] && exit 0
-#          echo "PASS"
-#
-#  wget_download_on_centOS:
+#          echo "${SUCCESSFUL_LOG}"
+  #
+  #  wget_download_on_centOS:
 #    runs-on: ubuntu-latest
 #    name: wget download on CentOS
 #    strategy:
@@ -80,7 +80,7 @@ jobs:
 #          lsCount=$(ls dotfiles/ | wc -c)
 #          echo "ls count: ${lsCount}"
 #          [ "${lsCount}" -eq 0 ] && exit 1
-#          echo "PASS"
+#          echo "${SUCCESSFUL_LOG}"
 #      - name: Checkout code
 #        uses: actions/checkout@v3
 #      - name: Asserting the result of a failed download by wget
@@ -99,9 +99,9 @@ jobs:
 #          lsCount=$(ls dotfiles/ | wc -c)
 #          echo "ls count: ${lsCount}"
 #          [ "${lsCount}" -eq 0 ] || exit 1
-#          echo "PASS"
-#
-#  git_download_on_centOS:
+#          echo "${SUCCESSFUL_LOG}"
+  #
+  #  git_download_on_centOS:
 #    runs-on: ubuntu-latest
 #    name: wget download on CentOS
 #    strategy:
@@ -127,7 +127,7 @@ jobs:
 #          lsCount=$(ls dotfiles/ | wc -c)
 #          echo "ls count: ${lsCount}"
 #          [ "${lsCount}" -eq 0 ] && exit 1
-#          echo "PASS"
+#          echo "${SUCCESSFUL_LOG}"
 #
 #  curl_download_on_macOS_x86:
 #    runs-on: macos-latest
@@ -161,23 +161,59 @@ jobs:
       matrix:
         image: [ 'ubuntu:23.10']
     env:
-      CENTOS_VERSION: ${{ matrix.centos }}
-    container:
-      image: ${{ matrix.image }} # Specify the Docker image to use
+      UBUNTU_IMAGE_VERSION: ${{ matrix.image}}
 
     steps:
-      - name: Check out repository code
-        uses: actions/checkout@v3
-      - name: Install curl
+      - name: Successful curl download on ubuntu
         run: |
-          apt update;
-          apt install -y curl
-      - name: Run commands inside the Ubuntu container
-        run: |
-          curl -fsSL ${INSTALLATION_URL} | bash
-          ls -ahl
+          docker run --rm -v $PWD:/workdir -w /workdir ${UBUNTU_IMAGE_VERSION} bash -c "
+            apt update;
+            apt install -y curl;
+            curl -fsSL ${INSTALLATION_URL} | bash;
+          "
           lsCount=$(ls dotfiles/ | wc -c)
           echo "ls count: ${lsCount}"
-          [ "${lsCount}" -eq 0 ] && exit 1
-          ${SUCCESSFUL_LOG}
-          
+          [ "${lsCount}" -gt 0 ] || exit 1
+          echo "${SUCCESSFUL_LOG}"
+      - name: Failed curl download on ubuntu
+        run: |
+          docker run --rm -v $PWD:/workdir -w /workdir ${UBUNTU_IMAGE_VERSION} bash -c "
+            curl -fsSL ${INSTALLATION_URL} | bash;
+          "
+          lsCount=$(ls dotfiles/ | wc -c)
+          echo "ls count: ${lsCount}"
+          [ "${lsCount}" -eq 0 ] || exit 1
+          echo "${SUCCESSFUL_LOG}"
+
+  wget_download_on_ubuntu:
+    name: wget download on ubuntu
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        image: [ 'ubuntu:23.10']
+    env:
+      UBUNTU_IMAGE_VERSION: ${{ matrix.image }}
+
+    steps:
+      - name: Successful wget download on ubuntu
+        run: |
+          docker run --rm -v $PWD:/workdir -w /workdir ${UBUNTU_IMAGE_VERSION} bash -c "
+            apt update;
+            apt install -y wget;
+            wget -O- ${INSTALLATION_URL} | bash
+          "
+          lsCount=$(ls dotfiles/ | wc -c)
+          echo "ls count: ${lsCount}"
+          [ "${lsCount}" -gt 0 ] || exit 1
+          echo "${SUCCESSFUL_LOG}"
+      - name: Failed wget download on ubuntu
+        run: |
+          rm -rf * .??*
+          docker run --rm -v $PWD:/workdir -w /workdir ${UBUNTU_IMAGE_VERSION} bash -c "
+            apt update;
+            wget -O- ${INSTALLATION_URL} | bash
+          "
+          lsCount=$(ls dotfiles/ | wc -c)
+          echo "ls count: ${lsCount}"
+          [ ! "${lsCount}" -eq 0 ] || exit 1
+          echo "${SUCCESSFUL_LOG}"
