@@ -113,6 +113,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: Asserting the result of a successful download by curl
+      - name: Asserting the result of a successful download by wget
         run: |
           wget -O- ${INSTALLATION_URL} | sh
