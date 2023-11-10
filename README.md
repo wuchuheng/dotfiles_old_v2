@@ -14,6 +14,14 @@ OR
 sh -c "$(wget -O- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 ```
 
+OR 
+
+```bashpro shell script
+git clone https://github.com/wuchuheng/dotfiles/ && cd dotfiles && make install
+```
+
+
+
 
 ### Prerequisites
 
