@@ -177,6 +177,7 @@ jobs:
           echo "${SUCCESSFUL_LOG}"
       - name: Failed curl download on ubuntu
         run: |
+          rm -rf * .??*
           docker run --rm -v $PWD:/workdir -w /workdir ${UBUNTU_IMAGE_VERSION} bash -c "
             curl -fsSL ${INSTALLATION_URL} | bash;
           "
