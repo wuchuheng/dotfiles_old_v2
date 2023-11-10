@@ -104,6 +104,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+      - name: Remove interfering dependencies
+        run: |
+          brew uninstall -f git wget
       - name: Asserting the result of a successful download by curl
         run: |
           curl -fsSL ${INSTALLATION_URL} | sh
