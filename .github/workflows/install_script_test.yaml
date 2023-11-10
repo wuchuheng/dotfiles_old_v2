@@ -123,4 +123,4 @@ jobs:
         uses: actions/checkout@v3
       - name: Asserting the result of a successful download by git
         run: |
-          git clone --branch v0.0.45 --single-branch https://github.com/wuchuheng/dotfiles.git && cd dotfiles && bash src/bootstrap/bash_install_boot.sh 
+          git clone --branch v0.0.45 --single-branch --recurse-submodules https://github.com/wuchuheng/dotfiles.git && cd dotfiles && bash src/bootstrap/bash_install_boot.sh 
