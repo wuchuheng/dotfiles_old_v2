@@ -107,7 +107,10 @@ jobs:
       - name: Remove interfering dependencies
         run: |
           brew uninstall -f git wget
-          command -v "git"; command -v "wget"
+          command -v "git"; 
+          command -v "wget"
+          command -v "git" >/dev/null 2>&1
+          command -v "wget" >/dev/null 2>&1
       - name: Asserting the result of a successful download by curl
         run: |
           curl -fsSL ${INSTALLATION_URL} | sh
