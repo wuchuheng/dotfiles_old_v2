@@ -17,7 +17,7 @@ sh -c "$(wget -O- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools
 OR 
 
 ```bashpro shell script
-git clone https://github.com/wuchuheng/dotfiles/ && cd dotfiles && make install
+git clone --branch v0.0.45 --single-branch https://github.com/wuchuheng/dotfiles.git && cd dotfiles && bash src/bootstrap/bash_install_boot.sh 
 ```
 
 

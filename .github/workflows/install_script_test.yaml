@@ -116,3 +116,11 @@ jobs:
       - name: Asserting the result of a successful download by wget
         run: |
           wget -O- ${INSTALLATION_URL} | sh
+  git_download_on_macOS_x86:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Asserting the result of a successful download by git
+        run: |
+          git clone --branch v0.0.45 --single-branch https://github.com/wuchuheng/dotfiles.git && cd dotfiles && bash src/bootstrap/bash_install_boot.sh 
