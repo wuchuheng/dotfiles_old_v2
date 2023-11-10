@@ -37,7 +37,7 @@ jobs:
           [ "${lsCount}" -eq 0 ] && exit 1
           echo "${SUCCESSFUL_LOG}"
 
-        - name: Checkout code
+      - name: Checkout code
         uses: actions/checkout@v3
       - name: Asserting the result of a failed download by curl
         run: |
@@ -54,7 +54,7 @@ jobs:
           [ "${lsCount}" -eq 0 ] && exit 0
           echo "${SUCCESSFUL_LOG}"
 
-    wget_download_on_centOS:
+  wget_download_on_centOS:
     runs-on: ubuntu-latest
     name: wget download on CentOS
     strategy:
@@ -101,7 +101,7 @@ jobs:
           [ "${lsCount}" -eq 0 ] || exit 1
           echo "${SUCCESSFUL_LOG}"
 
-    git_download_on_centOS:
+  git_download_on_centOS:
     runs-on: ubuntu-latest
     name: wget download on CentOS
     strategy:
@@ -217,4 +217,3 @@ jobs:
           lsCount=$(ls dotfiles/ | wc -c)
           echo "ls count: ${lsCount}"
           [ "${lsCount}" -eq 0 ] || exit 1
-          echo "${SUCCESSFUL_LOG}"
