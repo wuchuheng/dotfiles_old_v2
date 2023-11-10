@@ -216,5 +216,5 @@ jobs:
           "
           lsCount=$(ls dotfiles/ | wc -c)
           echo "ls count: ${lsCount}"
-          [ ! "${lsCount}" -eq 0 ] || exit 1
+          [ "${lsCount}" -eq 0 ] || exit 1
           echo "${SUCCESSFUL_LOG}"
