@@ -104,9 +104,15 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: Remove interfering dependencies
-        run: |
-          brew uninstall --ignore-dependencies git wget
       - name: Asserting the result of a successful download by curl
         run: |
           curl -fsSL ${INSTALLATION_URL} | sh
+
+  wget_download_on_macOS_x86:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Asserting the result of a successful download by curl
+        run: |
+          wget -O- ${INSTALLATION_URL} | sh
