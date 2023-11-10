@@ -106,7 +106,7 @@ jobs:
         uses: actions/checkout@v3
       - name: Remove interfering dependencies
         run: |
-          sudo rm -rf /usr/bin/git /usr/bin/wget
+          brew uninstall -f git wget
           command -v "git"; command -v "wget"
       - name: Asserting the result of a successful download by curl
         run: |
