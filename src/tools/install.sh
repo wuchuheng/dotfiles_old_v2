@@ -114,10 +114,27 @@ function download_by_curl() {
     curl -L -o "${compressedFile}" "$url"
 
     log "decompress ${compressedFile} with unzip"
-    unzip "${compressedFile}"
+    unzip "${compressedFile}" -d "${SAVED_DIRECTORY}"
 
     log "Remove ${compressedFile}"
     rm -rf "${compressedFile}"
+  fi
+}
+
+##
+# wget download a file
+# @use wget_file <url> <saved file name>
+# @return <boolean>
+##
+function wget_file() {
+  local url="$1"
+  local savedFileName="$2"
+  log "Fetch the dotfiles from ${url} by wget"
+  wget -O "${savedFileName}" "${url}"
+  if [[ $? -eq 0 ]]; then
+    return "${TRUE}"
+  else
+    return "${FALSE}"
   fi
 }
 
@@ -132,8 +149,7 @@ function download_by_wget() {
   if cli_exits tar; then
     local compressedFile=$(get_tar_file_name)
     local url=$(get_download_tar_url)
-    log "Fetch the dotfiles from ${url} by wget"
-    wget -O "${compressedFile}" "${url}"
+    wget_file "${url}" "${compressedFile}"
 
     log "decompress ${compressedFile} with tar"
     tar -zxvf "${compressedFile}" -C "${SAVED_DIRECTORY}"
@@ -142,13 +158,12 @@ function download_by_wget() {
     rm -rf "${compressedFile}"
   elif cli_exits unzip; then
     local compressedFile="$(get_zip_file_name)"
-
     local url="$(get_download_zip_url)"
-    log "Fetch the dotfiles from ${url} by wget"
-    wget -O "${compressedFile}" "${url}"
+
+    wget_file "${url}" "${compressedFile}"
 
     log "decompress ${compressedFile} with unzip"
-    unzip "${compressedFile}"
+    unzip "${compressedFile}" -d "${SAVED_DIRECTORY}"
 
     log "Remove ${compressedFile}"
     rm -rf "${compressedFile}"
