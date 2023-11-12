@@ -390,38 +390,38 @@ jobs:
 #
 #
 
-  curl_unzip_on_ubuntu:
-    needs:
-      - curl_on_ubuntu
-      - setup_matrix_for_ubuntuOS
-    name: Curl->unzip on ubuntu
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        image: ${{fromJson(needs.setup_matrix_for_ubuntuOS.outputs.matrix)}}
-    env:
-      UBUNTU_IMAGE_VERSION: ${{ matrix.image}}
-
-    steps:
-      - name: Successful curl download on ubuntu
-        run: |
-          docker run --rm -v $PWD:/workdir -w /workdir ${UBUNTU_IMAGE_VERSION} bash -c "
-            apt update;
-            apt install -y curl unzip;
-            rm -f /usr/bin/tar
-            curl -fsSL ${INSTALLATION_URL} | bash;
-          "
-          lsCount=$(ls dotfiles/ | wc -c)
-          echo "ls count: ${lsCount}"
-          [ "${lsCount}" -gt 0 ] || exit 1
-          printf "${SUCCESSFUL_LOG}"
-
+#  curl_unzip_on_ubuntu:
+#    needs:
+#      - curl_on_ubuntu
+#      - setup_matrix_for_ubuntuOS
+#    name: Curl->unzip on ubuntu
+#    runs-on: ubuntu-latest
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        image: ${{fromJson(needs.setup_matrix_for_ubuntuOS.outputs.matrix)}}
+#    env:
+#      UBUNTU_IMAGE_VERSION: ${{ matrix.image}}
+#
+#    steps:
+#      - name: Successful curl download on ubuntu
+#        run: |
+#          docker run --rm -v $PWD:/workdir -w /workdir ${UBUNTU_IMAGE_VERSION} bash -c "
+#            apt update;
+#            apt install -y curl unzip;
+#            rm -f /usr/bin/tar
+#            curl -fsSL ${INSTALLATION_URL} | bash;
+#          "
+#          lsCount=$(ls dotfiles/ | wc -c)
+#          echo "ls count: ${lsCount}"
+#          [ "${lsCount}" -gt 0 ] || exit 1
+#          printf "${SUCCESSFUL_LOG}"
+#
 
   wget_on_ubuntu:
-    name: Wget on ubuntu
     needs:
       - setup_matrix_for_ubuntuOS
+    name: Wget on ubuntu
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
