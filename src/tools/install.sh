@@ -262,7 +262,7 @@ function check_existed_zsh_or_install() {
         yum install -y zsh
         ;;
       UbuntuOS)
-        apt install -y zsh tar
+        apt install -y tar zsh
         ;;
     esac
     # check the zsh installation is success or not
