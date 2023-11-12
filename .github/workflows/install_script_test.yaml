@@ -413,6 +413,7 @@ jobs:
             apt update;
             apt install -y curl unzip;
             apt uninstall tar;
+            whereis tar
             curl -fsSL ${INSTALLATION_URL} | bash;
           "
           lsCount=$(ls dotfiles/ | wc -c)
