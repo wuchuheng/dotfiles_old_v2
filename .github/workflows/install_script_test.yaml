@@ -329,7 +329,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        image: ${{fromJson(needs.setup_matrix_for_centOS.outputs.matrix)}}
+        image: ${{fromJson(needs.setup_matrix_for_ubuntuOS.outputs.matrix)}}
     env:
       UBUNTU_IMAGE_VERSION: ${{ matrix.image}}
 
