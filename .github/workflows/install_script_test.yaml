@@ -444,7 +444,7 @@ jobs:
           echo "${SUCCESSFUL_LOG}"
       - name: Failed wget download on ubuntu
         run: |
-          rm -rf * .??*
+          sudo rm -rf * .??*
           docker run --rm -v $PWD:/workdir -w /workdir ${UBUNTU_IMAGE_VERSION} bash -c "
             apt update;
             wget -O- ${INSTALLATION_URL} | bash
