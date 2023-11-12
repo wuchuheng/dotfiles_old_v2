@@ -20,7 +20,8 @@ jobs:
         run: echo 'matrix=["centos:centos8.4.2105", "centos:centos8"]' >> $GITHUB_OUTPUT
 
   curl_on_centOS:
-    needs: setup_matrix_for_centOS
+    needs:
+      - setup_matrix_for_centOS
     runs-on: ubuntu-latest
     name: curl on CentOS
     strategy:
@@ -64,8 +65,11 @@ jobs:
           echo "${SUCCESSFUL_LOG}"
 
 
+
   curl_tar_on_centOS:
-    needs: curl_on_centOS
+    needs:
+      - curl_on_centOS
+      - setup_matrix_for_centOS
     runs-on: ubuntu-latest
     name: curl->tar on CentOS
     strategy:
@@ -93,7 +97,9 @@ jobs:
           echo "${SUCCESSFUL_LOG}"
 
   curl_unzip_on_centOS:
-    needs: curl_on_centOS
+    needs:
+      - curl_on_centOS
+      - setup_matrix_for_centOS
     runs-on: ubuntu-latest
     name: curl->unzip on CentOS
     strategy:
@@ -123,6 +129,8 @@ jobs:
           echo "${SUCCESSFUL_LOG}"
 
   wget_download_on_centOS:
+    needs:
+      - setup_matrix_for_centOS
     runs-on: ubuntu-latest
     name: wget download on CentOS
     strategy:
