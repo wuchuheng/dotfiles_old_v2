@@ -202,3 +202,7 @@ function download_dotfiles() {
 }
 
 download_dotfiles
+
+cd "${SAVED_DIRECTORY}"
+
+bash src/bootstrap/bash_install_boot.sh

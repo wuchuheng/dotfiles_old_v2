@@ -480,7 +480,7 @@ jobs:
           printf "${SUCCESSFUL_LOG}"
 
   wget_unzip_on_ubuntu:
-    name: Wget->tar on ubuntu
+    name: Wget->unzip on ubuntu
     needs:
       - setup_matrix_for_ubuntuOS
       - wget_on_ubuntu
