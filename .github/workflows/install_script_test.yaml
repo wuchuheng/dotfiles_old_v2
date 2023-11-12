@@ -307,7 +307,7 @@ jobs:
         run: |
           command -v unzip >/dev/null 2>&1
           ! [ $? ] && exit 1
-          brew uninstall git
+          rm -f /usr/bin/git
           command -v git
           curl -fsSL ${INSTALLATION_URL} | bash
           lsCount=$(ls dotfiles/ | wc -c)
