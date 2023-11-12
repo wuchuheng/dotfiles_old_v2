@@ -46,7 +46,7 @@ jobs:
 #          lsCount=$(ls dotfiles/ | wc -c)
 #          echo "ls count: ${lsCount}"
 #          [ "${lsCount}" -eq 0 ] && exit 1
-#          echo "${SUCCESSFUL_LOG}"
+#          printf "${SUCCESSFUL_LOG}"
 #      - name: Checkout code
 #        uses: actions/checkout@v3
 #      - name: Asserting the result of a failed download by curl
@@ -62,7 +62,7 @@ jobs:
 #          lsCount=$(ls dotfiles/ | wc -c)
 #          echo "ls count: ${lsCount}"
 #          [ "${lsCount}" -eq 0 ] && exit 0
-#          echo "${SUCCESSFUL_LOG}"
+#          printf "${SUCCESSFUL_LOG}"
 #
 #  curl_tar_on_centOS:
 #    needs:
@@ -92,7 +92,7 @@ jobs:
 #          lsCount=$(ls dotfiles/ | wc -c)
 #          echo "ls count: ${lsCount}"
 #          [ "${lsCount}" -eq 0 ] && exit 1
-#          echo "${SUCCESSFUL_LOG}"
+#          printf "${SUCCESSFUL_LOG}"
 #
 #
 #  curl_unzip_on_centOS:
@@ -125,7 +125,7 @@ jobs:
 #          lsCount=$(ls dotfiles/ | wc -c)
 #          echo "ls count: ${lsCount}"
 #          [ "${lsCount}" -eq 0 ] && exit 1
-#          echo "${SUCCESSFUL_LOG}"
+#          printf "${SUCCESSFUL_LOG}"
 #
 #
 #  wget_on_centOS:
@@ -157,7 +157,7 @@ jobs:
 #          lsCount=$(ls dotfiles/ | wc -c)
 #          echo "ls count: ${lsCount}"
 #          [ "${lsCount}" -eq 0 ] && exit 1
-#          echo "${SUCCESSFUL_LOG}"
+#          printf "${SUCCESSFUL_LOG}"
 #      - name: Checkout code
 #        uses: actions/checkout@v3
 #      - name: Asserting the result of a failed download by wget
@@ -176,7 +176,7 @@ jobs:
 #          lsCount=$(ls dotfiles/ | wc -c)
 #          echo "ls count: ${lsCount}"
 #          [ "${lsCount}" -eq 0 ] || exit 1
-#          echo ${SUCCESSFUL_LOG}
+#          printf ${SUCCESSFUL_LOG}
 #
 #
 #  wget_tar_on_centOS:
@@ -210,7 +210,7 @@ jobs:
 #          lsCount=$(ls dotfiles/ | wc -c)
 #          echo "ls count: ${lsCount}"
 #          [ "${lsCount}" -eq 0 ] && exit 1
-#          echo "${SUCCESSFUL_LOG}"
+#          printf "${SUCCESSFUL_LOG}"
 #
 #
 #  wget_unzip_on_centOS:
@@ -244,7 +244,7 @@ jobs:
 #          lsCount=$(ls dotfiles/ | wc -c)
 #          echo "ls count: ${lsCount}"
 #          [ "${lsCount}" -eq 0 ] && exit 1
-#          echo "${SUCCESSFUL_LOG}"
+#          printf "${SUCCESSFUL_LOG}"
 #
 #
 #
@@ -279,7 +279,7 @@ jobs:
 #          lsCount=$(ls dotfiles/ | wc -c)
 #          echo "ls count: ${lsCount}"
 #          [ "${lsCount}" -eq 0 ] && exit 1
-#          echo "${SUCCESSFUL_LOG}"
+#          printf "${SUCCESSFUL_LOG}"
 
 #  curl_on_macOS_x86:
 #    name: Curl on macOS
@@ -293,7 +293,7 @@ jobs:
 #          lsCount=$(ls dotfiles/ | wc -c)
 #          echo "ls count: ${lsCount}"
 #          [ "${lsCount}" -eq 0 ] && exit 1
-#          echo "${SUCCESSFUL_LOG}"
+#          printf "${SUCCESSFUL_LOG}"
 #
 #  wget_download_on_macOS_x86:
 #    runs-on: macos-latest
@@ -340,7 +340,7 @@ jobs:
 #          lsCount=$(ls dotfiles/ | wc -c)
 #          echo "ls count: ${lsCount}"
 #          [ "${lsCount}" -gt 0 ] || exit 1
-#          echo "${SUCCESSFUL_LOG}"
+#          printf "${SUCCESSFUL_LOG}"
 #      - name: Failed curl download on ubuntu
 #        run: |
 #          rm -rf * .??*
@@ -350,7 +350,7 @@ jobs:
 #          lsCount=$(ls dotfiles/ | wc -c)
 #          echo "ls count: ${lsCount}"
 #          [ "${lsCount}" -eq 0 ] || exit 1
-#          echo "${SUCCESSFUL_LOG}"
+#          printf "${SUCCESSFUL_LOG}"
 
   curl_tar_on_ubuntu:
     needs:
@@ -375,7 +375,7 @@ jobs:
           lsCount=$(ls dotfiles/ | wc -c)
           echo "ls count: ${lsCount}"
           [ "${lsCount}" -gt 0 ] || exit 1
-          echo "${SUCCESSFUL_LOG}"
+          printf "${SUCCESSFUL_LOG}"
       - name: Failed curl download on ubuntu
         run: |
           rm -rf * .??*
