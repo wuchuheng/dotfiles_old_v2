@@ -294,26 +294,6 @@ jobs:
 #          echo "ls count: ${lsCount}"
 #          [ "${lsCount}" -eq 0 ] && exit 1
 #          echo "${SUCCESSFUL_LOG}"
-
-  curl_tar_on_macOS_x86:
-#    needs:
-#      - curl_on_macOS_x86
-    name: Curl->tar on macOS
-    runs-on: macos-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-      - name: Asserting the result of a successful download by curl
-        run: |
-          command -v unzip >/dev/null 2>&1
-          ! [ $? ] && exit 1
-          rm -f /usr/bin/git
-          command -v git
-          curl -fsSL ${INSTALLATION_URL} | bash
-          lsCount=$(ls dotfiles/ | wc -c)
-          echo "ls count: ${lsCount}"
-          [ "${lsCount}" -eq 0 ] && exit 1
-          echo "${SUCCESSFUL_LOG}"
 #
 #  wget_download_on_macOS_x86:
 #    runs-on: macos-latest
@@ -332,6 +312,15 @@ jobs:
 #        run: |
 #          git clone --branch ${GIT_VERSION} --single-branch --recurse-submodules ${GIT_REP_URL} && cd dotfiles
 #
+
+  setup_matrix_for_ubuntuOS:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - id: set-matrix
+        run: echo 'matrix=["ubuntu:23.10"]' >> $GITHUB_OUTPUT
+
 #  curl_download_on_ubuntu:
 #    runs-on: ubuntu-latest
 #    strategy:
@@ -362,6 +351,41 @@ jobs:
 #          echo "ls count: ${lsCount}"
 #          [ "${lsCount}" -eq 0 ] || exit 1
 #          echo "${SUCCESSFUL_LOG}"
+
+  curl_tar_on_ubuntu:
+    needs:
+      - setup_matrix_for_ubuntuOS
+    name: Curl->tar on ubuntu
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        image: ${{fromJson(needs.setup_matrix_for_centOS.outputs.matrix)}}
+    env:
+      UBUNTU_IMAGE_VERSION: ${{ matrix.image}}
+
+    steps:
+      - name: Successful curl download on ubuntu
+        run: |
+          docker run --rm -v $PWD:/workdir -w /workdir ${UBUNTU_IMAGE_VERSION} bash -c "
+            apt update;
+            apt install -y curl tar;
+            curl -fsSL ${INSTALLATION_URL} | bash;
+          "
+          lsCount=$(ls dotfiles/ | wc -c)
+          echo "ls count: ${lsCount}"
+          [ "${lsCount}" -gt 0 ] || exit 1
+          echo "${SUCCESSFUL_LOG}"
+      - name: Failed curl download on ubuntu
+        run: |
+          rm -rf * .??*
+          docker run --rm -v $PWD:/workdir -w /workdir ${UBUNTU_IMAGE_VERSION} bash -c "
+            curl -fsSL ${INSTALLATION_URL} | bash;
+          "
+          lsCount=$(ls dotfiles/ | wc -c)
+          echo "ls count: ${lsCount}"
+          [ "${lsCount}" -eq 0 ] || exit 1
+          echo "${SUCCESSFUL_LOG}"
 #
 #  wget_download_on_ubuntu:
 #    name: wget download on ubuntu
