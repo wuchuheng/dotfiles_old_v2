@@ -412,8 +412,7 @@ jobs:
           docker run --rm -v $PWD:/workdir -w /workdir ${UBUNTU_IMAGE_VERSION} bash -c "
             apt update;
             apt install -y curl unzip;
-            apt uninstall tar;
-            whereis tar
+            rm -f /usr/bin/tar
             curl -fsSL ${INSTALLATION_URL} | bash;
           "
           lsCount=$(ls dotfiles/ | wc -c)
