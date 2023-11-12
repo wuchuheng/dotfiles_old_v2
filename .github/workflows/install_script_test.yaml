@@ -305,6 +305,7 @@ jobs:
         uses: actions/checkout@v3
       - name: Asserting the result of a successful download by curl
         run: |
+          command -v unzip >/dev/null 2>&1 && brew uninstall -y unzip
           brew uninstall unzip
           curl -fsSL ${INSTALLATION_URL} | bash
           lsCount=$(ls dotfiles/ | wc -c)
