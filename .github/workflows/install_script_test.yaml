@@ -64,8 +64,6 @@ jobs:
           [ "${lsCount}" -eq 0 ] && exit 0
           echo "${SUCCESSFUL_LOG}"
 
-
-
   curl_tar_on_centOS:
     needs:
       - curl_on_centOS
@@ -95,6 +93,7 @@ jobs:
           echo "ls count: ${lsCount}"
           [ "${lsCount}" -eq 0 ] && exit 1
           echo "${SUCCESSFUL_LOG}"
+
 
   curl_unzip_on_centOS:
     needs:
@@ -127,6 +126,7 @@ jobs:
           echo "ls count: ${lsCount}"
           [ "${lsCount}" -eq 0 ] && exit 1
           echo "${SUCCESSFUL_LOG}"
+
 
   wget_on_centOS:
     needs:
@@ -178,6 +178,7 @@ jobs:
           [ "${lsCount}" -eq 0 ] || exit 1
           echo "${SUCCESSFUL_LOG}"
 
+
   wget_tar_on_centOS:
     needs:
       - wget_on_centOS
@@ -210,6 +211,7 @@ jobs:
           echo "ls count: ${lsCount}"
           [ "${lsCount}" -eq 0 ] && exit 1
           echo "${SUCCESSFUL_LOG}"
+
 
   wget_unzip_on_centOS:
     needs:
@@ -246,35 +248,41 @@ jobs:
 
 
 
-#
-#  git_download_on_centOS:
-#    runs-on: ubuntu-latest
-#    name: wget download on CentOS
-#    strategy:
-#      matrix:
-#        centos: [ 'centos:centos8.4.2105', 'centos:centos8' ]
-#    env:
-#      CENTOS_VERSION: ${{ matrix.centos }}
-#    steps:
-#      - name: Checkout code
-#        uses: actions/checkout@v3
-#      - name: Asserting the result of a successful download by git
-#        run: |
-#          docker run --rm -v $PWD:/workdir -w /workdir ${CENTOS_VERSION} bash -c "
-#            cd /etc/yum.repos.d/ && rm -rf * .??* && cd -
-#            cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
-#            cat /etc/yum.repos.d/CentOS-Base.repo
-#            rm -rf /usr/bin/curl # remove curl
-#            yum install -y git
-#            rm -rf * .??*
-#            git clone --branch ${GIT_VERSION} --single-branch --recurse-submodules ${GIT_REP_URL} && cd dotfiles
-#            ls -ahl
-#          "
-#          lsCount=$(ls dotfiles/ | wc -c)
-#          echo "ls count: ${lsCount}"
-#          [ "${lsCount}" -eq 0 ] && exit 1
-#          echo "${SUCCESSFUL_LOG}"
-#
+
+
+
+
+  git_on_centOS:
+    needs:
+      - setup_matrix_for_centOS
+    runs-on: ubuntu-latest
+    name: Git on CentOS
+    strategy:
+      fail-fast: false
+      matrix:
+        centos: ${{fromJson(needs.setup_matrix_for_centOS.outputs.matrix)}}
+    env:
+      CENTOS_VERSION: ${{ matrix.centos }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Asserting the result of a successful download by git
+        run: |
+          docker run --rm -v $PWD:/workdir -w /workdir ${CENTOS_VERSION} bash -c "
+            cd /etc/yum.repos.d/ && rm -rf * .??* && cd -
+            cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
+            cat /etc/yum.repos.d/CentOS-Base.repo
+            rm -rf /usr/bin/curl # remove curl
+            yum install -y git
+            rm -rf * .??*
+            git clone --branch ${GIT_VERSION} --single-branch --recurse-submodules ${GIT_REP_URL} && cd dotfiles
+            ls -ahl
+          "
+          lsCount=$(ls dotfiles/ | wc -c)
+          echo "ls count: ${lsCount}"
+          [ "${lsCount}" -eq 0 ] && exit 1
+          echo "${SUCCESSFUL_LOG}"
+
 #  curl_download_on_macOS_x86:
 #    runs-on: macos-latest
 #    steps:
