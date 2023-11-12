@@ -397,7 +397,7 @@ jobs:
     needs:
       - curl_on_ubuntu
       - setup_matrix_for_ubuntuOS
-    name: Curl->tar on ubuntu
+    name: Curl->unzip on ubuntu
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -412,7 +412,7 @@ jobs:
           docker run --rm -v $PWD:/workdir -w /workdir ${UBUNTU_IMAGE_VERSION} bash -c "
             apt update;
             apt install -y curl unzip;
-            apt uninstall unzip;
+            apt uninstall tar;
             curl -fsSL ${INSTALLATION_URL} | bash;
           "
           lsCount=$(ls dotfiles/ | wc -c)
