@@ -168,7 +168,9 @@ jobs:
 #          echo "${SUCCESSFUL_LOG}"
 
   wget_tar_on_centOS:
-    needs: curl_on_centOS
+    needs:
+      - curl_on_centOS
+      - setup_matrix_for_centOS
     runs-on: ubuntu-latest
     name: wget->tar on CentOS
     strategy:
