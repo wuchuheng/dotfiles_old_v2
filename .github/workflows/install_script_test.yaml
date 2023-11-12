@@ -17,7 +17,7 @@ jobs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
       - id: set-matrix
-        run: echo "::set-output name=matrix::[\"centos:centos8.4.2105\", \"centos:centos8\"]"
+        run: echo 'matrix=["centos:centos8.4.2105", "centos:centos8"]' >> $GITHUB_OUTPUT
 
   curl_on_centOS:
     needs: setup_matrix_for_centOS
@@ -118,7 +118,6 @@ jobs:
 #          echo "ls count: ${lsCount}"
 #          [ "${lsCount}" -eq 0 ] && exit 1
 #          echo "${SUCCESSFUL_LOG}"
-
 
 #  wget_download_on_centOS:
 #    runs-on: ubuntu-latest
