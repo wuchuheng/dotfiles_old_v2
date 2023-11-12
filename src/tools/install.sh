@@ -6,6 +6,37 @@ DOTFILES_REP="github.com/wuchuheng/dotfiles"
 SAVED_DIRECTORY='dotfiles'
 TRUE=0;
 FALSE=1
+IS_INSTALLATION_ZSH=${FALSE}
+SUPPORTED_OS_LIST=(MacOS CentOS UbuntuOS)
+
+##
+# get the os symbol
+# @use get_os_symbol
+# @print <UbuntuOS|CentOS|MacOS|unknown>
+function get_os_symbol() {
+  case "$(uname -s)" in
+    Linux*)
+      if [ -f /etc/os-release ]; then
+        source /etc/os-release
+        if [ "$ID" = "ubuntu" ]; then
+          echo "UbuntuOS"
+        elif [ "$ID" = "centos" ]; then
+          echo "CentOS"
+        else
+          echo "$ID" # or you could default to just "Linux"
+        fi
+      else
+        echo "Linux"
+      fi
+      ;;
+    Darwin*)
+      echo "MacOS"
+      ;;
+    *)
+      echo "unknown:$(uname -s)"
+      ;;
+  esac
+}
 
 ##
 # print the log in terminal
@@ -201,8 +232,52 @@ function download_dotfiles() {
   fi
 }
 
+##
+# check zsh existed or not
+# @use check_existed_zsh_or_install
+# @return <boolean>
+##
+function check_existed_zsh_or_install() {
+  if ! cli_exits zsh; then
+      local currentOS=$(get_os_symbol)
+      # check the current OS was supported or not
+      local isSupportedOS=${FALSE}
+      for os in "${SUPPORTED_OS_LIST[@]}"; do
+          if [[ ${currentOS} == ${os} ]]; then
+            isSupportedOS=${TRUE}
+            break
+          fi
+      done
+      if [[ ${isSupportedOS} -eq ${FALSE}  ]]; then
+        log "Your OS is not supported, please install zsh by yourself."
+        exit;
+      fi
+
+    log "Install zsh."
+    case ${currentOS} in
+      MacOS)
+        brew install zsh
+        ;;
+      CentOS)
+        yum install -y zsh
+        ;;
+      UbuntuOS)
+        apt install -y zsh
+        ;;
+    esac
+    # check the zsh installation is success or not
+    if ! cli_exits zsh; then
+      log "Install zsh failed, please install zsh by yourself."
+      exit;
+    else
+      IS_INSTALLATION_ZSH=${TRUE}
+    fi
+
+    return "${TRUE}"
+  fi
+}
+
 download_dotfiles
-
+check_existed_zsh_or_install
 cd "${SAVED_DIRECTORY}"
-
 bash src/bootstrap/bash_install_boot.sh
