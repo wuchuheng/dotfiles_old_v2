@@ -15,7 +15,7 @@ jobs:
         run: |
           symbolOS=$(bash src/tmp.sh)
           echo "${symbolOS}"
-          [[ $symbolOS == "macOS" ]] && echo "Test Passed" || echo "Test Failed"
+          [[ $symbolOS == "MacOS" ]] && echo "Test Passed" || echo "Test Failed"
 
   centOS:
     runs-on: ubuntu-latest
@@ -32,7 +32,7 @@ jobs:
         run: |
           symbolOS=$(bash src/tmp.sh)
           echo "${symbolOS}"
-          [[ $symbolOS == "centOS" ]] && echo "Test Passed" || echo "Test Failed"
+          [[ $symbolOS == "CentOS" ]] && echo "Test Passed" || echo "Test Failed"
   ubuntu:
     runs-on: ubuntu-latest
     steps:
@@ -42,4 +42,4 @@ jobs:
         run: |
           symbolOS=$(bash src/tmp.sh)
           echo "${symbolOS}"
-          [[ $symbolOS == "ubuntuOS" ]] && echo "Test Passed" || echo "Test Failed"
+          [[ $symbolOS == "UbuntuOS" ]] && echo "Test Passed" || echo "Test Failed"

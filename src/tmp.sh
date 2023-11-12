@@ -6,9 +6,9 @@ get_os_symbol() {
       if [ -f /etc/os-release ]; then
         source /etc/os-release
         if [ "$ID" = "ubuntu" ]; then
-          echo "ubuntuOS"
+          echo "UbuntuOS"
         elif [ "$ID" = "centos" ]; then
-          echo "centOS"
+          echo "CentOS"
         else
           echo "$ID" # or you could default to just "Linux"
         fi
@@ -17,7 +17,7 @@ get_os_symbol() {
       fi
       ;;
     Darwin*)
-      echo "macOS"
+      echo "MacOS"
       ;;
     *)
       echo "unknown:$(uname -s)"
