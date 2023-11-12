@@ -11,51 +11,50 @@ env:
   SUCCESSFUL_LOG: 'echo "\033[0;32mPASS\033[0m %s\n"'
 
 jobs:
-
-  curl_download_on_centOS:
-    runs-on: ubuntu-latest
-    name: curl download on CentOS
-    strategy:
-      matrix:
-        centos: [ 'centos:centos8.4.2105', 'centos:centos8' ]
-    env:
-      CENTOS_VERSION: ${{ matrix.centos }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-      - name: Asserting the result of a successful download by curl
-        run: |
-          docker run --rm -v $PWD:/workdir -w /workdir ${CENTOS_VERSION} bash -c "
-            cd /etc/yum.repos.d/ && rm -rf * .??* && cd -
-            cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
-            cat /etc/yum.repos.d/CentOS-Base.repo
-            rm -rf * .??*
-            curl -fsSL ${INSTALLATION_URL} | bash
-            ls -ahl
-          "
-          lsCount=$(ls dotfiles/ | wc -c)
-          echo "ls count: ${lsCount}"
-          [ "${lsCount}" -eq 0 ] && exit 1
-          echo "${SUCCESSFUL_LOG}"
-      - name: Checkout code
-        uses: actions/checkout@v3
-      - name: Asserting the result of a failed download by curl
-        run: |
-          docker run --rm -v $PWD:/workdir -w /workdir ${CENTOS_VERSION} bash -c "
-            cd /etc/yum.repos.d/ && rm -rf * .??* && cd -
-            cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
-            cat /etc/yum.repos.d/CentOS-Base.repo
-            rm -rf * .??*
-            yum remove -y curl
-            curl -fsSL ${INSTALLATION_URL} | bash
-          "
-          lsCount=$(ls dotfiles/ | wc -c)
-          echo "ls count: ${lsCount}"
-          [ "${lsCount}" -eq 0 ] && exit 0
-          echo "${SUCCESSFUL_LOG}"
+#  curl_on_centOS:
+#    runs-on: ubuntu-latest
+#    name: curl on CentOS
+#    strategy:
+#      matrix:
+#        centos: [ 'centos:centos8.4.2105', 'centos:centos8' ]
+#    env:
+#      CENTOS_VERSION: ${{ matrix.centos }}
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v3
+#      - name: Asserting the result of a successful download by curl
+#        run: |
+#          docker run --rm -v $PWD:/workdir -w /workdir ${CENTOS_VERSION} bash -c "
+#            cd /etc/yum.repos.d/ && rm -rf * .??* && cd -
+#            cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
+#            cat /etc/yum.repos.d/CentOS-Base.repo
+#            rm -rf * .??*
+#            curl -fsSL ${INSTALLATION_URL} | bash
+#            ls -ahl
+#          "
+#          lsCount=$(ls dotfiles/ | wc -c)
+#          echo "ls count: ${lsCount}"
+#          [ "${lsCount}" -eq 0 ] && exit 1
+#          echo "${SUCCESSFUL_LOG}"
+#      - name: Checkout code
+#        uses: actions/checkout@v3
+#      - name: Asserting the result of a failed download by curl
+#        run: |
+#          docker run --rm -v $PWD:/workdir -w /workdir ${CENTOS_VERSION} bash -c "
+#            cd /etc/yum.repos.d/ && rm -rf * .??* && cd -
+#            cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
+#            cat /etc/yum.repos.d/CentOS-Base.repo
+#            rm -rf * .??*
+#            yum remove -y curl
+#            curl -fsSL ${INSTALLATION_URL} | bash
+#          "
+#          lsCount=$(ls dotfiles/ | wc -c)
+#          echo "ls count: ${lsCount}"
+#          [ "${lsCount}" -eq 0 ] && exit 0
+#          echo "${SUCCESSFUL_LOG}"
 
 #  curl_tar_on_centOS:
-#    needs: curl_download_on_centOS
+#    needs: curl_on_centOS
 #    runs-on: ubuntu-latest
 #    name: curl->tar on CentOS
 #    strategy:
@@ -81,34 +80,35 @@ jobs:
 #          [ "${lsCount}" -eq 0 ] && exit 1
 #          echo "${SUCCESSFUL_LOG}"
 
-  curl_unzip_on_centOS:
-    needs: curl_download_on_centOS
-    runs-on: ubuntu-latest
-    name: curl->unzip on CentOS
-    strategy:
-      matrix:
-         centos: [ 'centos:centos8.4.2105', 'centos:centos8' ]
-    env:
-      CENTOS_VERSION: ${{ matrix.centos }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-      - name: Asserting the result of a successful download by curl
-        run: |
-          docker run --rm -v $PWD:/workdir -w /workdir ${CENTOS_VERSION} bash -c "
-            cd /etc/yum.repos.d/ && rm -rf * .??* && cd -
-            cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
-            cat /etc/yum.repos.d/CentOS-Base.repo
-            rm -rf * .??*
-            yum remove -y tar;
-            yum install -y unzip
-            curl -fsSL ${INSTALLATION_URL} | bash
-            ls -ahl
-          "
-          lsCount=$(ls dotfiles/ | wc -c)
-          echo "ls count: ${lsCount}"
-          [ "${lsCount}" -eq 0 ] && exit 1
-          echo "${SUCCESSFUL_LOG}"
+#  curl_unzip_on_centOS:
+#    needs: curl_on_centOS
+#    runs-on: ubuntu-latest
+#    name: curl->unzip on CentOS
+#    strategy:
+#      matrix:
+#         centos: [ 'centos:centos8.4.2105', 'centos:centos8' ]
+#    env:
+#      CENTOS_VERSION: ${{ matrix.centos }}
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v3
+#      - name: Asserting the result of a successful download by curl
+#        run: |
+#          docker run --rm -v $PWD:/workdir -w /workdir ${CENTOS_VERSION} bash -c "
+#            cd /etc/yum.repos.d/ && rm -rf * .??* && cd -
+#            cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
+#            cat /etc/yum.repos.d/CentOS-Base.repo
+#            rm -rf * .??*
+#            yum remove -y tar;
+#            yum install -y unzip
+#            curl -fsSL ${INSTALLATION_URL} | bash
+#            ls -ahl
+#          "
+#          lsCount=$(ls dotfiles/ | wc -c)
+#          echo "ls count: ${lsCount}"
+#          [ "${lsCount}" -eq 0 ] && exit 1
+#          echo "${SUCCESSFUL_LOG}"
+
 
 #  wget_download_on_centOS:
 #    runs-on: ubuntu-latest
@@ -156,6 +156,46 @@ jobs:
 #          echo "ls count: ${lsCount}"
 #          [ "${lsCount}" -eq 0 ] || exit 1
 #          echo "${SUCCESSFUL_LOG}"
+
+  setup_matrix_for_centOS:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - id: set-matrix
+        run: echo "::set-output name=matrix::[\"centos:centos8.4.2105\", \"centos:centos8\"]"
+
+  wget_tar_on_centOS:
+    needs: setup_matrix_for_centOS
+    runs-on: ubuntu-latest
+    name: wget->tar on CentOS
+    strategy:
+      fail-fast: false
+      matrix:
+        centos: ${{fromJson(needs.setup_matrix_for_centOS.outputs.matrix)}}
+    env:
+      CENTOS_VERSION: ${{ matrix.centos }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Asserting the result of a successful download by wget
+        run: |
+          docker run --rm -v $PWD:/workdir -w /workdir ${CENTOS_VERSION} bash -c "
+            cd /etc/yum.repos.d/ && rm -rf * .??* && cd -;
+            cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo;
+            cat /etc/yum.repos.d/CentOS-Base.repo;
+            rm -rf /usr/bin/curl # remove curl;
+            yum install -y wget;
+            yum install -y tar;
+            rm -rf * .??*;
+            wget -O- ${INSTALLATION_URL} | bash;
+            ls -ahl
+          "
+          lsCount=$(ls dotfiles/ | wc -c)
+          echo "ls count: ${lsCount}"
+          [ "${lsCount}" -eq 0 ] && exit 1
+          echo "${SUCCESSFUL_LOG}"
+
 #
 #  git_download_on_centOS:
 #    runs-on: ubuntu-latest
