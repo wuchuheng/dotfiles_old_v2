@@ -321,11 +321,51 @@ jobs:
       - id: set-matrix
         run: echo 'matrix=["ubuntu:23.10"]' >> $GITHUB_OUTPUT
 
-#  curl_download_on_ubuntu:
+  curl_on_ubuntu:
+    needs:
+      - setup_matrix_for_ubuntuOS
+    name: Curl on ubuntu
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        image: ${{fromJson(needs.setup_matrix_for_centOS.outputs.matrix)}}
+    env:
+      UBUNTU_IMAGE_VERSION: ${{ matrix.image}}
+
+    steps:
+      - name: Successful curl download on ubuntu
+        run: |
+          docker run --rm -v $PWD:/workdir -w /workdir ${UBUNTU_IMAGE_VERSION} bash -c "
+            apt update;
+            apt install -y curl;
+            curl -fsSL ${INSTALLATION_URL} | bash;
+          "
+          lsCount=$(ls dotfiles/ | wc -c)
+          echo "ls count: ${lsCount}"
+          [ "${lsCount}" -gt 0 ] || exit 1
+          printf "${SUCCESSFUL_LOG}"
+      - name: Failed curl download on ubuntu
+        run: |
+          rm -rf * .??*
+          docker run --rm -v $PWD:/workdir -w /workdir ${UBUNTU_IMAGE_VERSION} bash -c "
+            curl -fsSL ${INSTALLATION_URL} | bash;
+          "
+          lsCount=$(ls dotfiles/ | wc -c)
+          echo "ls count: ${lsCount}"
+          [ "${lsCount}" -eq 0 ] || exit 1
+          printf "${SUCCESSFUL_LOG}"
+
+#  curl_tar_on_ubuntu:
+#    needs:
+#      - curl_on_ubuntu
+#      - setup_matrix_for_ubuntuOS
+#    name: Curl->tar on ubuntu
 #    runs-on: ubuntu-latest
 #    strategy:
+#      fail-fast: false
 #      matrix:
-#        image: [ 'ubuntu:23.10']
+#        image: ${{fromJson(needs.setup_matrix_for_ubuntuOS.outputs.matrix)}}
 #    env:
 #      UBUNTU_IMAGE_VERSION: ${{ matrix.image}}
 #
@@ -334,7 +374,7 @@ jobs:
 #        run: |
 #          docker run --rm -v $PWD:/workdir -w /workdir ${UBUNTU_IMAGE_VERSION} bash -c "
 #            apt update;
-#            apt install -y curl;
+#            apt install -y curl tar;
 #            curl -fsSL ${INSTALLATION_URL} | bash;
 #          "
 #          lsCount=$(ls dotfiles/ | wc -c)
@@ -351,9 +391,11 @@ jobs:
 #          echo "ls count: ${lsCount}"
 #          [ "${lsCount}" -eq 0 ] || exit 1
 #          printf "${SUCCESSFUL_LOG}"
-
-  curl_tar_on_ubuntu:
+#
+#
+  curl_unzip_on_ubuntu:
     needs:
+      - curl_on_ubuntu
       - setup_matrix_for_ubuntuOS
     name: Curl->tar on ubuntu
     runs-on: ubuntu-latest
@@ -369,7 +411,8 @@ jobs:
         run: |
           docker run --rm -v $PWD:/workdir -w /workdir ${UBUNTU_IMAGE_VERSION} bash -c "
             apt update;
-            apt install -y curl tar;
+            apt install -y curl unzip;
+            apt uninstall unzip;
             curl -fsSL ${INSTALLATION_URL} | bash;
           "
           lsCount=$(ls dotfiles/ | wc -c)
