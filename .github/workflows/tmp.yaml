@@ -1,0 +1,42 @@
+name: Test the get_symbol_os function
+
+on:
+  push:
+    branches:
+      - tmp
+
+jobs:
+  macOS:
+    runs-on: macOS-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Test get_symbol_os
+        run: |
+          symbolOS=$(bash src/tmp.sh)
+          [[ $symbolOS == "macOS" ]] && echo "Test Passed" || echo "Test Failed"
+
+  centOS:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        centos: ["centos:centos8.4.2105", "centos:centos8"]
+    container:
+      image: ${{ matrix.centos }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Test get_symbol_os
+        run: |
+          symbolOS=$(bash src/tmp.sh)
+          [[ $symbolOS == "centOS" ]] && echo "Test Passed" || echo "Test Failed"
+  ubuntu:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Test get_symbol_os
+        run: |
+          symbolOS=$(bash src/tmp.sh)
+          [[ $symbolOS == "ubuntuOS" ]] && echo "Test Passed" || echo "Test Failed"
