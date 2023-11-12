@@ -385,7 +385,7 @@ jobs:
           lsCount=$(ls dotfiles/ | wc -c)
           echo "ls count: ${lsCount}"
           [ "${lsCount}" -eq 0 ] || exit 1
-          echo '${SUCCESSFUL_LOG}'
+          printf "${SUCCESSFUL_LOG}"
 #
 #  wget_download_on_ubuntu:
 #    name: wget download on ubuntu
