@@ -32,7 +32,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: Asserting the result of a successful download by curl
+      - name: Install Dotfiles by curl
         run: |
           docker run --rm -v $PWD:/workdir -w /workdir ${CENTOS_VERSION} bash -c "
             set -e
@@ -41,9 +41,10 @@ jobs:
             cat /etc/yum.repos.d/CentOS-Base.repo
             rm -rf * .??*
             curl -fsSL ${INSTALLATION_URL} | bash
-            ls -ahl
           "
-
+      - name: Check the result after the installation of Dotfiles
+        run: |
+          ls -ahl
 #
 #  curl_on_centOS:
 #    needs:
