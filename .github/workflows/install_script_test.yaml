@@ -408,7 +408,7 @@ jobs:
         run: |
           docker run --rm -v $PWD:/workdir -w /workdir ${UBUNTU_IMAGE_VERSION} bash -c "
             apt update;
-            apt install -y curl unzip;
+            apt install -y curl unzip zsh;
             rm -f /usr/bin/tar
             curl -fsSL ${INSTALLATION_URL} | bash;
           "
