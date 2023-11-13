@@ -8,6 +8,7 @@ TRUE=0;
 FALSE=1
 IS_INSTALLATION_ZSH=${FALSE}
 IS_INSTALLATION_TAR=${FALSE}
+IS_INSTALLATION_TPUT=${FALSE}
 SUPPORTED_OS_LIST=(MacOS CentOS UbuntuOS)
 
 ##
@@ -276,5 +277,6 @@ function check_current_os_is_supported() {
 check_current_os_is_supported
 download_dotfiles
 cli_exits zsh || install_tools_by_name zsh
+cli_exits tput || install_tools_by_name tput && IS_INSTALLATION_TPUT=${TRUE}
 cd "${SAVED_DIRECTORY}"
 bash src/bootstrap/bash_install_boot.sh
