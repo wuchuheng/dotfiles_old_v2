@@ -271,8 +271,8 @@ function check_current_os_is_supported() {
         fi
     done
     if [[ ${isSupportedOS} -eq ${FALSE}  ]]; then
-      log "Your OS is not supported, please install zsh by yourself."
-      exit;
+      log "Your OS is ${currentOS}, it was not supported."
+      exit 1;
     fi
 
     echo "${isSupportedOS}"
