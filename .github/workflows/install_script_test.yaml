@@ -52,6 +52,7 @@ jobs:
         run: |
           docker exec ${CONTAINER_NAME} bash -c "
             cd dotfiles
+            yum install -y make
             make check_dotfiles_installed
           "
 #  curl_on_centOS:
