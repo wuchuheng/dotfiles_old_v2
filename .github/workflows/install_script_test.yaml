@@ -506,3 +506,55 @@ jobs:
           echo "ls count: ${lsCount}"
           [ "${lsCount}" -gt 0 ] || exit 1
           printf "${SUCCESSFUL_LOG}"
+
+  git_on_ubuntu:
+    name: git on ubuntu
+    needs:
+      - setup_matrix_for_ubuntuOS
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        image: ${{fromJson(needs.setup_matrix_for_ubuntuOS.outputs.matrix)}}
+    env:
+      UBUNTU_IMAGE_VERSION: ${{ matrix.image }}
+
+    steps:
+      - name: Successful wget download on ubuntu
+        run: |
+          docker run --rm -v $PWD:/workdir -w /workdir ${UBUNTU_IMAGE_VERSION} bash -c "
+            apt update;
+            apt install -y git;
+            git clone --branch ${GIT_VERSION} --single-branch --recurse-submodules ${GIT_REP_URL}
+          "
+          lsCount=$(ls dotfiles/ | wc -c)
+          echo "ls count: ${lsCount}"
+          [ "${lsCount}" -gt 0 ] || exit 1
+          printf "${SUCCESSFUL_LOG}"
+
+  git_install_ubuntu:
+    name: git->installation on ubuntu
+    needs:
+      - setup_matrix_for_ubuntuOS
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        image: ${{fromJson(needs.setup_matrix_for_ubuntuOS.outputs.matrix)}}
+    env:
+      UBUNTU_IMAGE_VERSION: ${{ matrix.image }}
+
+    steps:
+      - name: Successful wget download on ubuntu
+        run: |
+          docker run --rm -v $PWD:/workdir -w /workdir ${UBUNTU_IMAGE_VERSION} bash -c "
+            apt update;
+            apt install -y git;
+            git clone --branch ${GIT_VERSION} --single-branch --recurse-submodules ${GIT_REP_URL};
+            cd dotfiles;
+            bash src/bootstrap/bash_install_boot.sh;
+          "
+          lsCount=$(ls dotfiles/ | wc -c)
+          echo "ls count: ${lsCount}"
+          [ "${lsCount}" -gt 0 ] || exit 1
+          printf "${SUCCESSFUL_LOG}"
