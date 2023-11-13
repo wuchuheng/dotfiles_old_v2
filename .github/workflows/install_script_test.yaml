@@ -30,11 +30,15 @@ jobs:
     env:
       CENTOS_VERSION: ${{ matrix.centos }}
     steps:
+      - name: Set container name
+        id: vars
+        run: |
+          echo "CONTAINER_NAME=centos" >> $GITHUB_ENV
       - name: Checkout code
         uses: actions/checkout@v3
       - name: Install Dotfiles by curl
         run: |
-          docker run --rm -v $PWD:/workdir -w /workdir ${CENTOS_VERSION} bash -c "
+          docker run -itd -v $PWD:/workdir --name ${CONTAINER_NAME} -w /workdir ${CENTOS_VERSION} bash -c "
             set -e
             export TERM=xterm
             cd /etc/yum.repos.d/ && rm -rf * .??* && cd -
@@ -45,9 +49,10 @@ jobs:
           "
       - name: Check the installation of dotfiles was successful or not
         run: |
-          cd dotfiles
-          /usr/share/zsh src/bootstrap/check_dotfiles_installed_boot.zsh
-#
+          docker exec -it ${CONTAINER_NAME} bash -c "
+            cd dotfiles
+            make check_dotfiles_installed
+          "
 #  curl_on_centOS:
 #    needs:
 #      - setup_matrix_for_centOS
