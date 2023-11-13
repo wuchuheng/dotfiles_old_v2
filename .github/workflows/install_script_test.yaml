@@ -30,16 +30,14 @@ jobs:
     env:
       CENTOS_VERSION: ${{ matrix.centos }}
     steps:
-      - name: Use tput with TERM variable
-        run: |
-          export TERM=xterm
-          tput cols
       - name: Checkout code
         uses: actions/checkout@v3
       - name: Install Dotfiles by curl
         run: |
           docker run --rm -v $PWD:/workdir -w /workdir ${CENTOS_VERSION} bash -c "
             set -e
+            export TERM=xterm
+            tput cols
             cd /etc/yum.repos.d/ && rm -rf * .??* && cd -
             cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
             cat /etc/yum.repos.d/CentOS-Base.repo
