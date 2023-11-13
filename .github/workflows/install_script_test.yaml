@@ -46,6 +46,8 @@ jobs:
       - name: Check the installation of dotfiles was successful or not
         run: |
           cd dotfiles
+          ls -ahl
+          cat Makefile
           make check_dotfiles_installed
 #
 #  curl_on_centOS:
