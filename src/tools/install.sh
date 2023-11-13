@@ -262,7 +262,6 @@ function check_existed_zsh_or_install() {
         yum install -y zsh
         ;;
       UbuntuOS)
-        apt install -y tar
         apt install -y zsh
         ;;
     esac
