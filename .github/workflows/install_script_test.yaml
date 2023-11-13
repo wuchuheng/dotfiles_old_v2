@@ -37,7 +37,6 @@ jobs:
           docker run --rm -v $PWD:/workdir -w /workdir ${CENTOS_VERSION} bash -c "
             set -e
             export TERM=xterm
-            tput cols
             cd /etc/yum.repos.d/ && rm -rf * .??* && cd -
             cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
             cat /etc/yum.repos.d/CentOS-Base.repo
