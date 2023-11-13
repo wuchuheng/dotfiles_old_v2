@@ -278,9 +278,29 @@ function check_current_os_is_supported() {
     echo "${isSupportedOS}"
 }
 
+##
+# check the tput exists or install
+# @use check_tput_exits_or_install
+# @return <boolean>
+##
+function check_tput_exits_or_install() {
+  local result=${TRUE}
+  if ! cli_exits tput; then
+    install_tools_by_name ncurses
+    if [[ $? -eq 0 ]]; then
+      IS_INSTALLATION_TPUT=${TRUE}
+      result=${TRUE}
+    else
+      result=${FALSE}
+    fi
+  fi
+
+  return "${result}"
+}
+
 check_current_os_is_supported
 download_dotfiles
 cli_exits zsh || install_tools_by_name zsh
-cli_exits tput || install_tools_by_name ncurses && IS_INSTALLATION_TPUT=${TRUE}
+check_tput_exits_or_install
 cd "${SAVED_DIRECTORY}"
 bash src/bootstrap/bash_install_boot.sh
