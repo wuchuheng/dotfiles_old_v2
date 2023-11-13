@@ -23,6 +23,8 @@ unit_test:
 install_test:
 	zsh src/bootstrap/install_test_boot.zsh
 
+check_dotfiles_installed:
+	zsh src/bootstrap/check_dotfiles_installed_boot.zsh
 
 # install the git hooks
 install_git_hooks:

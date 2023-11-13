@@ -42,11 +42,11 @@ jobs:
             cat /etc/yum.repos.d/CentOS-Base.repo
             rm -rf * .??*
             curl -fsSL ${INSTALLATION_URL} | bash
-            zsh
           "
-      - name: Check the result after the installation of Dotfiles
+      - name: Check the installation of dotfiles was successful or not
         run: |
-          ls -ahl
+          cd dotfiles
+          make check_dotfiles_installed
 #
 #  curl_on_centOS:
 #    needs:

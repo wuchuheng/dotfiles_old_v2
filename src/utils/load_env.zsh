@@ -47,12 +47,12 @@ function get_env() {
 
 ##
 # set the env type
-# @Use set_env_type "<test, install, uninstall, prod>"
+# @Use set_env_type "<test, install, uninstall, prod, check_installation>"
 # @Return <boolean>
 ##
 function set_env_type() {
   local envType=$1
-  local envTypeList=(test install uninstall prod)
+  local envTypeList=(test install uninstall prod check_installation)
   # check the env type is existed in envTypeList
   if [[ ! "${envTypeList[@]}" =~ "${envType}" ]]; then
     log ERROR "The env type is not existed!"
