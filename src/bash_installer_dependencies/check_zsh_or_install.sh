@@ -20,7 +20,7 @@ function _check_zsh_exit() {
 }
 
 ##
-# install zsh in mac OS
+# install zsh in MacOS
 # @Use _install_zsh_in_mac_os
 # @Return <boolean>
 ##

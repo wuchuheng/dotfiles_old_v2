@@ -35,7 +35,7 @@ for numberCliDirName in "${cliDirList[@]}"; do
   check_cli_by_number_dir "${numberCliDirName}"
   local isInstallation=$?
   # if the cli was not installed, then install it.
-  if [[ "${isInstallation}" -eq "${FALSE}" ]]; then
+  if [[ "${isInstallation}" -eq "${TRUE}" ]]; then
     printf "${numberCliDirName}: SUCCESSFUL"
     (( totalSuccessfulCliNum++ ))
   else

@@ -56,3 +56,7 @@
 ## 0.0.46
 - chore(CI/CD):  add the test to install the dotfile in centOS
 - feat: add the directive in Makefile to check the project was installed successful or not after install the dotfiles.
+
+## 0.0.47
+- refactor:  🎉 add a get_current_cli function in templates.
+- fix: :bug: fix the issue that the dotfile can't get the statisticians of checking the dotfile is installed or not.
