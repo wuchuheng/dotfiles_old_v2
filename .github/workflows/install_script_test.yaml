@@ -38,7 +38,8 @@ jobs:
         uses: actions/checkout@v3
       - name: Install Dotfiles by curl
         run: |
-          docker run -itd -v $PWD:/workdir --name ${CONTAINER_NAME} -w /workdir ${CENTOS_VERSION} bash -c "
+          docker run -itd -v $PWD:/workdir --name ${CONTAINER_NAME} -w /workdir ${CENTOS_VERSION}
+          docker exec -it ${CONTAINER_NAME} bash -c "
             set -e
             export TERM=xterm
             cd /etc/yum.repos.d/ && rm -rf * .??* && cd -
