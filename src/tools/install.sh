@@ -99,7 +99,7 @@ function install_tools_by_name() {
 
   # check the zsh installation is success or not
   if ! cli_exits "${binName}"; then
-    log "Install ${toolName} failed, please install zsh by yourself."
+    log "Install ${toolName} failed, please install ${toolName} by yourself."
     IS_INSTALLATION=${FALSE}
   else
     IS_INSTALLATION=${TRUE}
@@ -286,7 +286,7 @@ function check_current_os_is_supported() {
 function check_tput_exits_or_install() {
   local result=${TRUE}
   if ! cli_exits tput; then
-    install_tools_by_name ncurses
+    install_tools_by_name ncurses tput
     if [[ $? -eq 0 ]]; then
       IS_INSTALLATION_TPUT=${TRUE}
       result=${TRUE}
