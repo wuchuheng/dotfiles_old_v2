@@ -39,7 +39,7 @@ jobs:
       - name: Install Dotfiles by curl
         run: |
           docker run -itd -v $PWD:/workdir --name ${CONTAINER_NAME} -w /workdir ${CENTOS_VERSION}
-          docker exec -it ${CONTAINER_NAME} bash -c "
+          docker exec ${CONTAINER_NAME} bash -c "
             set -e
             export TERM=xterm
             cd /etc/yum.repos.d/ && rm -rf * .??* && cd -
@@ -50,7 +50,7 @@ jobs:
           "
       - name: Check the installation of dotfiles was successful or not
         run: |
-          docker exec -it ${CONTAINER_NAME} bash -c "
+          docker exec ${CONTAINER_NAME} bash -c "
             cd dotfiles
             make check_dotfiles_installed
           "
