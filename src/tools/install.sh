@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 set -e
-VERSION=v0.0.45;
+VERSION=v0.0.46;
 DOTFILES_REP="github.com/wuchuheng/dotfiles"
 SAVED_DIRECTORY='dotfiles'
 TRUE=0;
