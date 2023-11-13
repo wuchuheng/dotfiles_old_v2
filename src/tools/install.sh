@@ -73,11 +73,15 @@ function download_by_git() {
 
 ##
 # install tools by name
-# @use install_tools_by_name <tool_name>
+# @use install_tools_by_name <tool_name> <bin name>
 # @return TRUE|FALSE
 ##
 function install_tools_by_name() {
   local toolName=$1
+  local binName=$2
+  if [[ -z $binName ]]; then
+    binName="${toolName}"
+  fi
   local currentOS=$(get_os_symbol)
   local IS_INSTALLATION=${FALSE}
   log "Install ${toolName}."
@@ -94,8 +98,8 @@ function install_tools_by_name() {
   esac
 
   # check the zsh installation is success or not
-  if ! cli_exits "${toolName}"; then
-    log "Install zsh failed, please install zsh by yourself."
+  if ! cli_exits "${binName}"; then
+    log "Install ${toolName} failed, please install zsh by yourself."
     exit;
   else
     IS_INSTALLATION=${TRUE}
