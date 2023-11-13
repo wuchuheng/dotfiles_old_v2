@@ -47,6 +47,7 @@ jobs:
         run: |
           cd dotfiles
           ls -ahl
+          whereis zsh
           cat Makefile
           make check_dotfiles_installed
 #
