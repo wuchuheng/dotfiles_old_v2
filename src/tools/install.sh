@@ -100,7 +100,7 @@ function install_tools_by_name() {
   # check the zsh installation is success or not
   if ! cli_exits "${binName}"; then
     log "Install ${toolName} failed, please install zsh by yourself."
-    exit;
+    IS_INSTALLATION=${FALSE}
   else
     IS_INSTALLATION=${TRUE}
   fi
