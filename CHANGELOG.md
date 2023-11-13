@@ -60,3 +60,6 @@
 ## 0.0.47
 - refactor:  🎉 add a get_current_cli function in templates.
 - fix: :bug: fix the issue that the dotfile can't get the statisticians of checking the dotfile is installed or not.
+
+## 0.0.48
+- chore:  update CHANGELOG.md
