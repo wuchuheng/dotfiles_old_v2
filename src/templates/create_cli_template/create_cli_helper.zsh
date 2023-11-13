@@ -249,6 +249,8 @@ function _generateInstallationCheckerProviderFile() {
 
 import @/src/utils/log.zsh # {log}
 import @/src/utils/load_env.zsh #{get_env}
+import @/src/utils/cli_helper.zsh #{get_current_cli_path, get_str_from_ref}
+import @/src/utils/ref_variable_helper.zsh # {generate_unique_var_name, }
 
 ##
 # check the cli ${CLI_NAME} was installed or not.
@@ -257,6 +259,9 @@ import @/src/utils/load_env.zsh #{get_env}
 ##
 function ${CLI_NAME}_cli_installation_checker() {
   log INFO "Checking if $CLI_NAME CLI tool was installed or not."
+  local currentCliPathRef=\$(generate_unique_var_name)
+  get_current_cli_path "\${currentCliPathRef}"
+  local currentCliPath=\$(get_str_from_ref "${currentCliPathRef}") # /..../src/cli/${CLI_NAME}
   local envType=\$(get_env_type)
   case \$envType in
       prod)

@@ -2,6 +2,7 @@
 
 import ./helper.zsh # {get_all_sub_dir_by_path}
 import ./list_helper.zsh # {join}
+import ./ref_variable_helper.zsh # {assign_str_to_ref}
 
 ##
 # get cli list
@@ -64,5 +65,18 @@ function get_cli_name_by_number_cli_dir() {
   unset globalStrRef
 
   return "${TRUE}"
+}
+
+##
+# get current cli path
+# @use get_current_cli_path "<outPutStrRef>"
+# @return <boolean>
+##
+function get_current_cli_path() {
+  local outPutStrRef="$1"
+  local preFile="${funcfiletrace[1]}"
+  local preDir="${preFile:h}"
+  preDir="$(dirname ${preDir})"
+  assign_str_to_ref "${preDir}" "${outPutStrRef}"
 }
 
