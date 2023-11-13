@@ -44,10 +44,9 @@ jobs:
             curl -fsSL ${INSTALLATION_URL} | bash
           "
       - name: Check the installation of dotfiles was successful or not
-        shell: zsh {0}
         run: |
           cd dotfiles
-          make check_dotfiles_installed
+          /usr/share/zsh src/bootstrap/check_dotfiles_installed_boot.zsh
 #
 #  curl_on_centOS:
 #    needs:
