@@ -18,8 +18,8 @@ jobs:
     steps:
       - id: set-matrix
         run: echo 'matrix=["centos:centos8.4.2105", "centos:centos8"]' >> $GITHUB_OUTPUT
-  installation_exception_test_on_cetentOS:
-    name: Installation exception test on centOS
+  installation_by_url_on_centOS:
+    name: Installation by url on centOS
     needs:
       - setup_matrix_for_centOS
     runs-on: ubuntu-latest

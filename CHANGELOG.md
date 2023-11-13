@@ -52,3 +52,7 @@
 ## 0.0.45
 - feat:  🎉add the pip line to release on github
 - fix: :bug: fix some issues v0.0.45 
+
+## 0.0.46
+- chore(CI/CD):  add the test to install the dotfile in centOS
+- feat: add the directive in Makefile to check the project was installed successful or not after install the dotfiles.
