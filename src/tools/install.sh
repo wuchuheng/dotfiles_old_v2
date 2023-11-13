@@ -7,6 +7,7 @@ SAVED_DIRECTORY='dotfiles'
 TRUE=0;
 FALSE=1
 IS_INSTALLATION_ZSH=${FALSE}
+IS_INSTALLATION_TAR=${FALSE}
 SUPPORTED_OS_LIST=(MacOS CentOS UbuntuOS)
 
 ##
@@ -70,15 +71,57 @@ function download_by_git() {
 }
 
 ##
-# check tar and unzip existed or not
-# @use check_tar_unzip_exits
+# install tools by name
+# @use install_tools_by_name <tool_name>
 # @return TRUE|FALSE
 ##
-function check_tar_unzip_exits() {
-  if ! cli_exits tar && ! cli_exits unzip; then
-    log "Please install tar or unzip"
-    return "${FALSE}"
+function install_tools_by_name() {
+  local toolName=$1
+  local currentOS=$(get_os_symbol)
+  local IS_INSTALLATION=${FALSE}
+  log "Install ${toolName}."
+  case ${currentOS} in
+    MacOS)
+      brew install "${toolName}"
+      ;;
+    CentOS)
+      yum install -y "${toolName}"
+      ;;
+    UbuntuOS)
+      apt install -y "${toolName}"
+      ;;
+  esac
+
+  # check the zsh installation is success or not
+  if ! cli_exits "${toolName}"; then
+    log "Install zsh failed, please install zsh by yourself."
+    exit;
+  else
+    IS_INSTALLATION=${TRUE}
   fi
+
+  return "${IS_INSTALLATION}"
+}
+
+
+##
+# check tar existed or not
+# @use check_tar_exits_or_install
+# @return TRUE|FALSE
+##
+function check_tar_exits_or_install() {
+  if ! cli_exits tar; then
+    log "The tar was not existed"
+    install_tools_by_name tar
+    if $? -eq 0; then
+      IS_INSTALLATION_TAR=${TRUE}
+      return "${TRUE}"
+    else
+      return "${FALSE}"
+    fi
+  fi
+
+  return "${TRUE}"
 }
 
 ##
@@ -123,33 +166,21 @@ function get_download_zip_url() {
 # @return TRUE|FALSE
 ##
 function download_by_curl() {
-  # check unzip or tar exit
-  check_tar_unzip_exits || return "${FALSE}"
+  # check tar exited or install
+  check_tar_exits_or_install || return "${FALSE}"
 
-  if cli_exits tar; then
-    local compressedFile=$(get_tar_file_name)
-    local url=$(get_download_tar_url)
-    log "Fetch the dotfiles from ${url} by curl"
-    curl -L -o "${compressedFile}" "$url"
+  local compressedFile=$(get_tar_file_name)
+  local url=$(get_download_tar_url)
+  log "Fetch the dotfiles from ${url} by curl"
+  curl -L -o "${compressedFile}" "$url"
 
-    log "decompress ${compressedFile} with tar"
-    tar -zxvf "${compressedFile}" -C "${SAVED_DIRECTORY}"
+  log "decompress ${compressedFile} with tar"
+  tar -zxvf "${compressedFile}" -C "${SAVED_DIRECTORY}"
 
-    log "Remove ${compressedFile}"
-    rm -rf "${compressedFile}"
-  elif cli_exits unzip; then
-    local compressedFile="$(get_zip_file_name)"
+  log "Remove ${compressedFile}"
+  rm -rf "${compressedFile}"
 
-    local url="$(get_download_zip_url)"
-    log "Fetch the dotfiles from ${url} by curl"
-    curl -L -o "${compressedFile}" "$url"
-
-    log "decompress ${compressedFile} with unzip"
-    unzip "${compressedFile}" -d "${SAVED_DIRECTORY}"
-
-    log "Remove ${compressedFile}"
-    rm -rf "${compressedFile}"
-  fi
+  return ${TRUE}
 }
 
 ##
@@ -175,30 +206,18 @@ function wget_file() {
 # @return TRUE|FALSE
 ##
 function download_by_wget() {
-  check_tar_unzip_exits || return "${FALSE}"
+  check_tar_exits_or_install || return "${FALSE}"
+  local compressedFile=$(get_tar_file_name)
+  local url=$(get_download_tar_url)
+  wget_file "${url}" "${compressedFile}"
 
-  if cli_exits tar; then
-    local compressedFile=$(get_tar_file_name)
-    local url=$(get_download_tar_url)
-    wget_file "${url}" "${compressedFile}"
+  log "decompress ${compressedFile} with tar"
+  tar -zxvf "${compressedFile}" -C "${SAVED_DIRECTORY}"
 
-    log "decompress ${compressedFile} with tar"
-    tar -zxvf "${compressedFile}" -C "${SAVED_DIRECTORY}"
+  log "Remove ${compressedFile}"
+  rm -rf "${compressedFile}"
 
-    log "Remove ${compressedFile}"
-    rm -rf "${compressedFile}"
-  elif cli_exits unzip; then
-    local compressedFile="$(get_zip_file_name)"
-    local url="$(get_download_zip_url)"
-
-    wget_file "${url}" "${compressedFile}"
-
-    log "decompress ${compressedFile} with unzip"
-    unzip "${compressedFile}" -d "${SAVED_DIRECTORY}"
-
-    log "Remove ${compressedFile}"
-    rm -rf "${compressedFile}"
-  fi
+  return "${TRUE}"
 }
 
 ##
@@ -220,12 +239,12 @@ function download_dotfiles() {
 
   # if git existed, use git to download the dotfiles.
   if cli_exits git; then
-    download_by_git
+    download_by_git || exit 1
   # else if
   elif cli_exits curl; then
-    download_by_curl
+    download_by_curl || exit 1
   elif cli_exits wget; then
-    download_by_wget
+    download_by_wget || exit 1
   else
     log "Please install git or curl first."
     return "${FALSE}"
@@ -233,51 +252,29 @@ function download_dotfiles() {
 }
 
 ##
-# check zsh existed or not
-# @use check_existed_zsh_or_install
-# @return <boolean>
+# check_current_os_is_supported
+# @use check_current_os_is_supported
+# @echo <boolean>
 ##
-function check_existed_zsh_or_install() {
-  if ! cli_exits zsh; then
-      local currentOS=$(get_os_symbol)
-      # check the current OS was supported or not
-      local isSupportedOS=${FALSE}
-      for os in "${SUPPORTED_OS_LIST[@]}"; do
-          if [[ ${currentOS} == ${os} ]]; then
-            isSupportedOS=${TRUE}
-            break
-          fi
-      done
-      if [[ ${isSupportedOS} -eq ${FALSE}  ]]; then
-        log "Your OS is not supported, please install zsh by yourself."
-        exit;
-      fi
-
-    log "Install zsh."
-    case ${currentOS} in
-      MacOS)
-        brew install zsh
-        ;;
-      CentOS)
-        yum install -y zsh
-        ;;
-      UbuntuOS)
-        apt install -y zsh
-        ;;
-    esac
-    # check the zsh installation is success or not
-    if ! cli_exits zsh; then
-      log "Install zsh failed, please install zsh by yourself."
+function check_current_os_is_supported() {
+    local isSupportedOS=${FALSE}
+    local currentOS=$(get_os_symbol)
+    for os in "${SUPPORTED_OS_LIST[@]}"; do
+        if [[ ${currentOS} == ${os} ]]; then
+          isSupportedOS=${TRUE}
+          break
+        fi
+    done
+    if [[ ${isSupportedOS} -eq ${FALSE}  ]]; then
+      log "Your OS is not supported, please install zsh by yourself."
       exit;
-    else
-      IS_INSTALLATION_ZSH=${TRUE}
     fi
 
-    return "${TRUE}"
-  fi
+    echo "${isSupportedOS}"
 }
 
+check_current_os_is_supported
 download_dotfiles
-check_existed_zsh_or_install
+cli_exits zsh || install_tools_by_name zsh
 cd "${SAVED_DIRECTORY}"
 bash src/bootstrap/bash_install_boot.sh
