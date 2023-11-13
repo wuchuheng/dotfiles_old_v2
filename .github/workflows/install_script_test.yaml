@@ -471,36 +471,8 @@ jobs:
         run: |
           docker run --rm -v $PWD:/workdir -w /workdir ${UBUNTU_IMAGE_VERSION} bash -c "
             apt update;
-            apt install -y wget tar;
-            wget -O- ${INSTALLATION_URL} | bash
-          "
-          lsCount=$(ls dotfiles/ | wc -c)
-          echo "ls count: ${lsCount}"
-          [ "${lsCount}" -gt 0 ] || exit 1
-          printf "${SUCCESSFUL_LOG}"
-
-  wget_unzip_on_ubuntu:
-    name: Wget->unzip on ubuntu
-    needs:
-      - setup_matrix_for_ubuntuOS
-      - wget_on_ubuntu
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        image: ${{fromJson(needs.setup_matrix_for_ubuntuOS.outputs.matrix)}}
-    env:
-      UBUNTU_IMAGE_VERSION: ${{ matrix.image }}
-
-    steps:
-      - name: Successful wget download on ubuntu
-        run: |
-          docker run --rm -v $PWD:/workdir -w /workdir ${UBUNTU_IMAGE_VERSION} bash -c "
-            apt update;
-            apt install -y wget unzip;
-            apt uninstall tar
-            command -v tar
-            # rm -rf /usr/bin/tar # remove curl
+            apt install -y wget;
+            [ -f /usr/bin/tar] || echo 'Failed' && exit 1;
             wget -O- ${INSTALLATION_URL} | bash
           "
           lsCount=$(ls dotfiles/ | wc -c)
