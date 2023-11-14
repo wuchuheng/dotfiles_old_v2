@@ -109,44 +109,7 @@ jobs:
     needs:
       - wget_installation_on_centOS
       - curl_installation_on_centOS
-    runs-on: ubuntu-latest
-    env:
-      CENTOS_VERSION: ${{ matrix.centos }}
-    steps:
-      - name: Set container name
-        id: vars
-        run: |
-          echo "CONTAINER_NAME=centos" >> $GITHUB_ENV
-      - name: Checkout code
-        uses: actions/checkout@v3
-      - name: Conf the yum repository
-        run: |
-          docker run -itd -v $PWD:/workdir --name ${CONTAINER_NAME} -w /workdir ${CENTOS_VERSION}
-          docker exec ${CONTAINER_NAME} bash -c "
-            cd /etc/yum.repos.d/ && rm -rf * .??* && cd -
-            cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
-            cat /etc/yum.repos.d/CentOS-Base.repo
-            rm -rf * .??*
-          "
-      - name: Install Dotfiles by wget
-        run: |
-          docker exec ${CONTAINER_NAME} bash -c "
-            set -e
-            export TERM=xterm
-            yum install -y wget
-            wget -O- ${INSTALLATION_URL} | bash
-          "
-      - name: Unit test
-        run: |
-          docker exec ${CONTAINER_NAME} bash -c "
-            cd dotfiles
-            yum install -y make
-            make unit_test
-          "
-  test_after_installation_on_centOS:
-    name: Test after installation on centOS
-    needs:
-      - unit_test_on_centOS
+      - setup_matrix_for_centOS
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -183,8 +146,50 @@ jobs:
           docker exec ${CONTAINER_NAME} bash -c "
             cd dotfiles
             yum install -y make
-            make install_test
+            make unit_test
           "
+#  test_after_installation_on_centOS:
+#    name: Test after installation on centOS
+#    needs:
+#      - unit_test_on_centOS
+#    runs-on: ubuntu-latest
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        centos: ${{fromJson(needs.setup_matrix_for_centOS.outputs.matrix)}}
+#    env:
+#      CENTOS_VERSION: ${{ matrix.centos }}
+#    steps:
+#      - name: Set container name
+#        id: vars
+#        run: |
+#          echo "CONTAINER_NAME=centos" >> $GITHUB_ENV
+#      - name: Checkout code
+#        uses: actions/checkout@v3
+#      - name: Conf the yum repository
+#        run: |
+#          docker run -itd -v $PWD:/workdir --name ${CONTAINER_NAME} -w /workdir ${CENTOS_VERSION}
+#          docker exec ${CONTAINER_NAME} bash -c "
+#            cd /etc/yum.repos.d/ && rm -rf * .??* && cd -
+#            cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
+#            cat /etc/yum.repos.d/CentOS-Base.repo
+#            rm -rf * .??*
+#          "
+#      - name: Install Dotfiles by wget
+#        run: |
+#          docker exec ${CONTAINER_NAME} bash -c "
+#            set -e
+#            export TERM=xterm
+#            yum install -y wget
+#            wget -O- ${INSTALLATION_URL} | bash
+#          "
+#      - name: Unit test
+#        run: |
+#          docker exec ${CONTAINER_NAME} bash -c "
+#            cd dotfiles
+#            yum install -y make
+#            make install_test
+#          "
 
 #  curl_installation_on_macOS_x86:
 #    name: Curl installation on macOS
