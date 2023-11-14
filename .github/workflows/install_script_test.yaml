@@ -98,15 +98,25 @@ jobs:
 #
 
 
-  curl_on_macOS_x86:
-    name: Curl on macOS
+  curl_installation_on_macOS_x86:
+    name: Curl installation on macOS
     runs-on: macos-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
       - name: Asserting the result of a successful download by curl
         run: |
           curl -fsSL ${INSTALLATION_URL} | bash
+      - name: Check the installation of dotfiles was successful or not
+        run: |
+          cd dotfiles
+          make check_dotfiles_installed
+
+  wget_installation_on_macOS_x86:
+    name: Wget installation on macOS
+    runs-on: macos-latest
+    steps:
+      - name: Asserting the result of a successful download by curl
+        run: |
+          wget -O- ${INSTALLATION_URL} | bash
       - name: Check the installation of dotfiles was successful or not
         run: |
           cd dotfiles
