@@ -66,3 +66,6 @@
 
 ## 0.0.49
 - fix:  :bug: the issue that the qjs installed failed in unbuntu
+
+## 0.0.50
+- fix:  :bug: the issue that the qjs installed failed in unbuntu

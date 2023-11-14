@@ -7,7 +7,7 @@ on:
 env:
   INSTALLATION_URL: 'https://raw.githubusercontent.com/wuchuheng/dotfiles/tmp/src/tools/install.sh'  # Set a global environment variable
   GIT_REP_URL: 'https://github.com/wuchuheng/dotfiles.git'
-  GIT_VERSION: 'v0.0.49'
+  GIT_VERSION: 'v0.0.50'
   SUCCESSFUL_LOG: '\033[0;32mPASS\033[0m'
 
 jobs:
