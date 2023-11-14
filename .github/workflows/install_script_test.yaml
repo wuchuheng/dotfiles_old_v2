@@ -17,9 +17,10 @@ jobs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
       - id: set-matrix
-        run: echo 'matrix=["centos:centos8.4.2105", "centos:centos8"]' >> $GITHUB_OUTPUT
-  installation_by_url_on_centOS:
-    name: Installation by url on centOS
+#        run: echo 'matrix=["centos:centos8.4.2105", "centos:centos8"]' >> $GITHUB_OUTPUT
+        run: echo 'matrix=["centos:centos8.4.2105"]' >> $GITHUB_OUTPUT
+  curl_installation_on_centOS:
+    name: Curl installation on centOS
     needs:
       - setup_matrix_for_centOS
     runs-on: ubuntu-latest
@@ -47,6 +48,43 @@ jobs:
             cat /etc/yum.repos.d/CentOS-Base.repo
             rm -rf * .??*
             curl -fsSL ${INSTALLATION_URL} | bash
+          "
+      - name: Check the installation of dotfiles was successful or not
+        run: |
+          docker exec ${CONTAINER_NAME} bash -c "
+            cd dotfiles
+            yum install -y make
+            make check_dotfiles_installed
+          "
+  wget_installation_on_centOS:
+    name: Wget installation on centOS
+    needs:
+      - setup_matrix_for_centOS
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        centos: ${{fromJson(needs.setup_matrix_for_centOS.outputs.matrix)}}
+    env:
+      CENTOS_VERSION: ${{ matrix.centos }}
+    steps:
+      - name: Set container name
+        id: vars
+        run: |
+          echo "CONTAINER_NAME=centos" >> $GITHUB_ENV
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Install Dotfiles by curl
+        run: |
+          docker run -itd -v $PWD:/workdir --name ${CONTAINER_NAME} -w /workdir ${CENTOS_VERSION}
+          docker exec ${CONTAINER_NAME} bash -c "
+            set -e
+            export TERM=xterm
+            cd /etc/yum.repos.d/ && rm -rf * .??* && cd -
+            cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
+            cat /etc/yum.repos.d/CentOS-Base.repo
+            rm -rf * .??*
+            wget -O- ${INSTALLATION_URL} | bash
           "
       - name: Check the installation of dotfiles was successful or not
         run: |
