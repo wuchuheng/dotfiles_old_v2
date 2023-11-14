@@ -62,16 +62,6 @@ function cli_exits() {
 }
 
 ##
-# download dotfiles by git
-# @use download_by_git
-# @return TRUE|FALSE
-##
-function download_by_git() {
-  log "Fetch the repository from ${DOTFILES_REP} by git."
-  git clone --recurse-submodules https://${DOTFILES_REP} "${SAVED_DIRECTORY}"
-}
-
-##
 # install tools by name
 # @use install_tools_by_name <tool_name> <bin name>
 # @return TRUE|FALSE
@@ -242,11 +232,7 @@ function download_dotfiles() {
     mkdir "${SAVED_DIRECTORY}"
   fi
 
-  # if git existed, use git to download the dotfiles.
-  if cli_exits git; then
-    download_by_git || exit 1
-  # else if
-  elif cli_exits curl; then
+  if cli_exits curl; then
     download_by_curl || exit 1
   elif cli_exits wget; then
     download_by_wget || exit 1
