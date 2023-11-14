@@ -63,3 +63,6 @@
 
 ## 0.0.48
 - chore:  update CHANGELOG.md
+
+## 0.0.49
+- fix:  :bug: the issue that the qjs installed failed in unbuntu
