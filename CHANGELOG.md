@@ -69,3 +69,6 @@
 
 ## 0.0.50
 - fix:  :bug: the issue that the qjs installed failed in unbuntu
+
+## 0.0.51
+- feat(check):  :smile: add the feature to check the dotfile was installed or not in ~/.zshrc
