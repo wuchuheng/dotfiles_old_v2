@@ -44,9 +44,6 @@ jobs:
 #          docker exec ${CONTAINER_NAME} bash -c "
 #            set -e
 #            export TERM=xterm
-#            cd /etc/yum.repos.d/ && rm -rf * .??* && cd -
-#            cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
-#            cat /etc/yum.repos.d/CentOS-Base.repo
 #            rm -rf * .??*
 #            curl -fsSL ${INSTALLATION_URL} | bash
 #          "
@@ -98,295 +95,97 @@ jobs:
 #
 
 
-  curl_installation_on_macOS_x86:
-    name: Curl installation on macOS
-    runs-on: macos-latest
-    steps:
-      - name: Asserting the result of a successful download by curl
-        run: |
-          curl -fsSL ${INSTALLATION_URL} | bash
-      - name: Check the installation of dotfiles was successful or not
-        run: |
-          cd dotfiles
-          make check_dotfiles_installed
-
-  wget_installation_on_macOS_x86:
-    name: Wget installation on macOS
-    runs-on: macos-latest
-    steps:
-      - name: Asserting the result of a successful download by curl
-        run: |
-          wget -O- ${INSTALLATION_URL} | bash
-      - name: Check the installation of dotfiles was successful or not
-        run: |
-          cd dotfiles
-          make check_dotfiles_installed
-#
-#  wget_download_on_macOS_x86:
+#  curl_installation_on_macOS_x86:
+#    name: Curl installation on macOS
 #    runs-on: macos-latest
 #    steps:
-#      - name: Checkout code
-#        uses: actions/checkout@v3
-#      - name: Asserting the result of a successful download by wget
+#      - name: Asserting the result of a successful download by curl
+#        run: |
+#          curl -fsSL ${INSTALLATION_URL} | bash
+#      - name: Check the installation of dotfiles was successful or not
+#        run: |
+#          cd dotfiles
+#          make check_dotfiles_installed
+#
+#  wget_installation_on_macOS_x86:
+#    name: Wget installation on macOS
+#    runs-on: macos-latest
+#    steps:
+#      - name: Asserting the result of a successful download by curl
 #        run: |
 #          wget -O- ${INSTALLATION_URL} | bash
-#  git_download_on_macOS_x86:
-#    runs-on: macos-latest
-#    steps:
-#      - name: Checkout code
-#        uses: actions/checkout@v3
-#      - name: Asserting the result of a successful download by git
+#      - name: Check the installation of dotfiles was successful or not
 #        run: |
-#          git clone --branch ${GIT_VERSION} --single-branch --recurse-submodules ${GIT_REP_URL} && cd dotfiles
-#
-#
-#  setup_matrix_for_ubuntuOS:
-#    runs-on: ubuntu-latest
-#    outputs:
-#      matrix: ${{ steps.set-matrix.outputs.matrix }}
-#    steps:
-#      - id: set-matrix
-#        run: echo 'matrix=["ubuntu:23.10"]' >> $GITHUB_OUTPUT
-#
-#  curl_on_ubuntu:
-#    needs:
-#      - setup_matrix_for_ubuntuOS
-#    name: Curl on ubuntu
-#    runs-on: ubuntu-latest
-#    strategy:
-#      fail-fast: false
-#      matrix:
-#        image: ${{fromJson(needs.setup_matrix_for_ubuntuOS.outputs.matrix)}}
-#    env:
-#      UBUNTU_IMAGE_VERSION: ${{ matrix.image}}
-#
-#    steps:
-#      - name: Successful curl download on ubuntu
-#        run: |
-#          docker run --rm -v $PWD:/workdir -w /workdir ${UBUNTU_IMAGE_VERSION} bash -c "
-#            apt update;
-#            apt install -y curl;
-#            curl -fsSL ${INSTALLATION_URL} | bash;
-#          "
-#          lsCount=$(ls dotfiles/ | wc -c)
-#          echo "ls count: ${lsCount}"
-#          [ "${lsCount}" -gt 0 ] || exit 1
-#          printf "${SUCCESSFUL_LOG}"
-#      - name: Failed curl download on ubuntu
-#        run: |
-#          rm -rf * .??*
-#          docker run --rm -v $PWD:/workdir -w /workdir ${UBUNTU_IMAGE_VERSION} bash -c "
-#            curl -fsSL ${INSTALLATION_URL} | bash;
-#          "
-#          lsCount=$(ls dotfiles/ | wc -c)
-#          echo "ls count: ${lsCount}"
-#          [ "${lsCount}" -eq 0 ] || exit 1
-#          printf "${SUCCESSFUL_LOG}"
-#
-#  curl_tar_on_ubuntu:
-#    needs:
-#      - curl_on_ubuntu
-#      - setup_matrix_for_ubuntuOS
-#    name: Curl->tar on ubuntu
-#    runs-on: ubuntu-latest
-#    strategy:
-#      fail-fast: false
-#      matrix:
-#        image: ${{fromJson(needs.setup_matrix_for_ubuntuOS.outputs.matrix)}}
-#    env:
-#      UBUNTU_IMAGE_VERSION: ${{ matrix.image}}
-#
-#    steps:
-#      - name: Successful curl download on ubuntu
-#        run: |
-#          docker run --rm -v $PWD:/workdir -w /workdir ${UBUNTU_IMAGE_VERSION} bash -c "
-#            apt update;
-#            apt install -y curl tar;
-#            curl -fsSL ${INSTALLATION_URL} | bash;
-#          "
-#          lsCount=$(ls dotfiles/ | wc -c)
-#          echo "ls count: ${lsCount}"
-#          [ "${lsCount}" -gt 0 ] || exit 1
-#          printf "${SUCCESSFUL_LOG}"
-#      - name: Failed curl download on ubuntu
-#        run: |
-#          rm -rf * .??*
-#          docker run --rm -v $PWD:/workdir -w /workdir ${UBUNTU_IMAGE_VERSION} bash -c "
-#            curl -fsSL ${INSTALLATION_URL} | bash;
-#          "
-#          lsCount=$(ls dotfiles/ | wc -c)
-#          echo "ls count: ${lsCount}"
-#          [ "${lsCount}" -eq 0 ] || exit 1
-#          printf "${SUCCESSFUL_LOG}"
-#
-#
-#
-#  curl_unzip_on_ubuntu:
-#    needs:
-#      - curl_on_ubuntu
-#      - setup_matrix_for_ubuntuOS
-#    name: Curl->unzip on ubuntu
-#    runs-on: ubuntu-latest
-#    strategy:
-#      fail-fast: false
-#      matrix:
-#        image: ${{fromJson(needs.setup_matrix_for_ubuntuOS.outputs.matrix)}}
-#    env:
-#      UBUNTU_IMAGE_VERSION: ${{ matrix.image}}
-#
-#    steps:
-#      - name: Successful curl download on ubuntu
-#        run: |
-#          docker run --rm -v $PWD:/workdir -w /workdir ${UBUNTU_IMAGE_VERSION} bash -c "
-#            apt update;
-#            apt install -y curl unzip zsh;
-#            rm -f /usr/bin/tar
-#            curl -fsSL ${INSTALLATION_URL} | bash;
-#          "
-#          lsCount=$(ls dotfiles/ | wc -c)
-#          echo "ls count: ${lsCount}"
-#          [ "${lsCount}" -gt 0 ] || exit 1
-#          printf "${SUCCESSFUL_LOG}"
-#
-#
-#  wget_on_ubuntu:
-#    needs:
-#      - setup_matrix_for_ubuntuOS
-#    name: Wget on ubuntu
-#    runs-on: ubuntu-latest
-#    strategy:
-#      fail-fast: false
-#      matrix:
-#        image: ${{fromJson(needs.setup_matrix_for_ubuntuOS.outputs.matrix)}}
-#    env:
-#      UBUNTU_IMAGE_VERSION: ${{ matrix.image }}
-#
-#    steps:
-#      - name: Successful wget download on ubuntu
-#        run: |
-#          docker run --rm -v $PWD:/workdir -w /workdir ${UBUNTU_IMAGE_VERSION} bash -c "
-#            apt update;
-#            apt install -y wget;
-#            wget -O- ${INSTALLATION_URL} | bash
-#          "
-#          lsCount=$(ls dotfiles/ | wc -c)
-#          echo "ls count: ${lsCount}"
-#          [ "${lsCount}" -gt 0 ] || exit 1
-#          echo "${SUCCESSFUL_LOG}"
-#      - name: Failed wget download on ubuntu
-#        run: |
-#          sudo rm -rf * .??*
-#          docker run --rm -v $PWD:/workdir -w /workdir ${UBUNTU_IMAGE_VERSION} bash -c "
-#            apt update;
-#            wget -O- ${INSTALLATION_URL} | bash
-#          "
-#          lsCount=$(ls dotfiles/ | wc -c)
-#          echo "ls count: ${lsCount}"
-#          [ "${lsCount}" -eq 0 ] || exit 1
-#
-#  wget_tar_on_ubuntu:
-#    name: Wget->tar on ubuntu
-#    needs:
-#      - setup_matrix_for_ubuntuOS
-#      - wget_on_ubuntu
-#    runs-on: ubuntu-latest
-#    strategy:
-#      fail-fast: false
-#      matrix:
-#        image: ${{fromJson(needs.setup_matrix_for_ubuntuOS.outputs.matrix)}}
-#    env:
-#      UBUNTU_IMAGE_VERSION: ${{ matrix.image }}
-#
-#    steps:
-#      - name: Successful wget download on ubuntu
-#        run: |
-#          docker run --rm -v $PWD:/workdir -w /workdir ${UBUNTU_IMAGE_VERSION} bash -c "
-#            apt update;
-#            apt install -y wget tar;
-#            wget -O- ${INSTALLATION_URL} | bash
-#          "
-#          lsCount=$(ls dotfiles/ | wc -c)
-#          echo "ls count: ${lsCount}"
-#          [ "${lsCount}" -gt 0 ] || exit 1
-#          printf "${SUCCESSFUL_LOG}"
-#
-#  wget_unzip_on_ubuntu:
-#    name: Wget->unzip on ubuntu
-#    needs:
-#      - setup_matrix_for_ubuntuOS
-#      - wget_on_ubuntu
-#    runs-on: ubuntu-latest
-#    strategy:
-#      fail-fast: false
-#      matrix:
-#        image: ${{fromJson(needs.setup_matrix_for_ubuntuOS.outputs.matrix)}}
-#    env:
-#      UBUNTU_IMAGE_VERSION: ${{ matrix.image }}
-#
-#    steps:
-#      - name: Successful wget download on ubuntu
-#        run: |
-#          docker run --rm -v $PWD:/workdir -w /workdir ${UBUNTU_IMAGE_VERSION} bash -c "
-#            apt update;
-#            apt install -y wget unzip zsh;
-#            apt uninstall tar
-#            command -v tar
-#            wget -O- ${INSTALLATION_URL} | bash
-#          "
-#          lsCount=$(ls dotfiles/ | wc -c)
-#          echo "ls count: ${lsCount}"
-#          [ "${lsCount}" -gt 0 ] || exit 1
-#          printf "${SUCCESSFUL_LOG}"
-#
-#  git_on_ubuntu:
-#    name: git on ubuntu
-#    needs:
-#      - setup_matrix_for_ubuntuOS
-#    runs-on: ubuntu-latest
-#    strategy:
-#      fail-fast: false
-#      matrix:
-#        image: ${{fromJson(needs.setup_matrix_for_ubuntuOS.outputs.matrix)}}
-#    env:
-#      UBUNTU_IMAGE_VERSION: ${{ matrix.image }}
-#
-#    steps:
-#      - name: Successful wget download on ubuntu
-#        run: |
-#          docker run --rm -v $PWD:/workdir -w /workdir ${UBUNTU_IMAGE_VERSION} bash -c "
-#            apt update;
-#            apt install -y git;
-#            git clone --branch ${GIT_VERSION} --single-branch --recurse-submodules ${GIT_REP_URL}
-#          "
-#          lsCount=$(ls dotfiles/ | wc -c)
-#          echo "ls count: ${lsCount}"
-#          [ "${lsCount}" -gt 0 ] || exit 1
-#          printf "${SUCCESSFUL_LOG}"
-#
-#  git_installation_on_ubuntu:
-#    name: git->installation on ubuntu
-#    needs:
-#      - setup_matrix_for_ubuntuOS
-#      - git_on_ubuntu
-#    runs-on: ubuntu-latest
-#    strategy:
-#      fail-fast: false
-#      matrix:
-#        image: ${{fromJson(needs.setup_matrix_for_ubuntuOS.outputs.matrix)}}
-#    env:
-#      UBUNTU_IMAGE_VERSION: ${{ matrix.image }}
-#
-#    steps:
-#      - name: Successful wget download on ubuntu
-#        run: |
-#          docker run --rm -v $PWD:/workdir -w /workdir ${UBUNTU_IMAGE_VERSION} bash -c "
-#            apt update;
-#            apt install -y git;
-#            git clone --branch ${GIT_VERSION} --single-branch --recurse-submodules ${GIT_REP_URL};
-#            cd dotfiles;
-#            bash src/bootstrap/bash_install_boot.sh;
-#          "
-#          lsCount=$(ls dotfiles/ | wc -c)
-#          echo "ls count: ${lsCount}"
-#          [ "${lsCount}" -gt 0 ] || exit 1
-#          printf "${SUCCESSFUL_LOG}"
+#          cd dotfiles
+#          make check_dotfiles_installed
+
+  setup_matrix_for_ubuntuOS:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - id: set-matrix
+        run: echo 'matrix=["ubuntu:23.10"]' >> $GITHUB_OUTPUT
+
+  curl_installation_on_ubuntu:
+    needs:
+      - setup_matrix_for_ubuntuOS
+    name: Curl installation on ubuntu
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        image: ${{fromJson(needs.setup_matrix_for_ubuntuOS.outputs.matrix)}}
+    env:
+      UBUNTU_IMAGE_VERSION: ${{ matrix.image}}
+    steps:
+      - name: Set container name
+        id: vars
+        run: |
+          echo "CONTAINER_NAME=ubuntu" >> $GITHUB_ENV
+      - name: Install dotfiles by curl on ubuntu.
+        run: |
+          docker run -itd -v $PWD:/workdir --name ${CONTAINER_NAME} -w /workdir ${UBUNTU_IMAGE_VERSION}
+          docker exec ${CONTAINER_NAME} bash -c "
+            set -e
+            export TERM=xterm
+            curl -fsSL ${INSTALLATION_URL} | bash
+          "
+      - name: Check the installation of dotfiles was successful or not
+        run: |
+          docker exec ${CONTAINER_NAME} bash -c "
+            cd dotfiles
+            apt install -y make
+            make check_dotfiles_installed
+          "
+  wget_installation_on_ubuntu:
+    needs:
+      - setup_matrix_for_ubuntuOS
+    name: Wget installation on ubuntu
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        image: ${{fromJson(needs.setup_matrix_for_ubuntuOS.outputs.matrix)}}
+    env:
+      UBUNTU_IMAGE_VERSION: ${{ matrix.image}}
+    steps:
+      - name: Set container name
+        id: vars
+        run: |
+          echo "CONTAINER_NAME=ubuntu" >> $GITHUB_ENV
+      - name: Install dotfiles by wget on ubuntu.
+        run: |
+          docker run -itd -v $PWD:/workdir --name ${CONTAINER_NAME} -w /workdir ${UBUNTU_IMAGE_VERSION}
+          docker exec ${CONTAINER_NAME} bash -c "
+            set -e
+            export TERM=xterm
+            wget -O- ${INSTALLATION_URL} | bash
+          "
+      - name: Check the installation of dotfiles was successful or not
+        run: |
+          docker exec ${CONTAINER_NAME} bash -c "
+            cd dotfiles
+            apt install -y make
+            make check_dotfiles_installed
+          "
