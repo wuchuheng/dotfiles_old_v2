@@ -94,232 +94,43 @@ jobs:
             yum install -y make
             make check_dotfiles_installed
           "
-#  curl_on_centOS:
-#    needs:
-#      - setup_matrix_for_centOS
-#    runs-on: ubuntu-latest
-#    name: curl on CentOS
-#    strategy:
-#      fail-fast: false
-#      matrix:
-#        centos: ${{fromJson(needs.setup_matrix_for_centOS.outputs.matrix)}}
-#    env:
-#      CENTOS_VERSION: ${{ matrix.centos }}
-#    steps:
-#      - name: Checkout code
-#        uses: actions/checkout@v3
-#      - name: Asserting the result of a successful download by curl
-#        run: |
-#          docker run --rm -v $PWD:/workdir -w /workdir ${CENTOS_VERSION} bash -c "
-#            cd /etc/yum.repos.d/ && rm -rf * .??* && cd -
-#            cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
-#            cat /etc/yum.repos.d/CentOS-Base.repo
-#            rm -rf * .??*
-#            curl -fsSL ${INSTALLATION_URL} | bash
-#            ls -ahl
-#          "
-#          lsCount=$(ls dotfiles/ | wc -c)
-#          echo "ls count: ${lsCount}"
-#          [ "${lsCount}" -eq 0 ] && exit 1
-#          printf "${SUCCESSFUL_LOG}"
-#      - name: Checkout code
-#        uses: actions/checkout@v3
-#      - name: Asserting the result of a failed download by curl
-#        run: |
-#          docker run --rm -v $PWD:/workdir -w /workdir ${CENTOS_VERSION} bash -c "
-#            cd /etc/yum.repos.d/ && rm -rf * .??* && cd -
-#            cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
-#            cat /etc/yum.repos.d/CentOS-Base.repo
-#            rm -rf * .??*
-#            yum remove -y curl
-#            curl -fsSL ${INSTALLATION_URL} | bash
-#          "
-#          lsCount=$(ls dotfiles/ | wc -c)
-#          echo "ls count: ${lsCount}"
-#          [ "${lsCount}" -eq 0 ] && exit 0
-#          printf "${SUCCESSFUL_LOG}"
-#
-#  curl_tar_on_centOS:
-#    needs:
-#      - curl_on_centOS
-#      - setup_matrix_for_centOS
-#    runs-on: ubuntu-latest
-#    name: curl->tar on CentOS
-#    strategy:
-#      fail-fast: false
-#      matrix:
-#        centos: ${{fromJson(needs.setup_matrix_for_centOS.outputs.matrix)}}
-#    env:
-#      CENTOS_VERSION: ${{ matrix.centos }}
-#    steps:
-#      - name: Checkout code
-#        uses: actions/checkout@v3
-#      - name: Asserting the result of a successful download by curl
-#        run: |
-#          docker run --rm -v $PWD:/workdir -w /workdir ${CENTOS_VERSION} bash -c "
-#            cd /etc/yum.repos.d/ && rm -rf * .??* && cd -
-#            cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
-#            cat /etc/yum.repos.d/CentOS-Base.repo
-#            rm -rf * .??*
-#            curl -fsSL ${INSTALLATION_URL} | bash
-#            ls -ahl
-#          "
-#          lsCount=$(ls dotfiles/ | wc -c)
-#          echo "ls count: ${lsCount}"
-#          [ "${lsCount}" -eq 0 ] && exit 1
-#          printf "${SUCCESSFUL_LOG}"
-#
-#
-#  curl_unzip_on_centOS:
-#    needs:
-#      - curl_on_centOS
-#      - setup_matrix_for_centOS
-#    runs-on: ubuntu-latest
-#    name: curl->unzip on CentOS
-#    strategy:
-#      fail-fast: false
-#      matrix:
-#        centos: ${{fromJson(needs.setup_matrix_for_centOS.outputs.matrix)}}
-#    env:
-#      CENTOS_VERSION: ${{ matrix.centos }}
-#    steps:
-#      - name: Checkout code
-#        uses: actions/checkout@v3
-#      - name: Asserting the result of a successful download by curl
-#        run: |
-#          docker run --rm -v $PWD:/workdir -w /workdir ${CENTOS_VERSION} bash -c "
-#            cd /etc/yum.repos.d/ && rm -rf * .??* && cd -
-#            cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
-#            cat /etc/yum.repos.d/CentOS-Base.repo
-#            rm -rf * .??*
-#            yum remove -y tar;
-#            yum install -y unzip
-#            curl -fsSL ${INSTALLATION_URL} | bash
-#            ls -ahl
-#          "
-#          lsCount=$(ls dotfiles/ | wc -c)
-#          echo "ls count: ${lsCount}"
-#          [ "${lsCount}" -eq 0 ] && exit 1
-#          printf "${SUCCESSFUL_LOG}"
-#
-#
-#  wget_on_centOS:
-#    needs:
-#      - setup_matrix_for_centOS
-#    runs-on: ubuntu-latest
-#    name: wget on CentOS
-#    strategy:
-#      fail-fast: false
-#      matrix:
-#        centos: ${{fromJson(needs.setup_matrix_for_centOS.outputs.matrix)}}
-#    env:
-#      CENTOS_VERSION: ${{ matrix.centos }}
-#    steps:
-#      - name: Checkout code
-#        uses: actions/checkout@v3
-#      - name: Asserting the result of a successful download by wget
-#        run: |
-#          docker run --rm -v $PWD:/workdir -w /workdir ${CENTOS_VERSION} bash -c "
-#            cd /etc/yum.repos.d/ && rm -rf * .??* && cd -
-#            cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
-#            cat /etc/yum.repos.d/CentOS-Base.repo
-#            rm -rf /usr/bin/curl # remove curl
-#            yum install -y wget
-#            rm -rf * .??*
-#            wget -O- ${INSTALLATION_URL} | bash
-#            ls -ahl
-#          "
-#          lsCount=$(ls dotfiles/ | wc -c)
-#          echo "ls count: ${lsCount}"
-#          [ "${lsCount}" -eq 0 ] && exit 1
-#          printf "${SUCCESSFUL_LOG}"
-#      - name: Checkout code
-#        uses: actions/checkout@v3
-#      - name: Asserting the result of a failed download by wget
-#        run: |
-#          docker run --rm -v $PWD:/workdir -w /workdir ${CENTOS_VERSION} bash -c "
-#            cd /etc/yum.repos.d/ && rm -rf * .??* && cd -
-#            cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
-#            cat /etc/yum.repos.d/CentOS-Base.repo
-#            rm -rf /usr/bin/curl # remove curl
-#            command -v "wget"
-#            [ -f /usr/bin/wget ] && rm -f /usr/bin/wget
-#            rm -rf * .??*
-#            wget -O- ${INSTALLATION_URL} | bash
-#            ls -ahl
-#          "
-#          lsCount=$(ls dotfiles/ | wc -c)
-#          echo "ls count: ${lsCount}"
-#          [ "${lsCount}" -eq 0 ] || exit 1
-#          printf ${SUCCESSFUL_LOG}
-#
-#
-#  wget_tar_on_centOS:
-#    needs:
-#      - wget_on_centOS
-#      - setup_matrix_for_centOS
-#    runs-on: ubuntu-latest
-#    name: wget->tar on CentOS
-#    strategy:
-#      fail-fast: false
-#      matrix:
-#        centos: ${{fromJson(needs.setup_matrix_for_centOS.outputs.matrix)}}
-#    env:
-#      CENTOS_VERSION: ${{ matrix.centos }}
-#    steps:
-#      - name: Checkout code
-#        uses: actions/checkout@v3
-#      - name: Asserting the result of a successful download by wget
-#        run: |
-#          docker run --rm -v $PWD:/workdir -w /workdir ${CENTOS_VERSION} bash -c "
-#            cd /etc/yum.repos.d/ && rm -rf * .??* && cd -;
-#            cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo;
-#            cat /etc/yum.repos.d/CentOS-Base.repo;
-#            rm -rf /usr/bin/curl # remove curl;
-#            yum install -y wget;
-#            yum install -y tar;
-#            rm -rf * .??*;
-#            wget -O- ${INSTALLATION_URL} | bash;
-#            ls -ahl
-#          "
-#          lsCount=$(ls dotfiles/ | wc -c)
-#          echo "ls count: ${lsCount}"
-#          [ "${lsCount}" -eq 0 ] && exit 1
-#          printf "${SUCCESSFUL_LOG}"
-#
-#
-#  wget_unzip_on_centOS:
-#    needs:
-#      - wget_on_centOS
-#      - setup_matrix_for_centOS
-#    runs-on: ubuntu-latest
-#    name: wget->unzip on CentOS
-#    strategy:
-#      fail-fast: false
-#      matrix:
-#        centos: ${{fromJson(needs.setup_matrix_for_centOS.outputs.matrix)}}
-#    env:
-#      CENTOS_VERSION: ${{ matrix.centos }}
-#    steps:
-#      - name: Checkout code
-#        uses: actions/checkout@v3
-#      - name: Asserting the result of a successful download by wget
-#        run: |
-#          docker run --rm -v $PWD:/workdir -w /workdir ${CENTOS_VERSION} bash -c "
-#            cd /etc/yum.repos.d/ && rm -rf * .??* && cd -;
-#            cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo;
-#            cat /etc/yum.repos.d/CentOS-Base.repo;
-#            rm -rf /usr/bin/curl # remove curl;
-#            yum install -y wget unzip;
-#            yum remove -y tar;
-#            rm -rf * .??*;
-#            wget -O- ${INSTALLATION_URL} | bash;
-#            ls -ahl
-#          "
-#          lsCount=$(ls dotfiles/ | wc -c)
-#          echo "ls count: ${lsCount}"
-#          [ "${lsCount}" -eq 0 ] && exit 1
-#          printf "${SUCCESSFUL_LOG}"
+  git_installation_on_centOS:
+    name: Git installation on centOS
+    needs:
+      - setup_matrix_for_centOS
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        centos: ${{fromJson(needs.setup_matrix_for_centOS.outputs.matrix)}}
+    env:
+      CENTOS_VERSION: ${{ matrix.centos }}
+    steps:
+      - name: Set container name
+        id: vars
+        run: |
+          echo "CONTAINER_NAME=centos" >> $GITHUB_ENV
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Install Dotfiles by wget
+        run: |
+          docker run -itd -v $PWD:/workdir --name ${CONTAINER_NAME} -w /workdir ${CENTOS_VERSION}
+          docker exec ${CONTAINER_NAME} bash -c "
+            set -e
+            export TERM=xterm
+            cd /etc/yum.repos.d/ && rm -rf * .??* && cd -
+            cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
+            cat /etc/yum.repos.d/CentOS-Base.repo
+            rm -rf * .??*
+            git clone --branch ${GIT_VERSION} --single-branch --recurse-submodules ${GIT_REP_URL} && cd dotfiles && bash src/bootstrap/bash_install_boot.sh 
+          "
+      - name: Check the installation of dotfiles was successful or not
+        run: |
+          docker exec ${CONTAINER_NAME} bash -c "
+            cd dotfiles
+            yum install -y make
+            make check_dotfiles_installed
+          "
 #
 #  git_on_centOS:
 #    needs:
