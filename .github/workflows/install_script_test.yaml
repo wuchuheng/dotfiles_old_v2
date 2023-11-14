@@ -44,6 +44,9 @@ jobs:
           docker exec ${CONTAINER_NAME} bash -c "
             set -e
             export TERM=xterm
+            cd /etc/yum.repos.d/ && rm -rf * .??* && cd -
+            cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
+            cat /etc/yum.repos.d/CentOS-Base.repo
             rm -rf * .??*
             curl -fsSL ${INSTALLATION_URL} | bash
           "
