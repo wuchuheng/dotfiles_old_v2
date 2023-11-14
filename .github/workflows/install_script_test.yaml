@@ -112,7 +112,7 @@ jobs:
           echo "CONTAINER_NAME=centos" >> $GITHUB_ENV
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: Install Dotfiles by wget
+      - name: Install Dotfiles by git
         run: |
           docker run -itd -v $PWD:/workdir --name ${CONTAINER_NAME} -w /workdir ${CENTOS_VERSION}
           docker exec ${CONTAINER_NAME} bash -c "
@@ -121,6 +121,7 @@ jobs:
             cd /etc/yum.repos.d/ && rm -rf * .??* && cd -
             cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
             cat /etc/yum.repos.d/CentOS-Base.repo
+            yum install -y git
             rm -rf * .??*
             git clone --branch ${GIT_VERSION} --single-branch --recurse-submodules ${GIT_REP_URL} && cd dotfiles && bash src/bootstrap/bash_install_boot.sh 
           "
