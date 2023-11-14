@@ -149,6 +149,7 @@ jobs:
           docker exec ${CONTAINER_NAME} bash -c "
             set -e
             export TERM=xterm
+            apt install -y curl
             curl -fsSL ${INSTALLATION_URL} | bash
           "
       - name: Check the installation of dotfiles was successful or not
@@ -180,6 +181,7 @@ jobs:
           docker exec ${CONTAINER_NAME} bash -c "
             set -e
             export TERM=xterm
+            apt install -y wget
             wget -O- ${INSTALLATION_URL} | bash
           "
       - name: Check the installation of dotfiles was successful or not
