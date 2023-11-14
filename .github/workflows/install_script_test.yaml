@@ -11,89 +11,165 @@ env:
   SUCCESSFUL_LOG: '\033[0;32mPASS\033[0m'
 
 jobs:
-#  setup_matrix_for_centOS:
-#    runs-on: ubuntu-latest
-#    outputs:
-#      matrix: ${{ steps.set-matrix.outputs.matrix }}
-#    steps:
-#      - id: set-matrix
-#        # TODO(github): use all centos version in a standard test environment on github action.
-##        run: echo 'matrix=["centos:centos8.4.2105", "centos:centos8"]' >> $GITHUB_OUTPUT
-#        run: echo 'matrix=["centos:centos8.4.2105"]' >> $GITHUB_OUTPUT
-#  curl_installation_on_centOS:
-#    name: Curl installation on centOS
-#    needs:
-#      - setup_matrix_for_centOS
-#    runs-on: ubuntu-latest
-#    strategy:
-#      fail-fast: false
-#      matrix:
-#        centos: ${{fromJson(needs.setup_matrix_for_centOS.outputs.matrix)}}
-#    env:
-#      CENTOS_VERSION: ${{ matrix.centos }}
-#    steps:
-#      - name: Set container name
-#        id: vars
-#        run: |
-#          echo "CONTAINER_NAME=centos" >> $GITHUB_ENV
-#      - name: Checkout code
-#        uses: actions/checkout@v3
-#      - name: Install Dotfiles by curl
-#        run: |
-#          docker run -itd -v $PWD:/workdir --name ${CONTAINER_NAME} -w /workdir ${CENTOS_VERSION}
-#          docker exec ${CONTAINER_NAME} bash -c "
-#            set -e
-#            export TERM=xterm
-#            rm -rf * .??*
-#            curl -fsSL ${INSTALLATION_URL} | bash
-#          "
-#      - name: Check the installation of dotfiles was successful or not
-#        run: |
-#          docker exec ${CONTAINER_NAME} bash -c "
-#            cd dotfiles
-#            yum install -y make
-#            make check_dotfiles_installed
-#          "
-#  wget_installation_on_centOS:
-#    name: Wget installation on centOS
-#    needs:
-#      - setup_matrix_for_centOS
-#    runs-on: ubuntu-latest
-#    strategy:
-#      fail-fast: false
-#      matrix:
-#        centos: ${{fromJson(needs.setup_matrix_for_centOS.outputs.matrix)}}
-#    env:
-#      CENTOS_VERSION: ${{ matrix.centos }}
-#    steps:
-#      - name: Set container name
-#        id: vars
-#        run: |
-#          echo "CONTAINER_NAME=centos" >> $GITHUB_ENV
-#      - name: Checkout code
-#        uses: actions/checkout@v3
-#      - name: Install Dotfiles by wget
-#        run: |
-#          docker run -itd -v $PWD:/workdir --name ${CONTAINER_NAME} -w /workdir ${CENTOS_VERSION}
-#          docker exec ${CONTAINER_NAME} bash -c "
-#            set -e
-#            export TERM=xterm
-#            cd /etc/yum.repos.d/ && rm -rf * .??* && cd -
-#            cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
-#            cat /etc/yum.repos.d/CentOS-Base.repo
-#            yum install -y wget
-#            rm -rf * .??*
-#            wget -O- ${INSTALLATION_URL} | bash
-#          "
-#      - name: Check the installation of dotfiles was successful or not
-#        run: |
-#          docker exec ${CONTAINER_NAME} bash -c "
-#            cd dotfiles
-#            yum install -y make
-#            make check_dotfiles_installed
-#          "
-#
+  setup_matrix_for_centOS:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - id: set-matrix
+        # TODO(github): use all centos version in a standard test environment on github action.
+#        run: echo 'matrix=["centos:centos8.4.2105", "centos:centos8"]' >> $GITHUB_OUTPUT
+        run: echo 'matrix=["centos:centos8.4.2105"]' >> $GITHUB_OUTPUT
+  curl_installation_on_centOS:
+    name: Curl installation on centOS
+    needs:
+      - setup_matrix_for_centOS
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        centos: ${{fromJson(needs.setup_matrix_for_centOS.outputs.matrix)}}
+    env:
+      CENTOS_VERSION: ${{ matrix.centos }}
+    steps:
+      - name: Set container name
+        id: vars
+        run: |
+          echo "CONTAINER_NAME=centos" >> $GITHUB_ENV
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Install Dotfiles by curl
+        run: |
+          docker run -itd -v $PWD:/workdir --name ${CONTAINER_NAME} -w /workdir ${CENTOS_VERSION}
+          docker exec ${CONTAINER_NAME} bash -c "
+            set -e
+            export TERM=xterm
+            rm -rf * .??*
+            curl -fsSL ${INSTALLATION_URL} | bash
+          "
+      - name: Check the installation of dotfiles was successful or not
+        run: |
+          docker exec ${CONTAINER_NAME} bash -c "
+            cd dotfiles
+            yum install -y make
+            make check_dotfiles_installed
+          "
+  wget_installation_on_centOS:
+    name: Wget installation on centOS
+    needs:
+      - setup_matrix_for_centOS
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        centos: ${{fromJson(needs.setup_matrix_for_centOS.outputs.matrix)}}
+    env:
+      CENTOS_VERSION: ${{ matrix.centos }}
+    steps:
+      - name: Set container name
+        id: vars
+        run: |
+          echo "CONTAINER_NAME=centos" >> $GITHUB_ENV
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Install Dotfiles by wget
+        run: |
+          docker run -itd -v $PWD:/workdir --name ${CONTAINER_NAME} -w /workdir ${CENTOS_VERSION}
+          docker exec ${CONTAINER_NAME} bash -c "
+            set -e
+            export TERM=xterm
+            cd /etc/yum.repos.d/ && rm -rf * .??* && cd -
+            cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
+            cat /etc/yum.repos.d/CentOS-Base.repo
+            yum install -y wget
+            rm -rf * .??*
+            wget -O- ${INSTALLATION_URL} | bash
+          "
+      - name: Check the installation of dotfiles was successful or not
+        run: |
+          docker exec ${CONTAINER_NAME} bash -c "
+            cd dotfiles
+            yum install -y make
+            make check_dotfiles_installed
+          "
 
+  unit_test_on_centOS:
+    name: Unit est on centOS
+    needs:
+      - wget_installation_on_centOS
+      - curl_installation_on_centOS
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        centos: ${{fromJson(needs.setup_matrix_for_centOS.outputs.matrix)}}
+    env:
+      CENTOS_VERSION: ${{ matrix.centos }}
+    steps:
+      - name: Set container name
+        id: vars
+        run: |
+          echo "CONTAINER_NAME=centos" >> $GITHUB_ENV
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Install Dotfiles by wget
+        run: |
+          docker run -itd -v $PWD:/workdir --name ${CONTAINER_NAME} -w /workdir ${CENTOS_VERSION}
+          docker exec ${CONTAINER_NAME} bash -c "
+            set -e
+            export TERM=xterm
+            cd /etc/yum.repos.d/ && rm -rf * .??* && cd -
+            cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
+            cat /etc/yum.repos.d/CentOS-Base.repo
+            yum install -y wget
+            rm -rf * .??*
+            wget -O- ${INSTALLATION_URL} | bash
+          "
+      - name: Unit test
+        run: |
+          docker exec ${CONTAINER_NAME} bash -c "
+            cd dotfiles
+            yum install -y make
+            make unit_test
+          "
+  test_after_installation_on_centOS:
+    name: Test after installation on centOS
+    needs:
+      - unit_test_on_centOS
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        centos: ${{fromJson(needs.setup_matrix_for_centOS.outputs.matrix)}}
+    env:
+      CENTOS_VERSION: ${{ matrix.centos }}
+    steps:
+      - name: Set container name
+        id: vars
+        run: |
+          echo "CONTAINER_NAME=centos" >> $GITHUB_ENV
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Install Dotfiles by wget
+        run: |
+          docker run -itd -v $PWD:/workdir --name ${CONTAINER_NAME} -w /workdir ${CENTOS_VERSION}
+          docker exec ${CONTAINER_NAME} bash -c "
+            set -e
+            export TERM=xterm
+            cd /etc/yum.repos.d/ && rm -rf * .??* && cd -
+            cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
+            cat /etc/yum.repos.d/CentOS-Base.repo
+            yum install -y wget
+            rm -rf * .??*
+            wget -O- ${INSTALLATION_URL} | bash
+          "
+      - name: Unit test
+        run: |
+          docker exec ${CONTAINER_NAME} bash -c "
+            cd dotfiles
+            yum install -y make
+            make install_test
+          "
 
 #  curl_installation_on_macOS_x86:
 #    name: Curl installation on macOS
@@ -119,77 +195,77 @@ jobs:
 #          cd dotfiles
 #          make check_dotfiles_installed
 
-  setup_matrix_for_ubuntuOS:
-    runs-on: ubuntu-latest
-    outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
-    steps:
-      - id: set-matrix
-        run: echo 'matrix=["ubuntu:23.10"]' >> $GITHUB_OUTPUT
-
-  curl_installation_on_ubuntu:
-    needs:
-      - setup_matrix_for_ubuntuOS
-    name: Curl installation on ubuntu
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        image: ${{fromJson(needs.setup_matrix_for_ubuntuOS.outputs.matrix)}}
-    env:
-      UBUNTU_IMAGE_VERSION: ${{ matrix.image}}
-    steps:
-      - name: Set container name
-        id: vars
-        run: |
-          echo "CONTAINER_NAME=ubuntu" >> $GITHUB_ENV
-      - name: Install dotfiles by curl on ubuntu.
-        run: |
-          docker run -itd -v $PWD:/workdir --name ${CONTAINER_NAME} -w /workdir ${UBUNTU_IMAGE_VERSION}
-          docker exec ${CONTAINER_NAME} bash -c "
-            set -e
-            apt update
-            apt install -y curl
-            export TERM=xterm
-            curl -fsSL ${INSTALLATION_URL} | bash
-          "
-      - name: Check the installation of dotfiles was successful or not
-        run: |
-          docker exec ${CONTAINER_NAME} bash -c "
-            cd dotfiles
-            apt install -y make
-            make check_dotfiles_installed
-          "
-  wget_installation_on_ubuntu:
-    needs:
-      - setup_matrix_for_ubuntuOS
-    name: Wget installation on ubuntu
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        image: ${{fromJson(needs.setup_matrix_for_ubuntuOS.outputs.matrix)}}
-    env:
-      UBUNTU_IMAGE_VERSION: ${{ matrix.image}}
-    steps:
-      - name: Set container name
-        id: vars
-        run: |
-          echo "CONTAINER_NAME=ubuntu" >> $GITHUB_ENV
-      - name: Install dotfiles by wget on ubuntu.
-        run: |
-          docker run -itd -v $PWD:/workdir --name ${CONTAINER_NAME} -w /workdir ${UBUNTU_IMAGE_VERSION}
-          docker exec ${CONTAINER_NAME} bash -c "
-            set -e
-            export TERM=xterm
-            apt update
-            apt install -y wget
-            wget -O- ${INSTALLATION_URL} | bash
-          "
-      - name: Check the installation of dotfiles was successful or not
-        run: |
-          docker exec ${CONTAINER_NAME} bash -c "
-            cd dotfiles
-            apt install -y make
-            make check_dotfiles_installed
-          "
+#  setup_matrix_for_ubuntuOS:
+#    runs-on: ubuntu-latest
+#    outputs:
+#      matrix: ${{ steps.set-matrix.outputs.matrix }}
+#    steps:
+#      - id: set-matrix
+#        run: echo 'matrix=["ubuntu:23.10"]' >> $GITHUB_OUTPUT
+#  curl_installation_on_ubuntu:
+#    needs:
+#      - setup_matrix_for_ubuntuOS
+#    name: Curl installation on ubuntu
+#    runs-on: ubuntu-latest
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        image: ${{fromJson(needs.setup_matrix_for_ubuntuOS.outputs.matrix)}}
+#    env:
+#      UBUNTU_IMAGE_VERSION: ${{ matrix.image}}
+#    steps:
+#      - name: Set container name
+#        id: vars
+#        run: |
+#          echo "CONTAINER_NAME=ubuntu" >> $GITHUB_ENV
+#      - name: Install dotfiles by curl on ubuntu.
+#        run: |
+#          docker run -itd -v $PWD:/workdir --name ${CONTAINER_NAME} -w /workdir ${UBUNTU_IMAGE_VERSION}
+#          docker exec ${CONTAINER_NAME} bash -c "
+#            set -e
+#            apt update
+#            apt install -y curl
+#            export TERM=xterm
+#            curl -fsSL ${INSTALLATION_URL} | bash
+#          "
+#      - name: Check the installation of dotfiles was successful or not
+#        run: |
+#          docker exec ${CONTAINER_NAME} bash -c "
+#            cd dotfiles
+#            apt install -y make
+#            make check_dotfiles_installed
+#          "
+#  wget_installation_on_ubuntu:
+#    needs:
+#      - setup_matrix_for_ubuntuOS
+#    name: Wget installation on ubuntu
+#    runs-on: ubuntu-latest
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        image: ${{fromJson(needs.setup_matrix_for_ubuntuOS.outputs.matrix)}}
+#    env:
+#      UBUNTU_IMAGE_VERSION: ${{ matrix.image}}
+#    steps:
+#      - name: Set container name
+#        id: vars
+#        run: |
+#          echo "CONTAINER_NAME=ubuntu" >> $GITHUB_ENV
+#      - name: Install dotfiles by wget on ubuntu.
+#        run: |
+#          docker run -itd -v $PWD:/workdir --name ${CONTAINER_NAME} -w /workdir ${UBUNTU_IMAGE_VERSION}
+#          docker exec ${CONTAINER_NAME} bash -c "
+#            set -e
+#            export TERM=xterm
+#            apt update
+#            apt install -y wget
+#            wget -O- ${INSTALLATION_URL} | bash
+#          "
+#      - name: Check the installation of dotfiles was successful or not
+#        run: |
+#          docker exec ${CONTAINER_NAME} bash -c "
+#            cd dotfiles
+#            apt install -y make
+#            make check_dotfiles_installed
+#          "
+#
