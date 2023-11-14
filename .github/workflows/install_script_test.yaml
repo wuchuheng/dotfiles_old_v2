@@ -110,7 +110,6 @@ jobs:
       - name: Check the installation of dotfiles was successful or not
         run: |
           cd dotfiles
-          yum install -y make
           make check_dotfiles_installed
 #
 #  wget_download_on_macOS_x86:
