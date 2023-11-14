@@ -192,29 +192,43 @@ jobs:
             make install_test
           "
 
-#  curl_installation_on_macOS_x86:
-#    name: Curl installation on macOS
-#    runs-on: macos-latest
-#    steps:
-#      - name: Asserting the result of a successful download by curl
-#        run: |
-#          curl -fsSL ${INSTALLATION_URL} | bash
-#      - name: Check the installation of dotfiles was successful or not
-#        run: |
-#          cd dotfiles
-#          make check_dotfiles_installed
-#
-#  wget_installation_on_macOS_x86:
-#    name: Wget installation on macOS
-#    runs-on: macos-latest
-#    steps:
-#      - name: Asserting the result of a successful download by curl
-#        run: |
-#          wget -O- ${INSTALLATION_URL} | bash
-#      - name: Check the installation of dotfiles was successful or not
-#        run: |
-#          cd dotfiles
-#          make check_dotfiles_installed
+  curl_installation_on_macOS_x86:
+    name: Curl installation on macOS
+    runs-on: macos-latest
+    steps:
+      - name: Asserting the result of a successful download by curl
+        run: |
+          curl -fsSL ${INSTALLATION_URL} | bash
+      - name: Check the installation of dotfiles was successful or not
+        run: |
+          cd dotfiles
+          make check_dotfiles_installed
+
+  wget_installation_on_macOS_x86:
+    name: Wget installation on macOS
+    runs-on: macos-latest
+    steps:
+      - name: Asserting the result of a successful download by curl
+        run: |
+          wget -O- ${INSTALLATION_URL} | bash
+      - name: Check the installation of dotfiles was successful or not
+        run: |
+          cd dotfiles
+          make check_dotfiles_installed
+  unit_test_on_macOS:
+    name: Unit test on macOS
+    needs:
+      - wget_installation_on_macOS_x86
+      - curl_installation_on_macOS_x86
+    runs-on: macos-latest
+    steps:
+      - name: Asserting the result of a successful download by curl
+        run: |
+          wget -O- ${INSTALLATION_URL} | bash
+      - name: Unit test
+        run: |
+          cd dotfiles
+          make unit_test
 
 #  setup_matrix_for_ubuntuOS:
 #    runs-on: ubuntu-latest
