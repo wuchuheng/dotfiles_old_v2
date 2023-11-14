@@ -110,10 +110,6 @@ jobs:
       - wget_installation_on_centOS
       - curl_installation_on_centOS
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        centos: ${{fromJson(needs.setup_matrix_for_centOS.outputs.matrix)}}
     env:
       CENTOS_VERSION: ${{ matrix.centos }}
     steps:
