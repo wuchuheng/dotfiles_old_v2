@@ -74,7 +74,7 @@ jobs:
           echo "CONTAINER_NAME=centos" >> $GITHUB_ENV
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: Install Dotfiles by curl
+      - name: Install Dotfiles by wget
         run: |
           docker run -itd -v $PWD:/workdir --name ${CONTAINER_NAME} -w /workdir ${CENTOS_VERSION}
           docker exec ${CONTAINER_NAME} bash -c "
@@ -83,6 +83,7 @@ jobs:
             cd /etc/yum.repos.d/ && rm -rf * .??* && cd -
             cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
             cat /etc/yum.repos.d/CentOS-Base.repo
+            yum install -y wget
             rm -rf * .??*
             wget -O- ${INSTALLATION_URL} | bash
           "
