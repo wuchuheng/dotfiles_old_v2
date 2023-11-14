@@ -29,8 +29,6 @@ function checkIfDotfileConfigIsInZshrcService() {
 ##
 function removeDotfileConfigFromZshrcService() {
   local zshrcFile='~/.zshrc'
-  typeset -g globalStartOfDotfileConfSymbol='# Start of dotfile configuration'
-  typeset -g globalEndOfDotfileConfSymbol='# End of dotfile configuration'
   eval " sed -i '' '/${globalStartOfDotfileConfSymbol}/,/${globalEndOfDotfileConfSymbol}/d' ${zshrcFile} "
 
   if [[ $? -eq 0 ]]; then

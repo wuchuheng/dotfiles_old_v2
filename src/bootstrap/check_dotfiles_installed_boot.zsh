@@ -13,7 +13,7 @@ typeset -g APP_BASE_PATH=$(pwd); source "${APP_BASE_PATH}"/src/utils/autoload.zs
 import ../utils/ref_variable_helper.zsh # {generate_unique_var_name, get_str_from_ref}
 import @/src/templates/create_cli_template/create_cli_helper.zsh #{get_cli_uninstallation_provider_file_path}
 import ./boot_helper.zsh # { check_cli_by_number_dir }
-import @/src/services/insert_dotfile_config_into_zshrc_service.zsh #{insertDotfileConfigIntoZshrcService}
+import @/src/services/insert_dotfile_config_into_zshrc_service.zsh #{checkIfDotfileConfigIsInZshrcService}
 import @/src/utils/cli_helper.zsh #{getCliDirList}
 import @/src/utils/load_env.zsh # {set_env_type}
 import @/src/utils/color_printf.zsh # {red_print, green_print}
@@ -51,5 +51,14 @@ printf "Successful installed  cli: $(green_print ${totalSuccessfulCliNum}) \n"
 printf "Failed installed cli: $(red_print ${totalFailedCliNum})\n"
 
 if [[ ${totalFailedCliNum} -gt 0 ]]; then
+  exit 1
+fi
+
+printf "Check the dotfiles was existed or not in .zshrc\n"
+checkIfDotfileConfigIsInZshrcService
+if [[ $? -eq 0 ]]; then
+  printf "$(green_print PASS)\n"
+else
+  printf "$(red_print FAILED)\n"
   exit 1
 fi
