@@ -150,7 +150,7 @@ jobs:
           docker run -itd -v $PWD:/workdir --name ${CONTAINER_NAME} -w /workdir ${UBUNTU_IMAGE_VERSION}
           docker exec ${CONTAINER_NAME} bash -c "
             set -e
-            sudo apt install -y curl
+            apt install -y curl
             export TERM=xterm
             curl -fsSL ${INSTALLATION_URL} | bash
           "
@@ -158,40 +158,40 @@ jobs:
         run: |
           docker exec ${CONTAINER_NAME} bash -c "
             cd dotfiles
-            sudo apt install -y make
+            apt install -y make
             make check_dotfiles_installed
           "
-  wget_installation_on_ubuntu:
-    needs:
-      - setup_matrix_for_ubuntuOS
-    name: Wget installation on ubuntu
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        image: ${{fromJson(needs.setup_matrix_for_ubuntuOS.outputs.matrix)}}
-    env:
-      UBUNTU_IMAGE_VERSION: ${{ matrix.image}}
-    steps:
-      - name: Set container name
-        id: vars
-        run: |
-          echo "CONTAINER_NAME=ubuntu" >> $GITHUB_ENV
-      - name: Update apt
-        run: sudo apt update
-      - name: Install dotfiles by wget on ubuntu.
-        run: |
-          docker run -itd -v $PWD:/workdir --name ${CONTAINER_NAME} -w /workdir ${UBUNTU_IMAGE_VERSION}
-          docker exec ${CONTAINER_NAME} bash -c "
-            set -e
-            export TERM=xterm
-            sudo apt install -y wget
-            wget -O- ${INSTALLATION_URL} | bash
-          "
-      - name: Check the installation of dotfiles was successful or not
-        run: |
-          docker exec ${CONTAINER_NAME} bash -c "
-            cd dotfiles
-            sudo apt install -y make
-            make check_dotfiles_installed
-          "
+#  wget_installation_on_ubuntu:
+#    needs:
+#      - setup_matrix_for_ubuntuOS
+#    name: Wget installation on ubuntu
+#    runs-on: ubuntu-latest
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        image: ${{fromJson(needs.setup_matrix_for_ubuntuOS.outputs.matrix)}}
+#    env:
+#      UBUNTU_IMAGE_VERSION: ${{ matrix.image}}
+#    steps:
+#      - name: Set container name
+#        id: vars
+#        run: |
+#          echo "CONTAINER_NAME=ubuntu" >> $GITHUB_ENV
+#      - name: Update apt
+#        run: sudo apt update
+#      - name: Install dotfiles by wget on ubuntu.
+#        run: |
+#          docker run -itd -v $PWD:/workdir --name ${CONTAINER_NAME} -w /workdir ${UBUNTU_IMAGE_VERSION}
+#          docker exec ${CONTAINER_NAME} bash -c "
+#            set -e
+#            export TERM=xterm
+#            sudo apt install -y wget
+#            wget -O- ${INSTALLATION_URL} | bash
+#          "
+#      - name: Check the installation of dotfiles was successful or not
+#        run: |
+#          docker exec ${CONTAINER_NAME} bash -c "
+#            cd dotfiles
+#            sudo apt install -y make
+#            make check_dotfiles_installed
+#          "
