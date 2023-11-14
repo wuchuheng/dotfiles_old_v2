@@ -38,16 +38,20 @@ jobs:
           echo "CONTAINER_NAME=centos" >> $GITHUB_ENV
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: Install Dotfiles by curl
+      - name: Conf the yum repository
         run: |
           docker run -itd -v $PWD:/workdir --name ${CONTAINER_NAME} -w /workdir ${CENTOS_VERSION}
           docker exec ${CONTAINER_NAME} bash -c "
-            set -e
-            export TERM=xterm
             cd /etc/yum.repos.d/ && rm -rf * .??* && cd -
             cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
             cat /etc/yum.repos.d/CentOS-Base.repo
             rm -rf * .??*
+          "
+      - name: Install Dotfiles by curl
+        run: |
+          docker exec ${CONTAINER_NAME} bash -c "
+            set -e
+            export TERM=xterm
             curl -fsSL ${INSTALLATION_URL} | bash
           "
       - name: Check the installation of dotfiles was successful or not
@@ -75,17 +79,21 @@ jobs:
           echo "CONTAINER_NAME=centos" >> $GITHUB_ENV
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: Install Dotfiles by wget
+      - name: Conf the yum repository
         run: |
           docker run -itd -v $PWD:/workdir --name ${CONTAINER_NAME} -w /workdir ${CENTOS_VERSION}
           docker exec ${CONTAINER_NAME} bash -c "
-            set -e
-            export TERM=xterm
             cd /etc/yum.repos.d/ && rm -rf * .??* && cd -
             cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
             cat /etc/yum.repos.d/CentOS-Base.repo
-            yum install -y wget
             rm -rf * .??*
+          "
+      - name: Install Dotfiles by wget
+        run: |
+          docker exec ${CONTAINER_NAME} bash -c "
+            set -e
+            export TERM=xterm
+            yum install -y wget
             wget -O- ${INSTALLATION_URL} | bash
           "
       - name: Check the installation of dotfiles was successful or not
@@ -115,17 +123,21 @@ jobs:
           echo "CONTAINER_NAME=centos" >> $GITHUB_ENV
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: Install Dotfiles by wget
+      - name: Conf the yum repository
         run: |
           docker run -itd -v $PWD:/workdir --name ${CONTAINER_NAME} -w /workdir ${CENTOS_VERSION}
           docker exec ${CONTAINER_NAME} bash -c "
-            set -e
-            export TERM=xterm
             cd /etc/yum.repos.d/ && rm -rf * .??* && cd -
             cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
             cat /etc/yum.repos.d/CentOS-Base.repo
-            yum install -y wget
             rm -rf * .??*
+          "
+      - name: Install Dotfiles by wget
+        run: |
+          docker exec ${CONTAINER_NAME} bash -c "
+            set -e
+            export TERM=xterm
+            yum install -y wget
             wget -O- ${INSTALLATION_URL} | bash
           "
       - name: Unit test
@@ -153,17 +165,21 @@ jobs:
           echo "CONTAINER_NAME=centos" >> $GITHUB_ENV
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: Install Dotfiles by wget
+      - name: Conf the yum repository
         run: |
           docker run -itd -v $PWD:/workdir --name ${CONTAINER_NAME} -w /workdir ${CENTOS_VERSION}
           docker exec ${CONTAINER_NAME} bash -c "
-            set -e
-            export TERM=xterm
             cd /etc/yum.repos.d/ && rm -rf * .??* && cd -
             cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
             cat /etc/yum.repos.d/CentOS-Base.repo
-            yum install -y wget
             rm -rf * .??*
+          "
+      - name: Install Dotfiles by wget
+        run: |
+          docker exec ${CONTAINER_NAME} bash -c "
+            set -e
+            export TERM=xterm
+            yum install -y wget
             wget -O- ${INSTALLATION_URL} | bash
           "
       - name: Unit test
