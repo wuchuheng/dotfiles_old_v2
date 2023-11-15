@@ -228,7 +228,21 @@ jobs:
       - name: Unit test
         run: |
           cd dotfiles
-          make unit_test
+          make unit_tes
+
+  test_after_installation_on_macOS:
+    name: Test after installation on MacOS
+    needs:
+      - unit_test_on_macOS
+    runs-on: macos-latest
+    steps:
+      - name: Asserting the result of a successful download by curl
+        run: |
+          wget -O- ${INSTALLATION_URL} | bash
+      - name: Unit test
+        run: |
+          cd dotfiles
+          make install_test
 
 #  setup_matrix_for_ubuntuOS:
 #    runs-on: ubuntu-latest
