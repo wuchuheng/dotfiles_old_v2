@@ -1,6 +1,11 @@
 name: Test the dotfiles
 
 on:
+  workflow_call:
+    inputs:
+      config-path:
+        required: true
+        type: string
   push:
     branches:
       - '**'
