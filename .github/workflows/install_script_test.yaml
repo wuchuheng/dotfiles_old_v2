@@ -312,14 +312,14 @@ jobs:
   unit_test_on_ubuntuOS:
     name: Unit est on ubuntuOS
     needs:
+      - setup_matrix_for_ubuntuOS
       - wget_installation_on_ubuntu
       - curl_installation_on_ubuntu
-      - setup_matrix_for_ubuntuOS
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        centos: ${{fromJson(needs.setup_matrix_for_centOS.outputs.matrix)}}
+        image: ${{fromJson(needs.setup_matrix_for_ubuntuOS.outputs.matrix)}}
     container:
       image: ${{ matrix.image}}
     steps:
