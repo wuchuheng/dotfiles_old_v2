@@ -5,6 +5,7 @@ on:
     branches:
       - tmp
       - dev
+      - fix
       - master
 env:
   INSTALLATION_URL: 'https://raw.githubusercontent.com/wuchuheng/dotfiles/tmp/src/tools/install.sh'  # Set a global environment variable
@@ -331,9 +332,10 @@ jobs:
         run: make unit_test
 
   test_after_installation_on_ubuntuOS:
-    name: Unit test on ubuntuOS
+    name: Test after installation on ubuntu OS
     needs:
       - unit_test_on_ubuntuOS
+      - setup_matrix_for_ubuntuOS
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
