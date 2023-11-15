@@ -228,7 +228,7 @@ jobs:
       - name: Unit test
         run: |
           cd dotfiles
-          make unit_tes
+          make unit_test
 
   test_after_installation_on_macOS:
     name: Test after installation on MacOS
