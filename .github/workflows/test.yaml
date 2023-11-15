@@ -3,10 +3,9 @@ name: Test the dotfiles
 on:
   push:
     branches:
-      - tmp
-      - dev
-      - fix
-      - master
+      - '**'
+    tags-ignore:
+      - '**'
 env:
   INSTALLATION_URL: 'https://raw.githubusercontent.com/wuchuheng/dotfiles/tmp/src/tools/install.sh'  # Set a global environment variable
   GIT_REP_URL: 'https://github.com/wuchuheng/dotfiles.git'

@@ -72,3 +72,6 @@
 
 ## 0.0.51
 - feat(check):  :smile: add the feature to check the dotfile was installed or not in ~/.zshrc
+
+## 0.0.52
+- chore(github action):  :smile: update the release schedule on github action
