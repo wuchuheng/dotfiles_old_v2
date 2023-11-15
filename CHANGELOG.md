@@ -87,3 +87,6 @@
 
 ## 0.0.56
 - chore(github action):  :smile: update the release schedule on github action #4
+
+## 0.0.57
+- chore(github action):  :smile: update the release schedule on github action #5
