@@ -1,4 +1,4 @@
-name: Release the project.
+name: Release wuchuheng's Dotfiles
 
 on:
   push:
