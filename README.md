@@ -1,35 +1,23 @@
-# Wuchuheng's Dotfiles
+<h1 align="center"> Wuchuheng's Dotfiles </h1>
 
+<p align="center">
+    <a href="https://github.com/wuchuheng/dotfiles/actions/workflows/release.yaml">
+        <img alt="Release wuchuheng's Dotfiles" src="https://github.com/wuchuheng/dotfiles/actions/workflows/test.yaml/badge.svg"/>
+    </a>
+</p>
 
-
-## Getting Started
+## 1 Getting Started
 
 ```bashpro shell script
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/wuchuheng/dotfiles/tmp/src/tools/install.sh)"
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/wuchuheng/dotfiles/v0.0.59/src/tools/install.sh)"
 ```
 
 OR
 
 ```bashpro shell script
-sh -c "$(wget -O- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+sh -c "$(wget -O- https://raw.githubusercontent.com/wuchuheng/dotfiles/v0.0.59/src/tools/install.sh)"
 ```
 
-OR 
+## 2 License
 
-```bashpro shell script
-git clone --branch v0.0.45 --single-branch https://github.com/wuchuheng/dotfiles.git && cd dotfiles && bash src/bootstrap/bash_install_boot.sh 
-```
-
-
-
-
-### Prerequisites
-
-What things you need to install the software and how to install them.
-
-```plaintext
-- Node.js (v14.0+)
-- Docker (v20.0+)
-- PostgreSQL (v12.0+)
-- etc...
-```
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
