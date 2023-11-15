@@ -7,8 +7,7 @@ on:
 
 jobs:
   test:
-    - name: Test the dotfiles
-      uses: .github/workflows/test.yaml
+    uses: .github/workflows/test.yaml
 
   release:
     needs:
