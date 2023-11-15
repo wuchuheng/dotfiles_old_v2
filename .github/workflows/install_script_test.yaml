@@ -12,6 +12,7 @@ env:
 
 jobs:
   setup_matrix_for_centOS:
+    name: Setup matrix for centOS
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
