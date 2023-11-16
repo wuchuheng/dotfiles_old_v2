@@ -79,3 +79,18 @@ function get_str_from_ref() {
 
   return "${TRUE}"
 }
+
+##
+# get the list value from reference variable name.
+# @Use get_list_from_ref "<reference name>"
+# @Echo "(e1 e2 e3 ...)"
+# @Return "<boolean>"
+##
+function get_list_from_ref() {
+  local refName="${1}"
+  eval "
+    echo \"\${${refName}[@]}\"
+  "
+
+  return "${TRUE}"
+}

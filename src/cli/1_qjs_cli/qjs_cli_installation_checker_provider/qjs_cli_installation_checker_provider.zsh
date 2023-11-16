@@ -17,7 +17,7 @@ function qjs_cli_installation_checker() {
   get_current_cli_path "${currentCliPathRef}"
   local currentCliPath=$(get_str_from_ref "${currentCliPathRef}") # /..../src/cli/1_qjs_cli
   local binFile="${currentCliPath}/bin/qjs_$(get_OS_symbol)"
-  log DEBUG "Checking if qjs CLI tool was installed or not. [${binFile}]"
+  log DEBUG "Check ${binFile:${#APP_BASE_PATH} + 1} was exists or not."
   if [[ -f ${binFile} ]]; then
     return "${TRUE}"
   else

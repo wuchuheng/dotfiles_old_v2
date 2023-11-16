@@ -36,10 +36,10 @@ for numberCliDirName in "${cliDirList[@]}"; do
   local isInstallation=$?
   # if the cli was not installed, then install it.
   if [[ "${isInstallation}" -eq "${TRUE}" ]]; then
-    printf "${numberCliDirName}: SUCCESSFUL"
+    printf "${numberCliDirName}: SUCCESSFUL\n"
     (( totalSuccessfulCliNum++ ))
   else
-    printf "${numberCliDirName}: FAILED"
+    printf "${numberCliDirName}: FAILED\n"
     (( totalFailedCliNum++ ))
   fi
 done

@@ -48,6 +48,7 @@ function get_os_symbol() {
 function log() {
   printf  "\033[0;32mINFO\033[0m %s\n" "${@}"
 }
+
 ##
 # check the cli existed or not
 # @use cli_exits <cli_name>

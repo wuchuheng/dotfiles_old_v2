@@ -214,3 +214,16 @@ function listDecode() {
     split_str_with_point \"\${encodeStr}\" \"\${_serializeSymbol}\" \"${resultPointer}\"
   "
 }
+
+##
+# check the cli existed or not
+# @use cli_exits <cli_name>
+# @return TRUE|FALSE
+##
+function cli_exits() {
+  if command -v "$@" >/dev/null 2>&1; then
+    return "${TRUE}"
+  else
+    return "${FALSE}"
+  fi
+}

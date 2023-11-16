@@ -3,6 +3,7 @@
 import @/src/handlers/testing_callback_handler/testing_callback_handler.zsh
 import @/src/utils/log.zsh
 import @/src/utils/test_except.zsh
+import @/src/utils/helper.zsh #{cli_exits}
 
 function get_all_sub_dir_by_path_test() {
   local BASE_PATH=$(get_runtime_space_by_unit_test_name "${global_test_name}")
@@ -155,3 +156,11 @@ function get_file_name_exclude_path_test() {
 }
 
 testing_callback_handle "get_file_name_exclude_path_test" "To test get_file_name_exclude_path function"
+
+function cli_exits_test() {
+    alias cli_exits_name_demo="echo hello"
+    cli_exits cli_exits_name_demo
+    except_str "$?" "0"
+}
+
+testing_callback_handle "cli_exits_test" "To test cli_exits_test function"
