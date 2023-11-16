@@ -1,4 +1,4 @@
-<h1 align="center"> Wuchuheng's Dotfiles </h1>
+<h1 align="center"> ✨ Wuchuheng's Dotfiles ✨</h1>
 
 <p align="center">
     <a href="https://github.com/wuchuheng/dotfiles/actions/workflows/release.yaml">
