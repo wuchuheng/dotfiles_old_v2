@@ -161,3 +161,5 @@ if [[ -f ${localEnvFile} ]]; then
 fi
 
 import @/src/config/const_conf.zsh
+import @/src/handlers/exception_handler.zsh #{throw}
+
