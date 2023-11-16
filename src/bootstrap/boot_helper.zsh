@@ -11,7 +11,7 @@ import ../utils/ref_variable_helper.zsh # {generate_unique_var_name, get_str_fro
 function check_cli_by_number_dir() {
   local numberCliDirName=$1
   local cliInstallationCheckerProviderFilePathRef=$(generate_unique_var_name)
-  get_cli_installation_checker_provider_file_path "${numberCliDirName}" "${cliInstallationCheckerProviderFilePathRef}"
+  get_cli_check_install_file_path "${numberCliDirName}" "${cliInstallationCheckerProviderFilePathRef}"
   local cliInstallationCheckerProviderFilePath=$(get_str_from_ref "${cliInstallationCheckerProviderFilePathRef}")
   import "${cliInstallationCheckerProviderFilePath}"
 

@@ -82,16 +82,16 @@ EOF
 
 ##
 # get the cli installation checker provider file path
-# @Use get_cli_installation_checker_provider_file_path "<cli directory>" "<resultStrRef>"
-# @Example  get_cli_installation_checker_provider_file_path "1_tmp_cli" "<1_tmp_cli/tmp_cli_installation_checker_provider/tmp_cli_installation_checker_provider.zsh>"
+# @Use get_cli_check_install_file_path "<cli directory>" "<resultStrRef>"
+# @Example  get_cli_check_install_file_path "1_tmp_cli" "<1_tmp_cli/tmp_cli_check_install/tmp_cli_check_install.zsh>"
 # @Return <boolean>
 ##
-function get_cli_installation_checker_provider_file_path() {
+function get_cli_check_install_file_path() {
   local cliDirectory=$1
   local outputResultRefName=$2
 
   local CLI_PATH=$(getCliPath)
-  local result=${CLI_PATH}/${cliDirectory}/installation_checker_provider/installation_checker_provider.zsh
+  local result=${CLI_PATH}/${cliDirectory}/check_install/check_install.zsh
   assign_str_to_ref "${result}" "${outputResultRefName}"
 
   return "${TRUE}"
@@ -171,10 +171,10 @@ function _initCLIDirectory() {
 
   # check the directory to save the installation checker provider
   local checkerFilePathRefName=$(generate_unique_var_name)
-  get_cli_installation_checker_provider_file_path "${CLI_DIR_NAME}" "${checkerFilePathRefName}"
+  get_cli_check_install_file_path "${CLI_DIR_NAME}" "${checkerFilePathRefName}"
   local checkerFilePath=$(get_str_from_ref "${checkerFilePathRefName}")
-  local INSTALLATION_CHECKER_PROVIDER_PATH=$(dirname ${checkerFilePath})
-  _checkDirectoryOrCreate "${INSTALLATION_CHECKER_PROVIDER_PATH}"
+  local CHECK_INSTALL_PATH=$(dirname ${checkerFilePath})
+  _checkDirectoryOrCreate "${CHECK_INSTALL_PATH}"
 
   assign_str_to_ref "${CLI_DIR_NAME}" "$numberCliNameRefName"
 }
@@ -328,7 +328,7 @@ function create_cli() {
 
   # Generate the cli installation checker provider file.
   local cliInstallationCheckerProviderFileRef=$(generate_unique_var_name)
-  get_cli_installation_checker_provider_file_path "${numberCliName}" "${cliInstallationCheckerProviderFileRef}"
+  get_cli_check_install_file_path "${numberCliName}" "${cliInstallationCheckerProviderFileRef}"
   local cliInstallationCheckerProviderFile=$(get_str_from_ref "${cliInstallationCheckerProviderFileRef}")
   _generateInstallationCheckerProviderFile "${cliInstallationCheckerProviderFile}" "${CLI_NAME}"
 
