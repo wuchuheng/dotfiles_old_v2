@@ -12,7 +12,7 @@ import @/src/utils/helper.zsh #{cli_exits}
 # @Return <boolean>
 ##
 function base64Decode_cli_installation_checker() {
-  log INFO "Checking if base64Decode CLI tool was installed or not."
+  log DEBUG "Checking if base64Decode CLI tool was installed or not."
   local cliNameRef=$(generate_unique_var_name)
   get_current_cli_name "${cliNameRef}"
   local cliName=$(get_str_from_ref "${cliNameRef}")

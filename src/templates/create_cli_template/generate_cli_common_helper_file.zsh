@@ -13,7 +13,7 @@ function generateCLICommonHelperFile() {
   local cliNameRef=$(generate_unique_var_name)
   get_cli_name_from_number_cli_name "${numberCliName}" "${cliNameRef}"
   local cliName=$(get_str_from_ref "${cliNameRef}")
-  local cliHelperLibraryFile=$(getCliPath)/${numberCliName}/${cliName}_common_helper.zsh
+  local cliHelperLibraryFile=$(getCliPath)/${numberCliName}/common_helper.zsh
 
   cat > "${cliHelperLibraryFile}" << EOF
 #!/usr/bin/env zsh

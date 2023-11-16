@@ -90,12 +90,8 @@ function get_cli_installation_checker_provider_file_path() {
   local cliDirectory=$1
   local outputResultRefName=$2
 
-  local cliNameRefName=$(generate_unique_var_name)
-  get_cli_name_from_number_cli_name "${cliDirectory}" "${cliNameRefName}"
-  local cliName=$(get_str_from_ref "${cliNameRefName}")
-
   local CLI_PATH=$(getCliPath)
-  local result=${CLI_PATH}/${cliDirectory}/${cliName}_installation_checker_provider/${cliName}_installation_checker_provider.zsh
+  local result=${CLI_PATH}/${cliDirectory}/installation_checker_provider/installation_checker_provider.zsh
   assign_str_to_ref "${result}" "${outputResultRefName}"
 
   return "${TRUE}"
@@ -115,7 +111,7 @@ function get_cli_uninstallation_provider_file_path() {
   local cliName=$(get_str_from_ref "${cliNameRefName}")
 
   local CLI_PATH=$(getCliPath)
-  local result=${CLI_PATH}/${cliDirectory}/${cliName}_uninstallation_provider/${cliName}_uninstallation_provider.zsh
+  local result=${CLI_PATH}/${cliDirectory}/uninstallation_provider/uninstallation_provider.zsh
   assign_str_to_ref "${result}" "${outputResultRefName}"
 
   return "${TRUE}"
@@ -136,7 +132,7 @@ function get_cli_installation_provider_file_path() {
   local cliName=$(get_str_from_ref "${cliNameRefName}")
 
   local CLI_PATH=$(getCliPath)
-  local result=${CLI_PATH}/${cliDirectory}/${cliName}_installation_provider/${cliName}_installation_provider.zsh
+  local result=${CLI_PATH}/${cliDirectory}/installation_provider/installation_provider.zsh
   assign_str_to_ref "${result}" "${outputResultRefName}"
 
   return "${TRUE}"
@@ -258,7 +254,7 @@ import @/src/utils/ref_variable_helper.zsh # {generate_unique_var_name, }
 # @Return <boolean>
 ##
 function ${CLI_NAME}_cli_installation_checker() {
-  log INFO "Checking if $CLI_NAME CLI tool was installed or not."
+  log DEBUG "Checking if $CLI_NAME CLI tool was installed or not."
   local currentCliPathRef=\$(generate_unique_var_name)
   get_current_cli_path "\${currentCliPathRef}"
   local currentCliPath=\$(get_str_from_ref "${currentCliPathRef}") # /..../src/cli/${CLI_NAME}
@@ -292,10 +288,7 @@ EOF
 function get_cli_boot_file_path() {
   local numberCliName=$1
   local bootFileRefName=$2
-  local cliNameRef=$(generate_unique_var_name)
-  get_cli_name_from_number_cli_name "${numberCliName}" "${cliNameRef}"
-  local cliName=$(get_str_from_ref "${cliNameRef}")
-  local cliBootLoaderFile=$(getCliPath)/${numberCliName}/${cliName}_bootloader.zsh
+  local cliBootLoaderFile=$(getCliPath)/${numberCliName}/bootloader.zsh
 
   assign_str_to_ref "${cliBootLoaderFile}" "${bootFileRefName}"
 

@@ -8,7 +8,7 @@ import @/src/utils/test_except.zsh # {except_str}
 function get_cli_installation_checker_provider_file_path_test() {
   globalCliInstallationCheckerProviderFilePath=''
   get_cli_installation_checker_provider_file_path "1_tmp_cli" globalCliInstallationCheckerProviderFilePath
-  local exceptStrValue="src/cli/1_tmp_cli/tmp_cli_installation_checker_provider/tmp_cli_installation_checker_provider.zsh"
+  local exceptStrValue="src/cli/1_tmp_cli/installation_checker_provider/installation_checker_provider.zsh"
   local receiveValue=${globalCliInstallationCheckerProviderFilePath:${#APP_BASE_PATH} + 1}
   except_str "${exceptStrValue}"  "${receiveValue}"
 }

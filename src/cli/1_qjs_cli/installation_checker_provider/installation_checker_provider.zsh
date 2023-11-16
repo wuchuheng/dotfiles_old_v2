@@ -11,7 +11,7 @@ import @/src/utils/ref_variable_helper.zsh # {generate_unique_var_name, }
 # @Return <boolean>
 ##
 function qjs_cli_installation_checker() {
-  log INFO "Checking if qjs CLI tool was installed or not."
+  log DEBUG "Checking if qjs CLI tool was installed or not."
   local envType=$(get_env_type)
   local currentCliPathRef=$(generate_unique_var_name)
   get_current_cli_path "${currentCliPathRef}"

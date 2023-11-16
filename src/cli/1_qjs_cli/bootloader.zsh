@@ -6,7 +6,7 @@
 
 import @/src/utils/log.zsh #{log}
 import @/src/utils/ref_variable_helper.zsh #{generate_unique_var_name, get_str_from_ref}
-import ./qjs_cli_common_helper.zsh #{get_qjs_bin}
+import ./common_helper.zsh #{get_qjs_bin}
 
 function qjs_cli_boot() {
   local qjsBinRef=$(generate_unique_var_name)
