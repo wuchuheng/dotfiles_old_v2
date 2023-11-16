@@ -10,7 +10,7 @@
 typeset -g APP_BASE_PATH=$(pwd); source src/utils/autoload.zsh || exit 1
 
 import ../utils/ref_variable_helper.zsh # {generate_unique_var_name, get_str_from_ref}
-import @/src/templates/create_cli_template/create_cli_helper.zsh #{get_cli_uninstallation_provider_file_path}
+import @/src/templates/create_cli_template/create_cli_helper.zsh #{get_cli_uninstaller_file_path}
 import ./boot_helper.zsh # { check_cli_by_number_dir }
 import @/src/services/insert_dotfile_config_into_zshrc_service.zsh #{checkIfDotfileConfigIsInZshrcService, removeDotfileConfigFromZshrcService}
 import @/src/utils/load_env.zsh # {set_env_type}
@@ -29,7 +29,7 @@ for numberCliDirName in "${cliDirList[@]}"; do
   # if the cli was not installed, then install it.
   if [[ "${isInstallation}" -eq "${TRUE}" ]]; then
     local cliUninstallationProviderFilePathRef=$(generate_unique_var_name)
-    get_cli_uninstallation_provider_file_path "${numberCliDirName}" "${cliUninstallationProviderFilePathRef}"
+    get_cli_uninstaller_file_path "${numberCliDirName}" "${cliUninstallationProviderFilePathRef}"
     local uninstallProviderPath=$(get_str_from_ref "${cliUninstallationProviderFilePathRef}")
 
     # import uninstallation provider file.
@@ -41,7 +41,7 @@ for numberCliDirName in "${cliDirList[@]}"; do
     local cliName=$(get_str_from_ref "${cliNameRef}")
 
     # trigger the installation provider.
-    ${cliName}_uninstallation_provider
+    ${cliName}_uninstaller
   fi
 done
 

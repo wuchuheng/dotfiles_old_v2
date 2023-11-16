@@ -67,7 +67,7 @@ import @/src/utils/log.zsh # {log}
 # the provider entry to install ${cliName} cli
 # @return <boolean>
 ##
-function ${cliName}_cli_installation_provider() {
+function ${cliName}_cli_installer() {
   # if you want to stop the installation, set isInstallBrokenRef to \${TRUE}
   local isInstallBrokenRef=\$1
 
@@ -99,10 +99,10 @@ function get_cli_check_install_file_path() {
 
 ##
 # get the cli uninstallation provider file path
-# @Use get_cli_uninstallation_provider_file_path "<cli directory>" "<resultStrRef>"
-# @Example get_cli_uninstallation_provider_file_path "1_tmp_cli" "<1_tmp_cli/tmp_cli_uninstallation_provider/tmp_cli_uninstallation_provider.zsh>"
+# @Use get_cli_uninstaller_file_path "<cli directory>" "<resultStrRef>"
+# @Example get_cli_uninstaller_file_path "1_tmp_cli" "<1_tmp_cli/tmp_cli_uninstaller/tmp_cli_uninstaller.zsh>"
 # @Return <boolean>
-function get_cli_uninstallation_provider_file_path() {
+function get_cli_uninstaller_file_path() {
   local cliDirectory=$1
   local outputResultRefName=$2
 
@@ -111,7 +111,7 @@ function get_cli_uninstallation_provider_file_path() {
   local cliName=$(get_str_from_ref "${cliNameRefName}")
 
   local CLI_PATH=$(getCliPath)
-  local result=${CLI_PATH}/${cliDirectory}/uninstallation_provider/uninstallation_provider.zsh
+  local result=${CLI_PATH}/${cliDirectory}/uninstaller/uninstaller.zsh
   assign_str_to_ref "${result}" "${outputResultRefName}"
 
   return "${TRUE}"
@@ -119,11 +119,11 @@ function get_cli_uninstallation_provider_file_path() {
 
 ##
 # get the file path of installation provider.
-# @Use get_cli_installation_provider_file_path "<cli directory>" "<resultStrRef>"
-# @Example get_cli_installation_provider_file_path "1_tmp_cli" "<1_tmp_cli/tmp_cli_installation_provider/tmp_cli_installation_provider.zsh>"
+# @Use get_cli_installer_file_path "<cli directory>" "<resultStrRef>"
+# @Example get_cli_installer_file_path "1_tmp_cli" "<1_tmp_cli/tmp_cli_installer/tmp_cli_installer.zsh>"
 # @Return <boolean>
 ##
-function get_cli_installation_provider_file_path() {
+function get_cli_installer_file_path() {
   local cliDirectory=$1
   local outputResultRefName=$2
 
@@ -132,7 +132,7 @@ function get_cli_installation_provider_file_path() {
   local cliName=$(get_str_from_ref "${cliNameRefName}")
 
   local CLI_PATH=$(getCliPath)
-  local result=${CLI_PATH}/${cliDirectory}/installation_provider/installation_provider.zsh
+  local result=${CLI_PATH}/${cliDirectory}/installer/installer.zsh
   assign_str_to_ref "${result}" "${outputResultRefName}"
 
   return "${TRUE}"
@@ -157,17 +157,17 @@ function _initCLIDirectory() {
 
   # check the directory to save the provider to install.
   local installationProviderFilePathRefName=$(generate_unique_var_name)
-  get_cli_installation_provider_file_path "${CLI_DIR_NAME}" "${installationProviderFilePathRefName}"
+  get_cli_installer_file_path "${CLI_DIR_NAME}" "${installationProviderFilePathRefName}"
   local installationProviderFilePath=$(get_str_from_ref "${installationProviderFilePathRefName}")
-  local INSTALLATION_PROVIDER_PATH=$(dirname ${installationProviderFilePath})
-  _checkDirectoryOrCreate "${INSTALLATION_PROVIDER_PATH}"
+  local installer_PATH=$(dirname ${installationProviderFilePath})
+  _checkDirectoryOrCreate "${installer_PATH}"
 
   # check the directory to save the uninstallation provider
   local uninstallationProviderFilePathRefName=$(generate_unique_var_name)
-  get_cli_uninstallation_provider_file_path "${CLI_DIR_NAME}" "${uninstallationProviderFilePathRefName}"
+  get_cli_uninstaller_file_path "${CLI_DIR_NAME}" "${uninstallationProviderFilePathRefName}"
   local uninstallationProviderFilePath=$(get_str_from_ref "${uninstallationProviderFilePathRefName}")
-  local UNINSTALLATION_PROVIDER_PATH=$(dirname ${uninstallationProviderFilePath})
-  _checkDirectoryOrCreate "${UNINSTALLATION_PROVIDER_PATH}"
+  local UNinstaller_PATH=$(dirname ${uninstallationProviderFilePath})
+  _checkDirectoryOrCreate "${UNinstaller_PATH}"
 
   # check the directory to save the installation checker provider
   local checkerFilePathRefName=$(generate_unique_var_name)
@@ -221,7 +221,7 @@ import @/src/utils/log.zsh # {log}
 # the provider entry to uninstall ${cliName} cli
 # @return <boolean>
 ##
-function ${cliName}_cli_uninstallation_provider() {
+function ${cliName}_cli_uninstaller() {
   log INFO "Uninstalling ${cliName} CLI cli tool..."
   unalias "${cliName}"
 
@@ -310,7 +310,7 @@ function create_cli() {
 
   # Generate the cli installation provider file
   local cliInstallationProviderFileRef=$(generate_unique_var_name)
-  get_cli_installation_provider_file_path "${numberCliName}" "${cliInstallationProviderFileRef}"
+  get_cli_installer_file_path "${numberCliName}" "${cliInstallationProviderFileRef}"
   local cliInstallationProviderFile=$(get_str_from_ref "${cliInstallationProviderFileRef}")
   _generateInstallationProvider "${cliInstallationProviderFile}" "${CLI_NAME}"
 
@@ -322,7 +322,7 @@ function create_cli() {
 
   # Generate the cli uninstallation provider file
   local cliUninstallationProviderFileRefName=$(generate_unique_var_name)
-  get_cli_uninstallation_provider_file_path "${numberCliName}" "${cliUninstallationProviderFileRefName}"
+  get_cli_uninstaller_file_path "${numberCliName}" "${cliUninstallationProviderFileRefName}"
   local cliUninstallationProviderFile=$(get_str_from_ref "${cliUninstallationProviderFileRefName}")
   _generateUninstallationProviderFile "${cliUninstallationProviderFile}" "${CLI_NAME}"
 
