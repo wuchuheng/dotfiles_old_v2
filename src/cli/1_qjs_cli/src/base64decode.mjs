@@ -12,7 +12,11 @@ function decodeBase64(base64String) {
     return output;
 }
 
-// Example usage:
-const vmessUrl="ewogICJ2IjogIjIiLAogICJwcyI6ICJud2VtZSIsCiAgImFkZCI6ICJid2cud3VjaHVoZW5nLmNvbSIsCiAgInBvcnQiOiA2MDAwMiwKICAiaWQiOiAiYjQ0MzcxNGYtMjU4My00ZTUzLWQ4MGItYzM4YTViZmZlMWRhIiwKICAiYWlkIjogMCwKICAibmV0IjogInRjcCIsCiAgInR5cGUiOiAiaHR0cCIsCiAgImhvc3QiOiAiIiwKICAicGF0aCI6ICIvIiwKICAidGxzIjogInRscyIKfQ=="
-const decoded = decodeBase64(vmessUrl);
-console.log(decoded); // Outputs: Hello World!
+if (scriptArgs.length !== 2) {
+    console.log("Please input one argument with qjs!")
+    std.exit(1);
+}
+
+const base64String = scriptArgs[1];
+const encodedStr = decodeBase64(base64String);
+console.log(encodedStr);

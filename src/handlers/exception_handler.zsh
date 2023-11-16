@@ -35,7 +35,7 @@ function throw() {
     printf " ${funcfiletrace[$i]}\n"
   done
   local envType=$(get_env_type)
-  if ! [[ ${envType} == 'prod' ]]; then
-    exit $FALSE
+  if [[ ${envType} != 'prod' ]]; then
+    exit {$FALSE}
   fi
 }

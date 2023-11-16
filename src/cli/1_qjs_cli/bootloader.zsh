@@ -7,16 +7,23 @@
 import @/src/utils/log.zsh #{log}
 import @/src/utils/ref_variable_helper.zsh #{generate_unique_var_name, get_str_from_ref}
 import ./common_helper.zsh #{get_qjs_bin}
+import @/src/utils/cli_helper.zsh #{get_current_cli_name, get_current_cli_path}
 
 function qjs_cli_boot() {
-  local qjsBinRef=$(generate_unique_var_name)
-  get_qjs_bin "${qjsBinRef}"
-  local qjsBin=$(get_str_from_ref "${qjsBinRef}")
-  if [[ -f "${qjsBin}" ]]; then
-    alias qjs="${qjsBin}"
-    log INFO "Loaded qjs cli"
-  else
-    log ERROR "Failed to load qjs,the qjs bin ${qjsBin:${#APP_BASE_PATH} + 1} not found"
-  fi
+    local currentCliPathRef=$(generate_unique_var_name)
+    get_current_cli_path "${currentCliPathRef}"
+    local currentCliPath=$(get_str_from_ref "${currentCliPathRef}")
+    local qjsBinRef=$(generate_unique_var_name)
+    get_qjs_bin "${qjsBinRef}"
+    local qjsBin=$(get_str_from_ref "${qjsBinRef}")
+
+    if [[ -f "${qjsBin}" ]]; then
+      alias qjs="${qjsBin}"
+      log INFO "Loaded qjs cli"
+      alias base64Decode="${qjsBin} ${currentCliPath}/src/base64decode.mjs"
+      log INFO "Loaded base64Decode cli"
+    else
+      log ERROR "Failed to load qjs,the qjs bin ${qjsBin:${#APP_BASE_PATH} + 1} not found"
+    fi
 }
 

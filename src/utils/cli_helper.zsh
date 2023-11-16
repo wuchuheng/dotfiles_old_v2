@@ -3,6 +3,7 @@
 import ./helper.zsh # {get_all_sub_dir_by_path, split_str_with_point}
 import ./list_helper.zsh # {join}
 import ./ref_variable_helper.zsh # {assign_str_to_ref, generate_unique_var_name,get_list_from_ref }
+import @/src/utils/debug_helper.zsh # {assert_not_empty}
 
 ##
 # get cli list
@@ -75,9 +76,18 @@ function get_cli_name_by_number_cli_dir() {
 function get_current_cli_path() {
   local outPutStrRef="$1"
   local preFile="${funcfiletrace[1]}"
-  local preDir="${preFile:h}"
-  preDir="$(dirname ${preDir})"
-  assign_str_to_ref "${preDir}" "${outPutStrRef}"
+  local cliPath=$(getCliPath)
+  local cliLen=${#cliPath}
+  ((cliLen++))
+  local cliRelativePath=${preFile:${cliLen}}
+
+   # get the cli name with number from the relative path.
+  local pathSliceRef=$( generate_unique_var_name )
+  split_str_with_point "${cliRelativePath}" '/' "${pathSliceRef}"
+  local pathSlice=($( get_list_from_ref "${pathSliceRef}" ))
+  local numberCliDir=${pathSlice[1]}
+
+  assign_str_to_ref "${cliPath}/${numberCliDir}" "${outPutStrRef}"
 }
 
 ##
@@ -86,17 +96,16 @@ function get_current_cli_path() {
 # @return <boolean>
 ##
 function get_current_cli_name() {
+  assert_not_empty "$1"
   local outPutStrRef="$1"
   local preFile="${funcfiletrace[1]}"
   local cliPath=$(getCliPath)
   local cliLen=${#cliPath}
   ((cliLen++))
   local cliRelativePath=${preFile:${cliLen}}
-  echo "cli relative path: ${cliRelativePath}"
 
    # get the cli name with number from the relative path.
   local pathSliceRef=$( generate_unique_var_name )
-
   split_str_with_point "${cliRelativePath}" '/' "${pathSliceRef}"
   local pathSlice=($( get_list_from_ref "${pathSliceRef}" ))
   local numberCliDir=${pathSlice[1]}
