@@ -163,3 +163,6 @@ fi
 import @/src/config/const_conf.zsh
 import @/src/handlers/exception_handler.zsh #{throw}
 
+# clean the garbage
+import @/src/utils/ref_variable_helper.zsh #{clean_ref_garbage_cache_dir}
+clean_ref_garbage_cache_dir
