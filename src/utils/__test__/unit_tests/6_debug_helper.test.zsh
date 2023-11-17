@@ -7,7 +7,7 @@ import @/src/utils/debug_helper.zsh # {assert_not_empty}
 
 # the demo testing
 function assert_not_empty_test() {
-    assert_not_empty ""
+    assert_not_empty "hello"
 }
 
 # call hello_world_test() function，and pass the testing callback with the testing name and testing description.
