@@ -7,7 +7,7 @@ import @/src/utils/ref_variable_helper.zsh #{generate_unique_var_name, assign_st
 # the demo testing
 function generate_unique_var_name_test() {
   local receiveVal=$( generate_unique_var_name )
-  local exceptVal="src_utils___test___unit_tests_4_ref_variable_helper_test_zsh_9"
+  local exceptVal="src_utils___test___unit_tests_4_ref_variable_helper_test_zsh_9_1"
   except_str "${exceptVal}" "${receiveVal}"
 }
 
