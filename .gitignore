@@ -2,3 +2,4 @@
 src/runtime/
 .env
 src/cli/**/runtime/
+src/cli/**/bin/v2ray-macos
