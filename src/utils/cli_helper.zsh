@@ -80,7 +80,6 @@ function get_current_cli_path() {
   local cliLen=${#cliPath}
   ((cliLen++))
   local cliRelativePath=${preFile:${cliLen}}
-
    # get the cli name with number from the relative path.
   local pathSliceRef=$( generate_unique_var_name )
   split_str_with_point "${cliRelativePath}" '/' "${pathSliceRef}"

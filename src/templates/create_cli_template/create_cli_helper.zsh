@@ -71,7 +71,7 @@ function ${cliName}_cli_installer() {
   # if you want to stop the installation, set isInstallBrokenRef to \${TRUE}
   local isInstallBrokenRef=\$1
 
-  log INFO "Installing ${cliName} CLI cli tool..."
+  log DEBUG "Installing ${cliName} CLI cli tool..."
 
   return "\${TRUE}"
 }
@@ -198,7 +198,7 @@ import @/src/utils/log.zsh #{log}
 
 function ${cliName}_cli_boot() {
   alias ${cliName}='echo "hello ${cliName}"'
-  log INFO "Loaded ${cliName} cli."
+  log INFO "${cliName} cli loaded."
 }
 
 EOF

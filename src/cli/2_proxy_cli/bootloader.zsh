@@ -8,6 +8,6 @@ import @/src/utils/log.zsh #{log}
 
 function proxy_cli_boot() {
   alias proxy='echo "hello proxy"'
-  log INFO "Loaded proxy cli."
+  log INFO "proxy cli loaded."
 }
 

@@ -19,9 +19,9 @@ function qjs_cli_boot() {
 
     if [[ -f "${qjsBin}" ]]; then
       alias qjs="${qjsBin}"
-      log INFO "Loaded qjs cli"
+      log INFO "qjs cli loaded"
       alias base64Decode="${qjsBin} ${currentCliPath}/src/base64decode.mjs"
-      log INFO "Loaded base64Decode cli"
+      log INFO "base64Decode cli loaded"
     else
       log ERROR "Failed to load qjs,the qjs bin ${qjsBin:${#APP_BASE_PATH} + 1} not found"
     fi
