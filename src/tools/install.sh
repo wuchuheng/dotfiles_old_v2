@@ -13,9 +13,9 @@ SUPPORTED_OS_LIST=(MacOS CentOS UbuntuOS)
 
 ##
 # get the os symbol
-# @use get_os_symbol
+# @use get_os_name
 # @print <UbuntuOS|CentOS|MacOS|unknown>
-function get_os_symbol() {
+function get_os_name() {
   case "$(uname -s)" in
     Linux*)
       if [ -f /etc/os-release ]; then
@@ -73,7 +73,7 @@ function install_tools_by_name() {
   if [[ -z $binName ]]; then
     binName="${toolName}"
   fi
-  local currentOS=$(get_os_symbol)
+  local currentOS=$(get_os_name)
   local IS_INSTALLATION=${FALSE}
   log "Install ${toolName}."
   case ${currentOS} in
@@ -250,7 +250,7 @@ function download_dotfiles() {
 ##
 function check_current_os_is_supported() {
     local isSupportedOS=${FALSE}
-    local currentOS=$(get_os_symbol)
+    local currentOS=$(get_os_name)
     for os in "${SUPPORTED_OS_LIST[@]}"; do
         if [[ ${currentOS} == ${os} ]]; then
           isSupportedOS=${TRUE}
