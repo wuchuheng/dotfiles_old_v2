@@ -166,3 +166,6 @@ import @/src/handlers/exception_handler.zsh #{throw}
 # clean the garbage
 import @/src/utils/ref_variable_helper.zsh #{clean_ref_garbage_cache_dir}
 clean_ref_garbage_cache_dir
+
+import @/src/utils/swap_helper.zsh #{clean_swap_cache}
+clean_swap_cache
