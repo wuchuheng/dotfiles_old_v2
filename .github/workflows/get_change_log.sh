@@ -1,4 +1,16 @@
 #!/usr/bin/env bash
+
+##
+# get the change log by tag name
+# @use ./get_change_log.sh <tag name>
+# @example ./get_change_log.sh v0.0.59
+#          - test(unit): update the unit test for generate_unique_var_name function
+#          - fix: fix the issue  with incorrect information printed by assert_not_empty_test function
+#          - feat(cli): add the bin tar for proxy cli
+#          - feat(cli): add the installer for proxy cli '
+#          - chore: update submodule
+##
+
 tagName="${1:1}"
 result=''
 TRUE=0
