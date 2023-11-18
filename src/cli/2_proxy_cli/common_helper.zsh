@@ -1,6 +1,9 @@
 #!/usr/bin/env zsh
 
 import @/src/utils/string_cache.zsh #{setStringValue, setStringValueWithPointer, getStringValue}
+import @/src/utils/debug_helper.zsh #{assert_not_empty}
+import @/src/utils/ref_variable_helper.zsh # { assign_str_to_ref }
+import @/src/utils/os_helper.zsh # {get_os_name}
 
 ##
 # get the cli runtime space.
@@ -71,5 +74,43 @@ function check_key_map_exists_for_proxy_cli() {
 
   getStringValue "${key}" "${cacheSpaceName}"
   return $?
+}
+
+##
+# get the proxy bin file path
+# @use get_proxy_bin_file_path <output ref>
+# @return <boolean>
+##
+function get_proxy_bin_file_path() {
+  local outputRef=$1
+
+  local currentCliPathRef=$(generate_unique_var_name)
+  get_current_cli_path "${currentCliPathRef}"
+  local currentCliPath=$(get_str_from_ref "${currentCliPathRef}")
+  local binPath=${currentCliPath}/bin
+
+  local osNameRef=$(generate_unique_var_name)
+  get_os_name "${osNameRef}"
+  local osName=$(get_str_from_ref "${osNameRef}")
+  local result=''
+  case "${osName}" in
+    MacOS)
+        result="${binPath}/v2ray-macos"
+    ;;
+    UbuntuOS|CentOS)
+
+    ;;
+    *)
+      return "${FALSE}"
+    ;;
+  esac
+
+  if [[ -z ${result} ]]; then
+    assert_not_empty
+    return "${FALSE}"
+  else
+    assign_str_to_ref "${result}" "$outputRef"
+    return "${TRUE}"
+  fi
 }
 
