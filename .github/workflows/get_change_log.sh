@@ -24,13 +24,13 @@ while IFS= read -r line || [[ -n "$line" ]]; do
     isTextLog="${TRUE}"
     continue
   else
-    if [[ "${line}" == "##"* ]]; then
+    if [[ "${line}" == "## "* ]]; then
       isTextLog="${FALSE}"
     fi
   fi
 done < "CHANGELOG.md"
 
-# 无限循环
+# remove the empty line.
 while true; do
   if [[ ${result:${#result} - 2} == "\n" ]]; then
      result=${result:0:${#result} - 2}
