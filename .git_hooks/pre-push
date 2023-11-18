@@ -26,7 +26,7 @@ function check_tag_name_in_changelog_me() {
 
     # Get the contents of the CHANGELOG.md at the given tag
     CHANGELOG_CONTENT=$(git show "$tag_name:CHANGELOG.md")
-    lastTagNameInChangeLog=$( echo "${CHANGELOG_CONTENT}" | grep '## ' | tail -n 1 | cut -d ' ' -f 2 )
+    lastTagNameInChangeLog=$( echo "${CHANGELOG_CONTENT}" | grep '^## ' | tail -n 1 | cut -d ' ' -f 2 )
     echo "Check the tag name: ${tag_name}."
 
     # Check if the CHANGELOG.md has the change log for tag name
