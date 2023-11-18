@@ -9,13 +9,13 @@
 ## 1 Getting Started
 
 ```bashpro shell script
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/wuchuheng/dotfiles/v0.0.59/src/tools/install.sh)"
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/wuchuheng/dotfiles/v0.0.61/src/tools/install.sh)"
 ```
 
 OR
 
 ```bashpro shell script
-sh -c "$(wget -O- https://raw.githubusercontent.com/wuchuheng/dotfiles/v0.0.59/src/tools/install.sh)"
+sh -c "$(wget -O- https://raw.githubusercontent.com/wuchuheng/dotfiles/v0.0.61/src/tools/install.sh)"
 ```
 
 ## 2 License
