@@ -8,6 +8,42 @@ import @/src/utils/cli_helper.zsh #{get_current_cli_path}
 import @/src/cli/2_proxy_cli/common_helper.zsh # {get_proxy_bin_file_path}
 
 ##
+# install the cli on macOS
+# @use _proxy_cli_mac_installer
+# @return <boolean>
+##
+_proxy_cli_mac_installer() {
+  local currentCliPathRef=$(generate_unique_var_name)
+  get_current_cli_path "${currentCliPathRef}"
+  local currentCliPath=$(get_str_from_ref "${currentCliPathRef}")
+
+  local binPath=${currentCliPath}/bin
+
+  local binTarPath="${binPath}/v2ray-macos.tar.gz"
+
+  local binRef=$(generate_unique_var_name)
+  get_proxy_bin_file_path "${binRef}"
+  local bin=$(get_str_from_ref "${binRef}")
+
+  if [[ ! -f ${bin} ]]; then
+    tar -zxvf ${binTarPath} -C ${binPath}
+  fi
+
+  if [[ ! -f ${bin} ]]; then
+    log ERROR "Installation failed on macOS";
+    return ${FALSE}
+  else
+    return ${TRUE}
+  fi
+
+  # if the proxy config was not existed in the <proxy cli>/config.json, then create it.
+  local configPath="${currentCliPath}/config.json"
+  if [[ ! -f ${configPath} ]]; then
+    base64decode
+  fi
+}
+
+##
 # the provider entry to install proxy cli
 # @return <boolean>
 ##
@@ -24,25 +60,15 @@ function proxy_cli_installer() {
   get_current_cli_path "${currentCliPathRef}"
   local currentCliPath=$(get_str_from_ref "${currentCliPathRef}")
 
-  local binRef=$(generate_unique_var_name)
-  get_proxy_bin_file_path "${binRef}"
-  local bin=$(get_str_from_ref "${binRef}")
-
-  log INFO "bin file path: ${bin}"
 
   case "${osName}" in
     MacOS)
-        local binPath=${currentCliPath}/bin
-        local binTarPath="${binPath}/v2ray-macos.tar.gz"
-        if [[ ! -f ${bin} ]]; then
-          tar -zxvf ${binTarPath} -C ${binPath}
-        fi
-        if [[ ! -f ${bin} ]]; then
-          local isInstallBrokenRef=$1
-          log ERROR "Installation failed on macOS";
-          assign_str_to_ref "${FALSE}" "${isInstallBrokenRef}"
-          return ${FALSE}
-        fi
+      _proxy_cli_mac_installer
+      if [[ $? -eq ${FALSE} ]]; then
+        local isInstallBrokenRef=$1
+        assign_str_to_ref "${FALSE}" "${isInstallBrokenRef}"
+        return ${FALSE}
+      fi
     ;;
     UbuntuOS|CentOS)
       assert_not_empty "${currentCliPath}"
@@ -54,4 +80,3 @@ function proxy_cli_installer() {
 
   return "${TRUE}"
 }
-

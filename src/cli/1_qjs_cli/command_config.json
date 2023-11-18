@@ -1,0 +1,10 @@
+{
+  "qjs": {
+    "MacOS": {
+      "x86_64": "bin/qjs_darwin_x86_64",
+      "arm64": "bin/qjs_darwin_arm64"
+    },
+    "UbuntuOS": "bin/qjs_linux_x86_64",
+    "CentOS": "bin/qjs_linux_x86_64"
+  }
+}

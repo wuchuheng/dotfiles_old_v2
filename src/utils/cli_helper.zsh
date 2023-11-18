@@ -52,6 +52,8 @@ function getCliDirList() {
 # @return "<boolean>"
 ##
 function get_cli_name_by_number_cli_dir() {
+  assert_not_empty "${1}"
+  assert_not_empty "${2}"
   local numberCliDir=$1
   local outputStrRef=$2
   globalListRef=()
@@ -113,3 +115,29 @@ function get_current_cli_name() {
 
   return $?
 }
+
+##
+# get the cli name by name
+# @use get_cli_path_by_name <cli name> <result string output ref>
+# @return <boolean>
+function get_cli_path_by_name() {
+  assert_not_empty "$1"
+  assert_not_empty "$2"
+  local inputCliName=$1
+  local outPutStrRef=$2
+  local allCliDirPath=$(getCliDirectory)
+  for cliNamePath in "${allCliDirPath}"/*; do
+    local numberCliName=${cliNamePath:${#allCliDirPath} + 1}
+
+    local cliNameRef=$(generate_unique_var_name)
+    get_cli_name_by_number_cli_dir "${numberCliName}" "${cliNameRef}"
+    local cliName=$(get_str_from_ref "${cliNameRef}")
+
+    if [[ ${cliName} == ${inputCliName}_cli ]]; then
+      assign_str_to_ref "${cliNamePath}" "${outPutStrRef}"
+      return ${TRUE}
+    fi
+    break
+  done
+}
+
