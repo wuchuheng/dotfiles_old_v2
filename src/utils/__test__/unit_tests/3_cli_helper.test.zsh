@@ -41,3 +41,17 @@ function get_cli_binary_name_test() {
 }
 
 testing_callback_handle get_cli_binary_name_test ''
+
+function get_executable_cli_test() {
+  local qjsExecutableCliRef=$(generate_unique_var_name)
+  get_executable_cli qjs "${qjsExecutableCliRef}"
+  local qjsExecutableCli=$(get_str_from_ref "${qjsExecutableCliRef}")
+
+  local cliName=qjs
+  local cliPathRef=$(generate_unique_var_name)
+  get_cli_path_by_name "${cliName}" "${cliPathRef}"
+  local cliPath=$(get_str_from_ref "${cliPathRef}")
+
+  except_str "${cliPath}/bin/${cliName}_$(uname -s)_$(uname -m)" "${qjsExecutableCli}"
+}
+testing_callback_handle get_executable_cli_test ''

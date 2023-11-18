@@ -5,6 +5,8 @@ import ./list_helper.zsh # {join}
 import ./ref_variable_helper.zsh # {assign_str_to_ref, generate_unique_var_name,get_list_from_ref }
 import @/src/utils/debug_helper.zsh # {assert_not_empty}
 import ./os_helper.zsh # {get_os_name}
+import @/src/utils/swap_helper.zsh # {create_swap_file, get_swap_content}
+
 
 ##
 # get cli list
@@ -169,21 +171,33 @@ function get_executable_cli() {
   assert_not_empty "$1"
   assert_not_empty "$2"
   local cliName="$1"
-  local outputResultStrRef="$1"
+  local outputResultStrRef="$2"
 
   local cliNamePathRef=$(generate_unique_var_name)
   get_cli_path_by_name "$cliName" "${cliNamePathRef}"
   local cliNamePath=$(get_str_from_ref "${cliNamePathRef}")
   local cpuHardwareType=$(uname -m)
-
-  local osNameRef=$(generate_unique_var_name)
-  get_os_name "${osNameRef}"
-  local osName=$(get_str_from_ref "${osNameRef}")
+  local osName=$(uname -s)
 
   local qjsCliPathRef=$(generate_unique_var_name)
   get_cli_path_by_name qjs "${qjsCliPathRef}"
   local qjsCliPath=$(get_str_from_ref "${qjsCliPathRef}")
+  local qjsBin="${qjsCliPath}/bin/qjs_$(uname -s)_$(uname -m)"
+  local commandConfigParserJsPath="${qjsCliPath}/src/command_config_parser.mjs"
 
+  local cliConfigJsonPath="${cliNamePath}/command_config.json"
+  local swapFile=$(create_swap_file)
 
+  # parse the
+  ${qjsBin} ${commandConfigParserJsPath} \
+    -c ${cliConfigJsonPath} \
+    -m ${cpuHardwareType} \
+    -o ${osName} \
+    -cli_name "${cliName}" \
+    -p "${cliNamePath}" \
+    -output_file "${swapFile}"
 
+  local result=$(get_swap_content "${swapFile}")
+
+  assign_str_to_ref "${result}" "${outputResultStrRef}"
 }
