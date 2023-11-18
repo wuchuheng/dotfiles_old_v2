@@ -30,4 +30,8 @@ check_dotfiles_installed:
 install_git_hooks:
 	git config core.hooksPath .git_hooks/
 
+# put the git log between the latest tag and the git HEAD to CHANGELOG.md with the new tag name.
+update_change_log:
+	zsh .dev_scripts/update_change_log.zsh
 
+#git log $(git describe --tags --abbrev=0)..HEAD | grep '  ' | grep -v Date | sed 's/^    //' >> CHANGELOG.md
