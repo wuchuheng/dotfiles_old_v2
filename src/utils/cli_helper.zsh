@@ -4,6 +4,7 @@ import ./helper.zsh # {get_all_sub_dir_by_path, split_str_with_point}
 import ./list_helper.zsh # {join}
 import ./ref_variable_helper.zsh # {assign_str_to_ref, generate_unique_var_name,get_list_from_ref }
 import @/src/utils/debug_helper.zsh # {assert_not_empty}
+import ./os_helper.zsh # {get_os_name}
 
 ##
 # get cli list
@@ -140,4 +141,49 @@ function get_cli_path_by_name() {
     break
   done
 }
+##
+# get the cli binary name
+# @use get_cli_binary_name <cli name> <output string ref>
+# @example: get_cli_binary_name qjs <cliBinaryNameRef>
+#          <output the ref like: qjs_Linux_x86_64>
+# @return <boolean>
+##
+function get_cli_binary_name() {
+  assert_not_empty "$1"
+  assert_not_empty "$2"
+  local cli_name=$1
+  local cliBinaryNameRef="$2"
+  local os_name=$(uname -s)        # Get OS name (e.g., Linux, Darwin for macOS)
+  local hardware_name=$(uname -m)  # Get hardware name (e.g., x86_64)
+  # Combine the cli_name with OS name and hardware name
+  local binaryName="${cli_name}_${os_name}_${hardware_name}"
+  assign_str_to_ref "${binaryName}" "${cliBinaryNameRef}"
+  return $?
+}
 
+##
+# get the executable cli in terminal
+# @use get_executable_cli "<cliName>|<cliName.subCli>" "<outPutStrRef>"
+# @return <boolean>
+function get_executable_cli() {
+  assert_not_empty "$1"
+  assert_not_empty "$2"
+  local cliName="$1"
+  local outputResultStrRef="$1"
+
+  local cliNamePathRef=$(generate_unique_var_name)
+  get_cli_path_by_name "$cliName" "${cliNamePathRef}"
+  local cliNamePath=$(get_str_from_ref "${cliNamePathRef}")
+  local cpuHardwareType=$(uname -m)
+
+  local osNameRef=$(generate_unique_var_name)
+  get_os_name "${osNameRef}"
+  local osName=$(get_str_from_ref "${osNameRef}")
+
+  local qjsCliPathRef=$(generate_unique_var_name)
+  get_cli_path_by_name qjs "${qjsCliPathRef}"
+  local qjsCliPath=$(get_str_from_ref "${qjsCliPathRef}")
+
+
+
+}

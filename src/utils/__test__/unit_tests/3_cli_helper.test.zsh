@@ -2,7 +2,7 @@
 
 import @/src/handlers/testing_callback_handler/testing_callback_handler.zsh
 import @/src/utils/test_except.zsh # {except_str}
-import @/src/utils/cli_helper.zsh # {get_cli_name_by_number_cli_dir}
+import @/src/utils/cli_helper.zsh # {get_cli_name_by_number_cli_dir, get_cli_binary_name}
 import @/src/utils/ref_variable_helper.zsh #{generate_unique_var_name, get_str_from_ref}
 
 function get_cli_name_by_number_cli_dir_test() {
@@ -26,3 +26,18 @@ function get_cli_path_by_name_test() {
 
 testing_callback_handle "get_cli_path_by_name_test" "Unit test src/utils/__test__/unit_tests/3_cli_helper.test.zsh"
 
+
+function get_cli_binary_name_test() {
+  local qjsBinaryNameRef=$(generate_unique_var_name)
+  local cliName=qjs
+  get_cli_binary_name "${cliName}" "${qjsBinaryNameRef}"
+  local qjsBinaryName=$(get_str_from_ref "${qjsBinaryNameRef}")
+
+  local osName=$(uname -s)
+  local hardwareName=$(uname -m)
+  local qjsBinaryNameExpected="${cliName}_${osName}_${hardwareName}"
+
+  except_str "${qjsBinaryNameExpected}" "${qjsBinaryName}"
+}
+
+testing_callback_handle get_cli_binary_name_test ''
