@@ -99,3 +99,40 @@
 
 ## 0.0.60
 - chore(github action):  :smile: update the release schedule on github action #8
+ 
+## 0.0.61
+
+### feat:
+- feat(cli): add the bin tar for proxy cli
+- feat(cli): add the installer for proxy cli '
+- feat(cli): int proxy cli
+- feat: update the uninstaller for qjs
+- feat: add throw function in global scope
+- feat(cli): init base64Decode cli
+
+### docs
+- docs: update README.md
+- docs: add LICENSE
+- docs: update README.md
+- docs: update CHANGELOG.md
+
+### chore:
+- chore(github action): add the comments about how to use the script in get_change_log.sh
+- chore: update submodule
+- chore(git): update githooks
+- chore: typo fix
+
+### tests:
+- test(unit): update the unit test for generate_unique_var_name function
+
+### refactor:
+- refactor(tools): refactory the function get_os_symbol to get_os_name in tools/installer.sh
+- refactor: make the code readability
+- refactor: Simplify directory naming for cli#3
+- refactor: Simplify directory naming for cli#2
+- refactor: Simplify directory naming for cli
+
+### fix:
+- fix: fix the issue  with incorrect information printed by assert_not_empty_test function
+- fix: fix the issue that data crosstalk due to same-name references'
+- fix: fix the issut that the output change log was incorect from the CHANGELOG.md with bash script
