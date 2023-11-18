@@ -1,7 +1,8 @@
 #!/usr/bin/env zsh
 
 import @/src/utils/string_cache.zsh #{setStringValue, setStringValueWithPointer, getStringValue}
-import @/src/utils/ref_variable_helper.zsh #{assign_str_to_ref}
+import @/src/utils/ref_variable_helper.zsh #{assign_str_to_ref, generate_unique_var_name, get_str_from_ref}
+import @/src/utils/cli_helper.zsh # {get_cli_path_by_name}
 
 ##
 # get the cli runtime space.
@@ -82,7 +83,11 @@ function check_key_map_exists_for_qjs_cli() {
 ##
 function get_qjs_bin() {
   local qjsBinRef=$1
-  local qjsBin=$(getCliPath)/1_qjs_cli/bin/qjs_$(get_OS_symbol)
+  local cliPathRef=$(generate_unique_var_name)
+  get_cli_path_by_name qjs "${cliPathRef}"
+  local cliPath=$(get_str_from_ref "${cliPathRef}")
+
+  local qjsBin=${cliPath}/bin/qjs_$(uname -s)_$(uname -m)
   assign_str_to_ref "${qjsBin}" "${qjsBinRef}"
   local ok=$?
 
