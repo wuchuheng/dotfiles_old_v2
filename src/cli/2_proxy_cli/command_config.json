@@ -1,0 +1,15 @@
+{
+  "default": {
+    "Darwin": {
+      "x86_64": "${{ prefix }}/bin/qjs_Darwin_x86_64",
+      "arm64": "${{ prefix }}/bin/qjs_Darwin_arm64"
+    },
+    "Linux": {
+      "x86_64": "${{ prefix }}/bin/qjs_Linux_x86_64"
+    }
+  },
+  "command_lines": {
+    "qjs": "${{ default }}",
+    "base64Decode": "${{ default }} ${{ prefix }}/src/base64decode.mjs"
+  }
+}

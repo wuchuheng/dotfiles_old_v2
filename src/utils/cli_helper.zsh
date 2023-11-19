@@ -129,6 +129,7 @@ function get_cli_path_by_name() {
   local inputCliName=$1
   local outPutStrRef=$2
   local allCliDirPath=$(getCliDirectory)
+  local cliNamePath=''
   for cliNamePath in "${allCliDirPath}"/*; do
     local numberCliName=${cliNamePath:${#allCliDirPath} + 1}
 
@@ -169,24 +170,27 @@ function get_cli_binary_name() {
 function get_executable_cli() {
   assert_not_empty "$1"
   assert_not_empty "$2"
-  local subCli="$1"
+  local inputCliName="$1"
   local outputResultStrRef="$2"
 
   local subCliInfoRef=$(generate_unique_var_name)
-  split_str_with_point "${subCli}" "." "${subCliInfoRef}"
+  split_str_with_point "${inputCliName}" "." "${subCliInfoRef}"
   local subCliInfoList=($(get_list_from_ref "${subCliInfoRef}"))
 
   local cliName=${subCliInfoList[1]}
-  local subCli=${subCliInfoList[2]}
+  local subCli=''
   if [[ ${#subCliInfoList[@]} -eq 1 ]]; then
     subCli=${subCliInfoList[1]}
   else
     subCli=${subCliInfoList[2]}
   fi
 
+  # get the cli path by name
   local cliNamePathRef=$(generate_unique_var_name)
   get_cli_path_by_name "$cliName" "${cliNamePathRef}"
   local cliNamePath=$(get_str_from_ref "${cliNamePathRef}")
+
+  # get the hardware name and os name
   local cpuHardwareType=$(uname -m)
   local osName=$(uname -s)
 
@@ -199,7 +203,7 @@ function get_executable_cli() {
   local cliConfigJsonPath="${cliNamePath}/command_config.json"
   local swapFile=$(create_swap_file)
 
-  # parse the
+  # parse the config
   ${qjsBin} ${commandConfigParserJsPath} \
     -c ${cliConfigJsonPath} \
     -m ${cpuHardwareType} \
