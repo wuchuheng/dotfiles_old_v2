@@ -8,13 +8,9 @@ import @/src/utils/log.zsh #{log}
 import ./common_helper.zsh #{get_proxy_bin_file_path}
 import @/src/utils/ref_variable_helper.zsh # {assign_str_to_ref, generate_unique_var_name,get_list_from_ref }
 import @/src/utils/log.zsh #{log}
+import @/src/utils/cli_helper.zsh #{load_cli_from_command_config}
 
 function proxy_cli_boot() {
-  local binRef=$(generate_unique_var_name)
-  get_proxy_bin_file_path "${binRef}"
-  local bin=$(get_str_from_ref "${binRef}")
-
-  alias proxy=${bin}
-  log INFO "proxy cli loaded"
+  load_cli_from_command_config 'proxy'
 }
 

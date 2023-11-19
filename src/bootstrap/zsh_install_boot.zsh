@@ -15,7 +15,9 @@ import @/src/templates/create_cli_template/create_cli_helper.zsh #{get_cli_unins
 import ./boot_helper.zsh # { check_cli_by_number_dir }
 import @/src/services/insert_dotfile_config_into_zshrc_service.zsh #{insertDotfileConfigIntoZshrcService}
 import @/src/utils/cli_helper.zsh #{getCliDirList}
-import @/src/utils/load_env.zsh # {set_env_type}
+import @/src/utils/load_env.zsh # {set_env_type, load_env}
+
+load_env "${APP_BASE_PATH}/.env"
 set_env_type 'install'
 
 # get the cli list from cli directory.

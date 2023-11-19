@@ -83,5 +83,6 @@ if ( jsonObj.command_lines.hasOwnProperty(args.cli_name)) {
     const result = jsonObj.command_lines[args.cli_name]
     writeResultToFile(result, args.output_file)
 } else {
-    console.error("error")
+    console.log(JSON.stringify(args))
+    console.error(`${JSON.stringify(args)} not found in the config file`)
 }

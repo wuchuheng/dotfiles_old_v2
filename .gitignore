@@ -2,4 +2,6 @@
 src/runtime/
 .env
 src/cli/**/runtime/
-src/cli/**/bin/v2ray-macos
+
+# proxy cli config
+src/cli/**/proxy_config.json
