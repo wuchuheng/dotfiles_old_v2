@@ -165,13 +165,19 @@ function get_cli_binary_name() {
 
 ##
 # get the executable cli in terminal
-# @use get_executable_cli "<cliName>|<cliName.subCli>" "<outPutStrRef>"
+# @use get_executable_cli "<cliName.subCliName>" "<outPutStrRef>"
 # @return <boolean>
 function get_executable_cli() {
   assert_not_empty "$1"
   assert_not_empty "$2"
-  local cliName="$1"
+  local subCli="$1"
   local outputResultStrRef="$2"
+
+  local subCliInfoRef=$(generate_unique_var_name)
+  split_str_with_point "${subCli}" "." "${subCliInfoRef}"
+  local subCliInfoList=($(get_list_from_ref "${subCliInfoRef}"))
+  local cliName=${subCliInfoList[1]}
+  local subCli=${subCliInfoList[2]}
 
   local cliNamePathRef=$(generate_unique_var_name)
   get_cli_path_by_name "$cliName" "${cliNamePathRef}"
@@ -193,7 +199,7 @@ function get_executable_cli() {
     -c ${cliConfigJsonPath} \
     -m ${cpuHardwareType} \
     -o ${osName} \
-    -cli_name "${cliName}" \
+    -cli_name "${subCli}" \
     -p "${cliNamePath}" \
     -output_file "${swapFile}"
 
