@@ -7,9 +7,8 @@ import @/src/utils/log.zsh # {log}
 # @return <boolean>
 ##
 function proxy_cli_uninstaller() {
-  log INFO "Uninstalling proxy CLI cli tool..."
-  unalias "proxy"
-
+  unalias 'qjs'
+  unalias 'qjs.base64Decode'
   return "${TRUE}"
 }
 
