@@ -176,8 +176,14 @@ function get_executable_cli() {
   local subCliInfoRef=$(generate_unique_var_name)
   split_str_with_point "${subCli}" "." "${subCliInfoRef}"
   local subCliInfoList=($(get_list_from_ref "${subCliInfoRef}"))
+
   local cliName=${subCliInfoList[1]}
   local subCli=${subCliInfoList[2]}
+  if [[ ${#subCliInfoList[@]} -eq 1 ]]; then
+    subCli=${subCliInfoList[1]}
+  else
+    subCli=${subCliInfoList[2]}
+  fi
 
   local cliNamePathRef=$(generate_unique_var_name)
   get_cli_path_by_name "$cliName" "${cliNamePathRef}"
@@ -207,3 +213,22 @@ function get_executable_cli() {
 
   assign_str_to_ref "${result}" "${outputResultStrRef}"
 }
+
+##
+# @use  _load_qjs <cli name.sub cli name>
+# @return <boolean>
+function load_cli_from_command_config() {
+    assert_not_empty "$1"
+    local cliName="$1"
+    local executableCliRef=$(generate_unique_var_name)
+    get_executable_cli "${cliName}" "${executableCliRef}"
+    local executableCli=$(get_str_from_ref "${executableCliRef}")
+
+    if [[ $? -eq ${TRUE} ]]; then
+      alias ${cliName}="${executableCli}"
+      log INFO "${cliName} cli loaded"
+    else
+      log ERROR "Failed to load ${cliName} bin ${${executableCli}:${#APP_BASE_PATH} + 1} not found"
+    fi
+}
+
