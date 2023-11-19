@@ -44,7 +44,7 @@ testing_callback_handle get_cli_binary_name_test ''
 
 function get_executable_cli_test() {
   local qjsExecutableCliRef=$(generate_unique_var_name)
-  get_executable_cli qjs "${qjsExecutableCliRef}"
+  get_executable_cli qjs.qjs "${qjsExecutableCliRef}"
   local qjsExecutableCli=$(get_str_from_ref "${qjsExecutableCliRef}")
 
   local cliName=qjs
