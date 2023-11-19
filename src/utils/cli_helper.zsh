@@ -140,7 +140,6 @@ function get_cli_path_by_name() {
       assign_str_to_ref "${cliNamePath}" "${outPutStrRef}"
       return ${TRUE}
     fi
-    break
   done
 }
 ##
