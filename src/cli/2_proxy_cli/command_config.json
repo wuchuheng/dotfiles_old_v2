@@ -1,8 +1,8 @@
 {
   "default": {
     "Darwin": {
-      "x86_64": "${{ prefix }}/bin/macos/v2ray -c ${{ prefix }}/proxy_config.json",
-      "arm64": "${{ prefix }}/bin/macos/v2ray -c ${{ prefix }}/proxy_config.json"
+      "x86_64": "${{ prefix }}/bin/v2ray_Darwin_x86_64",
+      "arm64": "${{ prefix }}/bin/macos/v2ray"
     },
     "Linux": {
       "x86_64": "${{ prefix }}/bin/qjs_Linux_x86_64"
