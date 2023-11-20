@@ -4,4 +4,4 @@ src/runtime/
 src/cli/**/runtime/
 
 # proxy cli config
-src/cli/**/proxy_config.json
+src/cli/**/proxy_config.json5
