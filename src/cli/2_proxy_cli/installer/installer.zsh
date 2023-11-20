@@ -23,7 +23,7 @@ _check_proxy_config_or_create() {
   local proxyCliPathRef=$(generate_unique_var_name)
   get_cli_path_by_name proxy "${proxyCliPathRef}"
   local proxyCliPath=$(get_str_from_ref "${proxyCliPathRef}")
-  local configJsonPath="${proxyCliPath}/proxy_config.json"
+  local configJsonPath="${proxyCliPath}/proxy_config.json5"
 
   # convert the env to base64Text
   local vmessUrl=$( get_env "PROXY_CLI_VMESS_URL" )
