@@ -1,4 +1,4 @@
-name: Release wuchuheng's Dotfiles
+name: Release
 
 on:
   push:
