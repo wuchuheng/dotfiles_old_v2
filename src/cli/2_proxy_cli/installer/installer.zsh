@@ -5,7 +5,6 @@ import @/src/utils/os_helper.zsh # {get_os_name}
 import @/src/utils/ref_variable_helper.zsh # {generate_unique_var_name, get_str_from_ref, assign_str_to_ref}
 import @/src/utils/debug_helper.zsh #{assert_not_empty}
 import @/src/utils/cli_helper.zsh #{get_current_cli_path, get_cli_path_by_name}
-import @/src/cli/2_proxy_cli/common_helper.zsh # {get_proxy_bin_file_path}
 import @/src/utils/load_env.zsh  #{get_env}
 
 ##
