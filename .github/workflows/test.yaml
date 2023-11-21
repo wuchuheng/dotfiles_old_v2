@@ -1,0 +1,163 @@
+name: Test the dotfiles
+
+on:
+  push:
+    branches:
+      - master
+      - dev
+      - fix
+      - feat
+      - tmp
+
+jobs:
+  # Jobs for CentOS
+  setup_matrix_for_centOS:
+    name: Setup matrix for centOS
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - id: set-matrix
+        run: echo 'matrix=["centos:centos8.4.2105", "centos:centos8"]' >> $GITHUB_OUTPUT
+  unit_test_on_centOS:
+    name: Unit est on centOS
+    needs:
+      - setup_matrix_for_centOS
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        centos: ${{fromJson(needs.setup_matrix_for_centOS.outputs.matrix)}}
+    env:
+      CENTOS_VERSION: ${{ matrix.centos }}
+    steps:
+      - name: Set container name
+        id: vars
+        run: |
+          echo "CONTAINER_NAME=centos" >> $GITHUB_ENV
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Conf the yum repository
+        run: |
+          docker run -itd -v $PWD:/workdir --name ${CONTAINER_NAME} -w /workdir ${CENTOS_VERSION}
+          docker exec ${CONTAINER_NAME} bash -c "
+            cd /etc/yum.repos.d/ && rm -rf * .??* && cd -
+            cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
+            cat /etc/yum.repos.d/CentOS-Base.repo
+          "
+      - name: Unit test
+        run: |
+          docker exec ${CONTAINER_NAME} bash -c "
+            cd dotfiles
+            yum install -y make
+            make unit_test
+          "
+  test_after_installation_on_centOS:
+    name: Test after installation on centOS
+    needs:
+      - unit_test_on_centOS
+      - setup_matrix_for_centOS
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        centos: ${{fromJson(needs.setup_matrix_for_centOS.outputs.matrix)}}
+    env:
+      CENTOS_VERSION: ${{ matrix.centos }}
+    steps:
+      - name: Set container name
+        id: vars
+        run: |
+          echo "CONTAINER_NAME=centos" >> $GITHUB_ENV
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Conf the yum repository
+        run: |
+          docker run -itd -v $PWD:/workdir --name ${CONTAINER_NAME} -w /workdir ${CENTOS_VERSION}
+          docker exec ${CONTAINER_NAME} bash -c "
+            cd /etc/yum.repos.d/ && rm -rf * .??* && cd -
+            cat .github/workflows/CentOS-Base.repo > /etc/yum.repos.d/CentOS-Base.repo
+            cat /etc/yum.repos.d/CentOS-Base.repo
+          "
+      - name: Unit test
+        run: |
+          docker exec ${CONTAINER_NAME} bash -c "
+            cd dotfiles
+            yum install -y make
+            make install_test
+          "
+
+
+
+  # Jobs for MacOS
+  unit_test_on_macOS:
+    name: Unit test on macOS
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Unit test
+        run: |
+          cd dotfiles
+          make unit_test
+
+  test_after_installation_on_macOS:
+    name: Test after installation on MacOS
+    needs:
+      - unit_test_on_macOS
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Unit test
+        run: |
+          cd dotfiles
+          make install_test
+
+
+  # Jobs for UbuntuOS
+  setup_matrix_for_ubuntuOS:
+    name: Setup matrix for ubuntuOS
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - id: set-matrix
+        run: echo 'matrix=["ubuntu:23.10"]' >> $GITHUB_OUTPUT
+  unit_test_on_ubuntuOS:
+    name: Unit test on ubuntuOS
+    needs:
+      - setup_matrix_for_ubuntuOS
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        image: ${{fromJson(needs.setup_matrix_for_ubuntuOS.outputs.matrix)}}
+    container:
+      image: ${{ matrix.image}}
+    steps:
+      - run: apt update
+      - run: apt install -y zsh make
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Unit test
+        run: make unit_test
+  test_after_installation_on_ubuntuOS:
+    name: Test after installation on ubuntu OS
+    needs:
+      - unit_test_on_ubuntuOS
+      - setup_matrix_for_ubuntuOS
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        image: ${{fromJson(needs.setup_matrix_for_ubuntuOS.outputs.matrix)}}
+    container:
+      image: ${{ matrix.image}}
+    steps:
+      - run: apt update
+      - run: apt install -y zsh make
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Unit test
+        run: make install_test
