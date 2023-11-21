@@ -2,7 +2,10 @@
 
 <p align="center">
     <a href="https://github.com/wuchuheng/dotfiles/actions/workflows/release.yaml">
-        <img alt="Release wuchuheng's Dotfiles" src="https://github.com/wuchuheng/dotfiles/actions/workflows/test.yaml/badge.svg"/>
+        <img alt="Release wuchuheng's Dotfiles" src="https://github.com/wuchuheng/dotfiles/actions/workflows/release.yaml/badge.svg"/>
+    </a>
+    <a href="https://github.com/wuchuheng/dotfiles/actions/workflows/test.yaml">
+        <img alt="Test the dotfiles" src="https://github.com/wuchuheng/dotfiles/actions/workflows/test.yaml/badge.svg"/>
     </a>
 </p>
 
