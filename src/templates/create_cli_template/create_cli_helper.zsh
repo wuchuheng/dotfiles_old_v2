@@ -7,6 +7,7 @@ import ./generate_cli_common_helper_file.zsh # {generateCLICommonHelperFile, get
 import ./generate_cli_test_file/create_installation_test_file.zsh #{create_installation_test_file}
 import ./generate_cli_test_file/create_uninstallation_test_file.zsh #{create_uninstallation_test_file}
 import @/src/utils/ref_variable_helper.zsh #{generate_unique_var_name, assign_str_to_ref, get_str_from_ref}
+import @/src/utils/cli_helper.zsh #{get_cli_name_by_number_cli_dir}
 
 ##
 # get the max number from file names belong a directory
@@ -107,7 +108,7 @@ function get_cli_uninstaller_file_path() {
   local outputResultRefName=$2
 
   local cliNameRefName=$(generate_unique_var_name)
-  get_cli_name_from_number_cli_name "${cliDirectory}" "${cliNameRefName}"
+  get_cli_name_by_number_cli_dir "${cliDirectory}" "${cliNameRefName}"
   local cliName=$(get_str_from_ref "${cliNameRefName}")
 
   local CLI_PATH=$(getCliPath)
@@ -128,7 +129,7 @@ function get_cli_installer_file_path() {
   local outputResultRefName=$2
 
   local cliNameRefName=$(generate_unique_var_name)
-  get_cli_name_from_number_cli_name "${cliDirectory}" "${cliNameRefName}"
+  get_cli_name_by_number_cli_dir "${cliDirectory}" "${cliNameRefName}"
   local cliName=$(get_str_from_ref "${cliNameRefName}")
 
   local CLI_PATH=$(getCliPath)

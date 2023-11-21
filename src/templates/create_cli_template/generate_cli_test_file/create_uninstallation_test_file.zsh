@@ -1,8 +1,9 @@
 #!/usr/bin/env zsh
 
-import ../generate_cli_common_helper_file.zsh # {generateCLICommonHelperFile, get_cli_name_from_number_cli_name}
+import ../generate_cli_common_helper_file.zsh # {generateCLICommonHelperFile}
 import @/src/utils/ref_variable_helper.zsh #{generate_unique_var_name} #{get_str_from_ref} # {assign_str_to_ref}
 import @/src/utils/log.zsh #{log}
+import @/src/utils/cli_helper.zsh # {get_cli_name_by_number_cli_dir}
 
 ##
 # get the uninstallation test file
@@ -17,7 +18,7 @@ function get_uninstallation_test_file() {
   local cliPath=$(getCliPath)
 
   local cliNameRefName=$(generate_unique_var_name)
-  get_cli_name_from_number_cli_name "${numberCliName}" "${cliNameRefName}"
+  get_cli_name_by_number_cli_dir "${numberCliName}" "${cliNameRefName}"
 
   local uninstallationTestFile=${cliPath}/${numberCliName}/__test__/uninstallation_tests/1_uninstallation.test.zsh
   if [[ ! -d "$(dirname ${uninstallationTestFile})" ]]; then
@@ -39,7 +40,7 @@ function create_uninstallation_test_file() {
   local uninstallationTestFile=$(get_str_from_ref "${uninstallationTestFileRef}")
 
   local cliNameRef=$(generate_unique_var_name)
-  get_cli_name_from_number_cli_name "${numberCliName}" "${cliNameRef}"
+  get_cli_name_by_number_cli_dir "${numberCliName}" "${cliNameRef}"
   local cliName=$(get_str_from_ref "${cliNameRef}")
 
   local testFuncName="${cliName}_uninstallation_test"

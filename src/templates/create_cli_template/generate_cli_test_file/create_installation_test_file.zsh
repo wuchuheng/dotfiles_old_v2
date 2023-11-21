@@ -1,8 +1,8 @@
 #!/usr/bin/env zsh
 
-import ../generate_cli_common_helper_file.zsh # {generateCLICommonHelperFile, get_cli_name_from_number_cli_name}
-import ../generate_cli_common_helper_file.zsh # {generateCLICommonHelperFile, get_cli_name_from_number_cli_name}
+import ../generate_cli_common_helper_file.zsh # {generateCLICommonHelperFile}
 import @/src/utils/log.zsh # {log}
+import @/src/utils/cli_helper.zsh #{get_cli_name_by_number_cli_dir}
 
 ##
 # get the installation test file
@@ -17,7 +17,7 @@ function get_installation_test_file() {
   local cliPath=$(getCliPath)
 
   local cliNameRefName=$(generate_unique_var_name)
-  get_cli_name_from_number_cli_name "${numberCliName}" "${cliNameRefName}"
+  get_cli_name_by_number_cli_dir "${numberCliName}" "${cliNameRefName}"
 
   local installationTestFile=${cliPath}/${numberCliName}/__test__/installation_tests/1_installation.test.zsh
   if [[ ! -d "$(dirname ${installationTestFile})" ]]; then
@@ -39,7 +39,7 @@ function create_installation_test_file() {
   local installationTestFile=$(get_str_from_ref "${installationTestFileRef}")
 
   local cliNameRef=$(generate_unique_var_name)
-  get_cli_name_from_number_cli_name "${numberCliName}" "${cliNameRef}"
+  get_cli_name_by_number_cli_dir "${numberCliName}" "${cliNameRef}"
   local cliName=$(get_str_from_ref "${cliNameRef}")
 
   local testFuncName="${cliName}_installation_test"

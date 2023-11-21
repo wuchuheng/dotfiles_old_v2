@@ -2,6 +2,7 @@
 
 import ./get_func_name_helper.zsh #{get_func_name:get__runtime_space, get_func_name:set_key_map_value_for,get_func_name:set_key_map_value_with_ref_for, get_func_name:get_key_map_value_for, get_func_name:check_key_map_exists_for }
 import @/src/utils/log.zsh #{log}
+import @/src/utils/cli_helper.zsh #{get_cli_name_by_number_cli_dir}
 
 ##
 # generate the cli helper library file.
@@ -11,7 +12,8 @@ import @/src/utils/log.zsh #{log}
 function generateCLICommonHelperFile() {
   local numberCliName=$1
   local cliNameRef=$(generate_unique_var_name)
-  get_cli_name_from_number_cli_name "${numberCliName}" "${cliNameRef}"
+  get_cli_name_by_number_cli_dir "${numberCliName}" "${cliNameRef}"
+
   local cliName=$(get_str_from_ref "${cliNameRef}")
   local cliHelperLibraryFile=$(getCliPath)/${numberCliName}/common_helper.zsh
 
@@ -96,25 +98,3 @@ EOF
   log CREATE "${cliHelperLibraryFile:${#APP_BASE_PATH} + 1}"
 }
 
-##
-# get cli name from the cli directory that with a number.
-# @Use get_cli_name_from_number_cli_name "<cli directory>" "<resultStrRef>"
-# @Example get_cli_name_from_number_cli_name "1_tmp_cli" "<tmp_cli>"
-# @Return "<boolean>"
-##
-function get_cli_name_from_number_cli_name() {
-  local cliDirectory=$1
-  local outputResultRefName=$2
-  globalCliDirInfoListRef=()
-  split_str_with_point  "${cliDirectory}" '_' globalCliDirInfoListRef
-  # remove the first element of the globalCliDirInfoListRef
-  globalCliDirInfoListRef=("${globalCliDirInfoListRef[@]:1}")
-
-  globalCliNameTmp=''
-  join '_' globalCliDirInfoListRef globalCliNameTmp
-
-  local cliName=${globalCliNameTmp}
-  assign_str_to_ref "${cliName}" "${outputResultRefName}"
-
-  return "${TRUE}"
-}
