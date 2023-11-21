@@ -7,7 +7,8 @@ import ./generate_cli_common_helper_file.zsh # {generateCLICommonHelperFile, get
 import ./generate_cli_test_file/create_installation_test_file.zsh #{create_installation_test_file}
 import ./generate_cli_test_file/create_uninstallation_test_file.zsh #{create_uninstallation_test_file}
 import @/src/utils/ref_variable_helper.zsh #{generate_unique_var_name, assign_str_to_ref, get_str_from_ref}
-import @/src/utils/cli_helper.zsh #{get_cli_name_by_number_cli_dir}
+import @/src/utils/cli_helper.zsh #{get_cli_name_by_number_cli_dir, get_cli_path_by_name }
+import @/src/utils/debug_helper.zsh #{assert_not_empty}
 
 ##
 # get the max number from file names belong a directory
@@ -106,10 +107,6 @@ function get_cli_check_install_file_path() {
 function get_cli_uninstaller_file_path() {
   local cliDirectory=$1
   local outputResultRefName=$2
-
-  local cliNameRefName=$(generate_unique_var_name)
-  get_cli_name_by_number_cli_dir "${cliDirectory}" "${cliNameRefName}"
-  local cliName=$(get_str_from_ref "${cliNameRefName}")
 
   local CLI_PATH=$(getCliPath)
   local result=${CLI_PATH}/${cliDirectory}/uninstaller/uninstaller.zsh
@@ -296,6 +293,56 @@ function get_cli_boot_file_path() {
   return "${TRUE}"
 }
 
+##
+# create a cli runtime directory
+# @use create_cli_runtime_dir <numCliDir>
+##
+function create_cli_runtime_dir() {
+  assert_not_empty "$1"
+  local numCliDir="$1"
+  # get cli name
+  local cliNameRef=$(generate_unique_var_name)
+  get_cli_name_by_number_cli_dir "${numCliDir}" "${cliNameRef}"
+  local cliName=$(get_str_from_ref "${cliNameRef}")
+
+  # get the cli path for the current cli
+  local cliPathRef=$(generate_unique_var_name)
+  get_cli_path_by_name "${cliName:0:-4}" "${cliPathRef}"
+  local cliPath=$(get_str_from_ref "${cliPathRef}")
+  assert_not_empty "${cliPath}"
+
+  # create the runtime directory for cli
+  local cliRuntimeDir="$(getCliRuntimeDirectory)/${cliName}"
+  if [[ ! -d ${cliRuntimeDir} ]]; then
+    mkdir -p "${cliRuntimeDir}"
+  fi
+
+  # get the path level count between ${cliPath} to the dotfiles root path
+  local relativeCliRuntimeDir=${cliRuntimeDir:${#APP_BASE_PATH} + 1}
+  local levelFromCliPathToRoot=0;
+  local levelFromCliPathToRootCountRef=$(generate_unique_var_name);
+  split_str_with_point "${cliPath:${#APP_BASE_PATH} + 1}" "/" "${levelFromCliPathToRootCountRef}"
+  local levelFromCliPathToRootCount=$(get_str_from_ref "${levelFromCliPathToRootCountRef}")
+  levelFromCliPathToRootSlice=($(get_list_from_ref "${levelFromCliPathToRootCountRef}"))
+  levelFromCliPathToRootCount=${#levelFromCliPathToRootSlice[@]}
+
+  # get generate the path to link from ${cliPath} to cli_runtime
+  local linkPath=''
+  local i
+  for (( i = 0; i < ${levelFromCliPathToRootCount}; i++ )); do
+    linkPath="../${linkPath}"
+  done
+  assert_not_empty "${linkPath}"
+  linkPath="${linkPath}${relativeCliRuntimeDir}"
+
+  # link the runtime of the cli to the root directory of the cli.
+  ln -s "${linkPath}" "${cliPath}/runtime"
+  if [[ $? -eq ${TRUE} ]] ; then
+    log INFO " CREATE the runtime path for ${cliName:0:-4} cli"
+  else
+    log ERROR " CREATED failed the runtime path for ${cliName:0:-4} cli"
+  fi
+}
 
 ##
 # crete cli
@@ -341,4 +388,7 @@ function create_cli() {
 
   # create the uninstallation test
   create_uninstallation_test_file "${numberCliName}"
+
+  # create the runtime directory for the new cli
+  create_cli_runtime_dir "${numberCliName}"
 }

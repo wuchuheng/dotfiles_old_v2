@@ -17,9 +17,6 @@ function get_uninstallation_test_file() {
   local numberCliName=$1
   local cliPath=$(getCliPath)
 
-  local cliNameRefName=$(generate_unique_var_name)
-  get_cli_name_by_number_cli_dir "${numberCliName}" "${cliNameRefName}"
-
   local uninstallationTestFile=${cliPath}/${numberCliName}/__test__/uninstallation_tests/1_uninstallation.test.zsh
   if [[ ! -d "$(dirname ${uninstallationTestFile})" ]]; then
     mkdir -p "$(dirname ${uninstallationTestFile})"

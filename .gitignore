@@ -1,7 +1,6 @@
 .idea
 src/runtime/
 .env
-src/cli/**/runtime/
-
+# Ignore the runtime in echo cli directory.
 # proxy cli config
 src/cli/**/proxy_config.json5

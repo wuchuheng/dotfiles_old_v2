@@ -139,9 +139,11 @@ function get_cli_path_by_name() {
 
     if [[ ${cliName} == ${inputCliName}_cli ]]; then
       assign_str_to_ref "${cliNamePath}" "${outPutStrRef}"
-      return ${TRUE}
+      return "${TRUE}"
     fi
   done
+  assert_not_empty "${cliNamePath}"
+  return "${FALSE}"
 }
 ##
 # get the cli binary name
