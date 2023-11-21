@@ -1,4 +1,4 @@
-name: Test the dotfiles
+name: Release tests
 
 on:
   workflow_call: # This makes the workflow reusable
