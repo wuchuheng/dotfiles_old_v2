@@ -2,25 +2,14 @@
 
 typeset -g APP_BASE_PATH=$(pwd); source src/utils/autoload.zsh || exit 1
 
-# Define the path to your .env file
-ENV_FILE="${APP_BASE_PATH}/.env"
+import @/src/utils/cli_helper.zsh # {get_cli_path_by_name}
+import @/src/utils/ref_variable_helper.zsh # {generate_unique_var_name, get_str_from_ref}
+import @/src/utils/swap_helper.zsh # {create_swap_file}
 
-# Check if the .env file exists
-if [[ -f "$ENV_FILE" ]]; then
-    # Export the environment variables
-    while IFS= read -r line || [[ -n $line ]]; do
-        # Skip empty lines and lines starting with a comment
-        if [[ -z "$line" || "$line" == \#* ]]; then
-            continue
-        fi
-        # Use typeset to make sure the environment variable name is valid
-        typeset -x "$line"
-    done < "$ENV_FILE"
-else
-    echo "Error: .env file does not exist."
-    exit 1
-fi
+local proxyPathRef=$(generate_unique_var_name)
+get_cli_path_by_name proxy "${proxyPathRef}"
+local proxyPath=$(get_str_from_ref "${proxyPathRef}")
 
-# Now you can use the environment variables as usual
-echo "Username: $USERNAME"
-echo "Password: $PASSWORD"
+log INFO "proxy: ${proxyPath}"
+
+
