@@ -7,6 +7,7 @@
  */
 
 import * as std from 'std';
+import JSON5 from "./libs/json5.mjs";
 
 /**
  *
@@ -55,11 +56,11 @@ function getCommandConfig(inputConfigJsonPath, inputPrefixPath, inputHardwareNam
 
     // if jsonTxt was included the ${{ default }} and then replace it with the default value
     if (/\$\{\{ *default *\}\}/g.test(jsonTxt)) {
-        const defaultCli = (JSON.parse(jsonTxt)).default[inputOSName][inputHardwareName]
+        const defaultCli = (JSON5.parse(jsonTxt)).default[inputOSName][inputHardwareName]
         jsonTxt = jsonTxt.replace(/\$\{\{ *default *\}\}/g, defaultCli);
     }
 
-    const jsonObj = JSON.parse(jsonTxt)
+    const jsonObj = JSON5.parse(jsonTxt)
 
     return jsonObj
 }

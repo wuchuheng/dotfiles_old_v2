@@ -202,7 +202,7 @@ function get_executable_cli() {
   local qjsBin="${qjsCliPath}/bin/qjs_$(uname -s)_$(uname -m)"
   local commandConfigParserJsPath="${qjsCliPath}/src/command_config_parser.mjs"
 
-  local cliConfigJsonPath="${cliNamePath}/command_config.json"
+  local cliConfigJsonPath="${cliNamePath}/command_config.json5"
   local swapFile=$(create_swap_file)
 
   # parse the config
