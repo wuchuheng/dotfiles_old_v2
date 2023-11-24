@@ -8,7 +8,7 @@
       "x86_64": "${{ prefix }}/bin/v2ray_Linux_x86_64"
     }
   },
-  "command_lines": {
+  "commandLines": {
     "proxy": "${{ default }}"
   }
 }

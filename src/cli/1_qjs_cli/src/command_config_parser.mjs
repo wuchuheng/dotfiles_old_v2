@@ -79,8 +79,8 @@ function writeResultToFile(result, outputFilePath) {
 
 const args=parseArgs()
 const jsonObj = getCommandConfig(args.c, args.p, args.m, args.o)
-if ( jsonObj.command_lines.hasOwnProperty(args.cli_name)) {
-    const result = jsonObj.command_lines[args.cli_name]
+if ( jsonObj.commandLines.hasOwnProperty(args.cli_name)) {
+    const result = jsonObj.commandLines[args.cli_name]
     writeResultToFile(result, args.output_file)
 } else {
     console.log(JSON.stringify(args))

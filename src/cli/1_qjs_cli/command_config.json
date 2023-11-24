@@ -8,7 +8,7 @@
       "x86_64": "${{ prefix }}/bin/qjs_Linux_x86_64"
     }
   },
-  "command_lines": {
+  "commandLines": {
     "qjs": "${{ default }}",
     "base64Decode": "${{ default }} ${{ prefix }}/src/base64decode.mjs"
   }
