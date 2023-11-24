@@ -1,15 +1,15 @@
+/**
+ * the variable names
+ *
+ * @param {string} CLI_ROOT_PATH the absolute path of the cli directory.
+ * @param {string} MACHINE_NAME the machine hardware name, like: x86_64, arm64, etc.
+ * @param {string} OS_NAME the OS name, like: Darwin, Linux, etc.
+ */
 {
-  "default": {
-    "Darwin": {
-      "x86_64": "${{ prefix }}/bin/qjs_Darwin_x86_64",
-      "arm64": "${{ prefix }}/bin/qjs_Darwin_arm64"
-    },
-    "Linux": {
-      "x86_64": "${{ prefix }}/bin/qjs_Linux_x86_64"
-    }
-  },
-  "commandLines": {
-    "qjs": "${{ default }}",
-    "base64Decode": "${{ default }} ${{ prefix }}/src/base64decode.mjs"
+  "commands": {
+    // default is a specific key name while the command "qjs" called in command line
+    "__DEFAULT": "${commands.qjs}",
+    "qjs": "${ CLI_ROOT_PATH }/bin/qjs_${OS_NAME}_${MACHINE_NAME}",
+    "base64Decode": "${ commands.qjs } ${ CLI_ROOT_PATH }/src/base64decode.mjs"
   }
 }
