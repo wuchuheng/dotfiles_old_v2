@@ -4,3 +4,11 @@ src/runtime/
 # Ignore the runtime in echo cli directory.
 # proxy cli config
 src/cli/**/proxy_config.json5
+node_modules/
+.DS_Store
+#.env.local
+#.env.development.local
+#.env.test.local
+#.env.production
+
+.pnpm-debug.log
