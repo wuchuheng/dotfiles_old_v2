@@ -237,3 +237,52 @@ function load_cli_from_command_config() {
     fi
 }
 
+##
+# load all cli from boot config
+# @use load_all_cli_from_boot_config <cli name>
+# @return <boolean>
+function load_all_cli_from_boot_config() {
+    assert_not_empty "$1"
+    local inputCliName="$1"
+    #1 get the qjs bin path
+    local qjsCliPathRef=$(generate_unique_var_name)
+    get_cli_path_by_name qjs "${qjsCliPathRef}"
+    local qjsCliPath=$(get_str_from_ref "${qjsCliPathRef}")
+    local qjsBin="${qjsCliPath}/bin/qjs_$(uname -s)_$(uname -m)"
+
+    #2 get the boot config path
+    local cliNamePathRef=$(generate_unique_var_name)
+    get_cli_path_by_name "$inputCliName" "${cliNamePathRef}"
+    local cliNamePath=$(get_str_from_ref "${cliNamePathRef}")
+    local bootConfigPath="${cliNamePath}/boot_config.json5"
+
+    # get the parsed config contents of boot config
+    local swapFile=$(create_swap_file)
+    local bootConfigParserJsPath="${qjsCliPath}/src/command_config_parser.mjs"
+    ${qjsBin} ${bootConfigParserJsPath} ${bootConfigPath} \
+      -OS "$(uname -s)" \
+      -m "$(uname -m)" \
+      -c "${cliNamePath}" \
+      > "${swapFile}"
+    local bootConfigContent=$(get_swap_content "${swapFile}")
+
+    # get all commands from the config contents
+    local jsonQuery="${qjsCliPath}/src/json_query.mjs"
+    ${qjsBin} ${jsonQuery} "${bootConfigContent}" -q commands -k > "${swapFile}"
+    local commandNameList=($(get_swap_content "${swapFile}"))
+
+    # loop all commands from the config content and load the cli
+    local cliName
+    for  cliName in ${commandNameList}; do
+      ${qjsBin} ${jsonQuery} "${bootConfigContent}" -q "commands.${cliName}" > "${swapFile}"
+      local cli=$(get_swap_content "${swapFile}")
+      aliasName="${inputCliName}.${cliName}"
+      if [[ ${cliName} == "__DEFAULT__"  ]]; then
+        aliasName="${inputCliName}"
+      fi
+      local aliasConf=${aliasName}="'${cli}'"
+      alias "${aliasConf}"
+      log INFO "${aliasName} cli loaded"
+    done
+}
+

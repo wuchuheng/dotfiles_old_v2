@@ -10,6 +10,6 @@ import @/src/utils/log.zsh #{log}
 import @/src/utils/cli_helper.zsh #{load_cli_from_command_config}
 
 function proxy_cli_boot() {
-  load_cli_from_command_config 'proxy'
+  load_all_cli_from_boot_config 'proxy'
 }
 

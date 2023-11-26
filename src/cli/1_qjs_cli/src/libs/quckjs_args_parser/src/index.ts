@@ -9,6 +9,7 @@ type CommandType = {
   options: {
     name: string;
     alias: string;
+    required: boolean;
     type: "string" | "boolean";
     description: string;
   }[];
@@ -21,18 +22,28 @@ type OutputType = {
 
 enum ErrorType {
   PRINT_HELP = "print help",
-}
-class PrintHelpError extends Error {
-  message = ErrorType.PRINT_HELP;
+  // the count of the arguments is not correct.
+  INCORRECT_ARGUMENT_COUNT = "incorrect argument count",
+
+  // the count of the options is not correct.
+  INCORRECT_OPTION_COUNT = "incorrect option count",
 }
 
 function printHelp(command: CommandType) {
-  console.log(`${command.name}: ${command.description}`);
-  console.log("");
+  let argsStr = "";
+  command.args.forEach((arg) => {
+    argsStr += ` <${arg.name}>`;
+  });
+  if (command.options.length > 0) {
+    argsStr += " [options]";
+  }
+  console.log(`Usage: ${command.name} ${argsStr}`);
   console.log("Options:");
   command.options.forEach((option) => {
-    console.log(`  --${option.name}\t${option.description}`);
+    console.log(`  --${option.name}, -${option.alias}\t${option.description}`);
   });
+  console.log("");
+  console.log(`${command.description}`);
 }
 
 async function parseArguments(
@@ -46,7 +57,7 @@ async function parseArguments(
   // if the args include the --help option, print the help message and exit.
   if (args.includes("--help")) {
     printHelp(command);
-    throw new PrintHelpError();
+    throw new Error(ErrorType.PRINT_HELP);
   }
 
   // Mapping of the alias name to the long name in the command options list
@@ -83,8 +94,41 @@ async function parseArguments(
     }
   }
 
+  // check the total number of arguments
+  if (regularArgs.length !== command.args.length) {
+    throw new Error(ErrorType.INCORRECT_ARGUMENT_COUNT);
+  }
+
+  // check the required options was existed or not
+  command.options
+    .filter((e) => e.required)
+    .forEach((el) => {
+      // eslint-disable-next-line no-prototype-builtins
+      if (!options.hasOwnProperty(el.name)) {
+        throw new Error(ErrorType.INCORRECT_OPTION_COUNT);
+      }
+    });
+
   return { regularArgs, options };
 }
+function parseArgs(
+  commandConfigs: CommandType,
+  args: string[]
+): Promise<OutputType> {
+  return new Promise<OutputType>((resolve, reject) => {
+    parseArguments(commandConfigs, args)
+      .then((result) => resolve(result))
+      .catch((err) => {
+        if (err.message != ErrorType.PRINT_HELP) {
+          console.log(
+            `${commandConfigs.name}: try '${commandConfigs.name} --help' for more information`
+          );
+        }
+        return reject(err);
+      });
+  });
+}
+
 // const args = [
 //   "command1",
 //   "arg1",
@@ -96,8 +140,7 @@ async function parseArguments(
 //   "-a",
 //   "option3 value",
 //   "-c",
-//   "option4 config file",
-//   "--help",
+//   "option4 value",
 // ];
 // const commandConfigs: CommandType = {
 //   name: "qjs.base64Decode",
@@ -141,17 +184,6 @@ async function parseArguments(
 //     },
 //   ],
 // };
-// parseArguments(commandConfigs, args)
-//   .then(({ options, regularArgs }) => {
-//     console.log("Regular Arguments:", regularArgs);
-//     console.log("Options:", options);
-//   })
-//   .catch((err) => {
-//     if (err.message !== ErrorType.PRINT_HELP) {
-//       console.log(
-//         `\n${commandConfigs.name}: try '${commandConfigs.name} --help' for more information`
-//       );
-//     }
-//   });
-//
-export { parseArguments };
+
+export { ErrorType };
+export default parseArgs;

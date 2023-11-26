@@ -7,9 +7,12 @@
  */
 {
   "commands": {
-    // default is a specific key name while the command "qjs" called in command line
-    "__DEFAULT": "${commands.qjs}",
-    "qjs": "${ CLI_ROOT_PATH }/bin/qjs_${OS_NAME}_${MACHINE_NAME}",
-    "base64Decode": "${ commands.qjs } ${ CLI_ROOT_PATH }/src/base64decode.mjs"
+    // default is a specific key name while the command "proxy" called in command line
+    "__DEFAULT__": "${ commands.proxy }",
+    "proxy": "${ CLI_ROOT_PATH }/bin/v2ray_${OS_NAME}_${MACHINE_NAME}",
+  },
+  //
+  "startUpServices": {
+
   }
 }

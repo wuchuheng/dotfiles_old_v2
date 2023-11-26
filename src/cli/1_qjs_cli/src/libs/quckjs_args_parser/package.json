@@ -13,6 +13,7 @@
     "build:binary": "pnpm run build; nexe dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "type": "module",
   "author": "",
   "license": "ISC",
   "devDependencies": {

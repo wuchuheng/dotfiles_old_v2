@@ -11,6 +11,5 @@ import @/src/utils/cli_helper.zsh #{get_current_cli_name, get_current_cli_path, 
 import @/src/utils/debug_helper.zsh # {assert_not_empty}
 
 function qjs_cli_boot() {
-  load_cli_from_command_config 'qjs'
-  load_cli_from_command_config 'qjs.base64Decode'
+  load_all_cli_from_boot_config 'qjs'
 }

@@ -5,7 +5,7 @@
  *  @print <the bin path>
  *  @date 2023/11/19 03:46
  */
-
+import parseArgs  from "./libs/quckjs_args_parser/dist/index.js";
 import * as std from 'std';
 import JSON5 from "./libs/json5.mjs";
 
@@ -15,7 +15,6 @@ import JSON5 from "./libs/json5.mjs";
  * @param filename
  * @returns string
  */
-
 const readFile = (filename) => {
     let file = std.open(filename, 'r');
     if (file) {
@@ -28,62 +27,94 @@ const readFile = (filename) => {
 }
 
 /**
- *
- * Parsing command line arguments and storing them in an object
- * @returns {*}
- */
-const parseArgs = () => {
-    const args = scriptArgs.slice(1).reduce((acc, arg, index, array) => {
-        if (arg.startsWith('-')) {
-            const key = arg.substring(1); // Remove the '-' from the flag
-            const value = array[index + 1] && !array[index + 1].startsWith('-') ? array[index + 1] : true;
-            acc[key] = value;
-        }
-
-        return acc;
-    }, {});
-    return args;
-}
-
-/**
  * get the CommandConfig object
  * @param configJsonPath
  * @return {String}
  */
-function getCommandConfig(inputConfigJsonPath, inputPrefixPath, inputHardwareName, inputOSName) {
-    let jsonTxt = readFile(inputConfigJsonPath)
-    jsonTxt = jsonTxt.replace(/\${{ *prefix *}}/g, inputPrefixPath);
+function getCommandConfig(inputJson5File, inputOSName, inputMachineName, inputCliRootPath) {
+    let jsonTxt = readFile(inputJson5File)
+    jsonTxt = JSON.stringify(JSON5.parse(jsonTxt))
+    // instead of the CLI_ROOT_PATH with inputCliRootPath
+    jsonTxt = jsonTxt.replace(/\${ *CLI_ROOT_PATH *}/g, inputCliRootPath);
+    // instead of the OS_NAME with inputOSName
+    jsonTxt = jsonTxt.replace(/\${ *OS_NAME *}/g, inputOSName);
+    // instead of the MACHINE_NAME with inputMachineName
+    jsonTxt = jsonTxt.replace(/\${ *MACHINE_NAME *}/g, inputMachineName);
 
-    // if jsonTxt was included the ${{ default }} and then replace it with the default value
-    if (/\$\{\{ *default *\}\}/g.test(jsonTxt)) {
-        const defaultCli = (JSON5.parse(jsonTxt)).default[inputOSName][inputHardwareName]
-        jsonTxt = jsonTxt.replace(/\$\{\{ *default *\}\}/g, defaultCli);
-    }
+    // Collect the remaining variable names
+    const regex = /\${\s*(\w+\.\w+)\s*}/g;
+    const matches = jsonTxt.match(regex);
+    const  variableNames = matches && matches.map((m) => m.replace(/\${\s*|\s*}/g, ''));
+    // Remove the remaining variable names and save them in a set
+    const variableNameSet = new Set(variableNames);
+    // Remove the variable name that do not exist in the json5 file
+    const jsonObj = JSON5.parse(jsonTxt);
+    variableNameSet.forEach((name) => {
+        let isRemove = false;
+        name.split('.').reduce((o, i) => {
+            if (o[i] === undefined) {
+                isRemove = true;
+                return;
+            }
+            return o[i];
+        }, jsonObj);
 
-    const jsonObj = JSON5.parse(jsonTxt)
+        isRemove && variableNameSet.delete(name);
+    });
+    // Replace the variable name with the value in the json5 file
+    variableNameSet.forEach((name) => {
+        const value = name.split('.').reduce((o, i) => o[i], jsonObj);
+        const keyNameInRegex = name.replace('.', '\\.');
+        const regexPattern = `\\$\\{\\s*(${keyNameInRegex})\\s*\\}`
+        const keyNameRegex = new RegExp(regexPattern, 'g');
+        jsonTxt = jsonTxt.replace(keyNameRegex, value);
+    });
 
-    return jsonObj
+    const result = JSON.parse(jsonTxt);
+    return result
 }
 
-/**
- * write the result to the output file
- * @type {*}
- */
-function writeResultToFile(result, outputFilePath) {
-    const file = std.open(outputFilePath, 'w');
-    if (!file) {
-        throw new Error(`Failed to open file: ${filePath}`);
-    }
-    file.puts(result); // Write text to file
-    file.close();    // Close the file
-}
-
-const args=parseArgs()
-const jsonObj = getCommandConfig(args.c, args.p, args.m, args.o)
-if ( jsonObj.commandLines.hasOwnProperty(args.cli_name)) {
-    const result = jsonObj.commandLines[args.cli_name]
-    writeResultToFile(result, args.output_file)
-} else {
-    console.log(JSON.stringify(args))
-    console.error(`${JSON.stringify(args)} not found in the config file`)
-}
+const commandConfigs = {
+    name: "qjs.convert_json5_config",
+    description: "Convert the variable name in the json5 file with the input variables",
+    args: [
+        {
+            name: "json5File",
+            type: "string",
+            description: "The config json5 file name",
+        }
+    ],
+    options: [
+        {
+            type: "string",
+            name: "OS_name",
+            alias: "OS",
+            required: true,
+            description: "The system OS name, like: Darwin, Linux, etc",
+        },
+        {
+            type: "string",
+            name: "machine_name",
+            alias: "m",
+            required: true,
+            description: "The cpu hardware machine name, like: x86_64, arm64, etc",
+        },
+        {
+            type: "string",
+            name: "cli_root_path",
+            alias: "c",
+            required: true,
+            description: "The cli root path",
+        },
+    ],
+};
+const args = scriptArgs.slice(1)
+parseArgs(commandConfigs, args).then(result => {
+    const options = result.options
+    const jsonObj = getCommandConfig(result.regularArgs[0], options.OS_name, options.machine_name, options.cli_root_path)
+    console.log(JSON.stringify(jsonObj))
+    std.exit(0); // Replace 1 with your desired error code
+}).catch((err) => {
+    console.log(err)
+    std.exit(1); // Replace 1 with your desired error code
+})
