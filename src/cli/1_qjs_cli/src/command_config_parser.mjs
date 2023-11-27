@@ -5,58 +5,10 @@
  *  @print <the bin path>
  *  @date 2023/11/19 03:46
  */
-import parseArgs  from "./libs/quckjs_args_parser/dist/index.js";
+import parseArgs from "./libs/quckjs_args_parser/dist/index.js";
 import * as std from 'std';
-import JSON5 from "./libs/json5.mjs";
 import {readFile} from "./libs/std.mjs";
-
-/**
- * get the CommandConfig object
- * @param configJsonPath
- * @return {String}
- */
-function getCommandConfig(inputJson5File, inputOSName, inputMachineName, inputCliRootPath) {
-    let jsonTxt = readFile(inputJson5File)
-    jsonTxt = JSON.stringify(JSON5.parse(jsonTxt))
-    // instead of the CLI_ROOT_PATH with inputCliRootPath
-    jsonTxt = jsonTxt.replace(/\${ *CLI_ROOT_PATH *}/g, inputCliRootPath);
-    // instead of the OS_NAME with inputOSName
-    jsonTxt = jsonTxt.replace(/\${ *OS_NAME *}/g, inputOSName);
-    // instead of the MACHINE_NAME with inputMachineName
-    jsonTxt = jsonTxt.replace(/\${ *MACHINE_NAME *}/g, inputMachineName);
-
-    // Collect the remaining variable names
-    const regex = /\${\s*(\w+\.\w+)\s*}/g;
-    const matches = jsonTxt.match(regex);
-    const  variableNames = matches && matches.map((m) => m.replace(/\${\s*|\s*}/g, ''));
-    // Remove the remaining variable names and save them in a set
-    const variableNameSet = new Set(variableNames);
-    // Remove the variable name that do not exist in the json5 file
-    const jsonObj = JSON5.parse(jsonTxt);
-    variableNameSet.forEach((name) => {
-        let isRemove = false;
-        name.split('.').reduce((o, i) => {
-            if (o[i] === undefined) {
-                isRemove = true;
-                return;
-            }
-            return o[i];
-        }, jsonObj);
-
-        isRemove && variableNameSet.delete(name);
-    });
-    // Replace the variable name with the value in the json5 file
-    variableNameSet.forEach((name) => {
-        const value = name.split('.').reduce((o, i) => o[i], jsonObj);
-        const keyNameInRegex = name.replace('.', '\\.');
-        const regexPattern = `\\$\\{\\s*(${keyNameInRegex})\\s*\\}`
-        const keyNameRegex = new RegExp(regexPattern, 'g');
-        jsonTxt = jsonTxt.replace(keyNameRegex, value);
-    });
-
-    const result = JSON.parse(jsonTxt);
-    return result
-}
+import {convertVariableNameJson5} from "./libs/convert_variable_name_json5.mjs";
 
 const commandConfigs = {
     name: "qjs.convert_json5_config",
@@ -71,21 +23,21 @@ const commandConfigs = {
     options: [
         {
             type: "string",
-            name: "OS_name",
+            name: "OS_NAME",
             alias: "OS",
             required: true,
             description: "The system OS name, like: Darwin, Linux, etc",
         },
         {
             type: "string",
-            name: "machine_name",
+            name: "MACHINE_NAME",
             alias: "m",
             required: true,
             description: "The cpu hardware machine name, like: x86_64, arm64, etc",
         },
         {
             type: "string",
-            name: "cli_root_path",
+            name: "CLI_ROOT_PATH",
             alias: "c",
             required: true,
             description: "The cli root path",
@@ -94,9 +46,10 @@ const commandConfigs = {
 };
 const args = scriptArgs.slice(1)
 parseArgs(commandConfigs, args).then(result => {
-    const options = result.options
-    const jsonObj = getCommandConfig(result.regularArgs[0], options.OS_name, options.machine_name, options.cli_root_path)
-    console.log(JSON.stringify(jsonObj))
+    const jsonPath = result.regularArgs[0];
+    const  json5txt= readFile(jsonPath)
+    const  jsonText = convertVariableNameJson5(json5txt, result.options)
+    console.log(jsonText)
     std.exit(0); // Replace 1 with your desired error code
 }).catch((err) => {
     console.log(err)
