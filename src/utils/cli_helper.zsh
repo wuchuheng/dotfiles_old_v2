@@ -190,51 +190,33 @@ function get_executable_cli() {
   # get the cli path by name
   local cliNamePathRef=$(generate_unique_var_name)
   get_cli_path_by_name "$cliName" "${cliNamePathRef}"
-  local cliNamePath=$(get_str_from_ref "${cliNamePathRef}")
 
   # get the hardware name and os name
-  local cpuHardwareType=$(uname -m)
-  local osName=$(uname -s)
 
   local qjsCliPathRef=$(generate_unique_var_name)
   get_cli_path_by_name qjs "${qjsCliPathRef}"
-  local qjsCliPath=$(get_str_from_ref "${qjsCliPathRef}")
-  local qjsBin="${qjsCliPath}/bin/qjs_$(uname -s)_$(uname -m)"
-  local commandConfigParserJsPath="${qjsCliPath}/src/command_config_parser.mjs"
 
-  local cliConfigJsonPath="${cliNamePath}/command_config.json5"
   local swapFile=$(create_swap_file)
 
-  # parse the config
-  ${qjsBin} ${commandConfigParserJsPath} \
-    -c ${cliConfigJsonPath} \
-    -m ${cpuHardwareType} \
-    -o ${osName} \
-    -cli_name "${subCli}" \
-    -p "${cliNamePath}" \
-    -output_file "${swapFile}"
+  # get the boot config content
+  local bootConfigContentRef=$(generate_unique_var_name)
+  get_boot_config_content "${cliName}" "${bootConfigContentRef}"
+  local bootConfigContent=$(get_str_from_ref "${bootConfigContentRef}")
 
+  # get the qjs bin path
+  local qjsBinPathRef=$(generate_unique_var_name)
+  get_qjs_bin_path "${qjsBinPathRef}"
+  local qjsBinPath=$(get_str_from_ref "${qjsBinPathRef}")
+
+  # get the json query path
+  local jsonQueryRef=$(generate_unique_var_name)
+  get_json_query_path "${jsonQueryRef}"
+  local jsonQuery=$(get_str_from_ref "${jsonQueryRef}")
+
+  ${qjsBinPath} ${jsonQuery} "${bootConfigContent}" -q commands.${subCli} > "${swapFile}"
   local result=$(get_swap_content "${swapFile}")
 
   assign_str_to_ref "${result}" "${outputResultStrRef}"
-}
-
-##
-# @use  _load_qjs <cli name.sub cli name>
-# @return <boolean>
-function load_cli_from_command_config() {
-    assert_not_empty "$1"
-    local cliName="$1"
-    local executableCliRef=$(generate_unique_var_name)
-    get_executable_cli "${cliName}" "${executableCliRef}"
-    local executableCli=$(get_str_from_ref "${executableCliRef}")
-
-    if [[ $? -eq ${TRUE} ]]; then
-      alias ${cliName}="${executableCli}"
-      log INFO "${cliName} cli loaded"
-    else
-      log ERROR "Failed to load ${cliName} bin ${${executableCli}:${#APP_BASE_PATH} + 1} not found"
-    fi
 }
 
 ##
@@ -405,4 +387,3 @@ function load_all_service_from_boot_config() {
       fi
     done
 }
-
