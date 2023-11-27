@@ -238,36 +238,90 @@ function load_cli_from_command_config() {
 }
 
 ##
+# get the qjs bin path
+# @use get_qjs_bin_path <outPutStrRef>
+# @return <boolean>
+function get_qjs_bin_path() {
+  assert_not_empty "$1"
+  local outPutStrRef="$1"
+  local qjsCliPathRef=$(generate_unique_var_name)
+  get_cli_path_by_name qjs "${qjsCliPathRef}"
+  local qjsCliPath=$(get_str_from_ref "${qjsCliPathRef}")
+  local qjsBin="${qjsCliPath}/bin/qjs_$(uname -s)_$(uname -m)"
+
+  assign_str_to_ref "${qjsBin}" "${outPutStrRef}"
+  return $?
+}
+
+##
+# get the content of boot load config
+# @use get_boot_config_content <cli name> <outPutStrRef>
+# @return <boolean>
+##
+function get_boot_config_content() {
+  assert_not_empty "$1"
+  assert_not_empty "$2"
+  local inputCliName="$1"
+  local outPutStrRef="$2"
+  #1 get the qjs bin path
+  local qjsCliPathRef=$(generate_unique_var_name)
+  get_qjs_bin_path "${qjsCliPathRef}"
+  local qjsBin=$(get_str_from_ref "${qjsCliPathRef}")
+
+  #2 get the boot config path
+  local cliNamePathRef=$(generate_unique_var_name)
+  get_cli_path_by_name "$inputCliName" "${cliNamePathRef}"
+  local cliNamePath=$(get_str_from_ref "${cliNamePathRef}")
+  local bootConfigPath="${cliNamePath}/boot_config.json5"
+
+  #3 get the qjs cli path
+  local qjsCliPathRef=$(generate_unique_var_name)
+  get_cli_path_by_name qjs "${qjsCliPathRef}"
+  local qjsCliPath=$(get_str_from_ref "${qjsCliPathRef}")
+
+  # get the parsed config contents of boot config
+  local swapFile=$(create_swap_file)
+  local bootConfigParserJsPath="${qjsCliPath}/src/command_config_parser.mjs"
+  ${qjsBin} ${bootConfigParserJsPath} ${bootConfigPath} \
+    -OS "$(uname -s)" \
+    -m "$(uname -m)" \
+    -c "${cliNamePath}" \
+    > "${swapFile}"
+  local bootConfigContent=$(get_swap_content "${swapFile}")
+
+  assign_str_to_ref "${bootConfigContent}" "${outPutStrRef}"
+}
+
+##
 # load all cli from boot config
 # @use load_all_cli_from_boot_config <cli name>
 # @return <boolean>
 function load_all_cli_from_boot_config() {
     assert_not_empty "$1"
     local inputCliName="$1"
-    #1 get the qjs bin path
+
+    # get the boot config content with the cli name
+    local bootConfigContentRef=$(generate_unique_var_name)
+    get_boot_config_content "${inputCliName}" "${bootConfigContentRef}"
+    local bootConfigContent=$(get_str_from_ref "${bootConfigContentRef}")
+
+    # get the qjs cli path
     local qjsCliPathRef=$(generate_unique_var_name)
     get_cli_path_by_name qjs "${qjsCliPathRef}"
     local qjsCliPath=$(get_str_from_ref "${qjsCliPathRef}")
-    local qjsBin="${qjsCliPath}/bin/qjs_$(uname -s)_$(uname -m)"
 
-    #2 get the boot config path
-    local cliNamePathRef=$(generate_unique_var_name)
-    get_cli_path_by_name "$inputCliName" "${cliNamePathRef}"
-    local cliNamePath=$(get_str_from_ref "${cliNamePathRef}")
-    local bootConfigPath="${cliNamePath}/boot_config.json5"
+    # get the qjs bin path
+    local qjsBinRef=$(generate_unique_var_name)
+    get_qjs_bin_path "${qjsBinRef}"
+    local qjsBin=$(get_str_from_ref "${qjsBinRef}")
 
-    # get the parsed config contents of boot config
+    # create a swap file
     local swapFile=$(create_swap_file)
-    local bootConfigParserJsPath="${qjsCliPath}/src/command_config_parser.mjs"
-    ${qjsBin} ${bootConfigParserJsPath} ${bootConfigPath} \
-      -OS "$(uname -s)" \
-      -m "$(uname -m)" \
-      -c "${cliNamePath}" \
-      > "${swapFile}"
-    local bootConfigContent=$(get_swap_content "${swapFile}")
 
     # get all commands from the config contents
-    local jsonQuery="${qjsCliPath}/src/json_query.mjs"
+    local jsonQueryRef=$(generate_unique_var_name)
+    get_json_query_path "${jsonQueryRef}"
+    local jsonQuery=$(get_str_from_ref "${jsonQueryRef}")
     ${qjsBin} ${jsonQuery} "${bootConfigContent}" -q commands -k > "${swapFile}"
     local commandNameList=($(get_swap_content "${swapFile}"))
 
@@ -282,7 +336,73 @@ function load_all_cli_from_boot_config() {
       fi
       local aliasConf=${aliasName}="'${cli}'"
       alias "${aliasConf}"
-      log INFO "${aliasName} cli loaded"
+      log CLI "${aliasName} cli loaded"
+    done
+}
+
+##
+# get the json query path
+# @use get_json_query_path <outPutStrRef>
+# @return <boolean>
+##
+function get_json_query_path() {
+    assert_not_empty "$1"
+    local outPutStrRef="$1"
+
+    local qjsCliPathRef=$(generate_unique_var_name)
+    get_cli_path_by_name qjs "${qjsCliPathRef}"
+    local qjsCliPath=$(get_str_from_ref "${qjsCliPathRef}")
+    local jsonQuery="${qjsCliPath}/src/json_query.mjs"
+
+    assign_str_to_ref "${jsonQuery}" "${outPutStrRef}"
+}
+
+##
+# load all services from boot config
+# @use load_all_services_from_boot_config <cli name>
+# @return <boolean>
+##
+function load_all_service_from_boot_config() {
+    assert_not_empty "$1"
+    local inputCliName="$1"
+
+    # get the boot config content with the cli name
+    local bootConfigContentRef=$(generate_unique_var_name)
+    get_boot_config_content "${inputCliName}" "${bootConfigContentRef}"
+    local bootConfigContent=$(get_str_from_ref "${bootConfigContentRef}")
+
+    # get the qjs cli path
+    local qjsCliPathRef=$(generate_unique_var_name)
+    get_cli_path_by_name qjs "${qjsCliPathRef}"
+    local qjsCliPath=$(get_str_from_ref "${qjsCliPathRef}")
+
+    # get the qjs bin path
+    local qjsBinRef=$(generate_unique_var_name)
+    get_qjs_bin_path "${qjsBinRef}"
+    local qjsBin=$(get_str_from_ref "${qjsBinRef}")
+
+    # create a swap file
+    local swapFile=$(create_swap_file)
+
+    # get all commands from the config contents
+    local jsonQueryRef=$(generate_unique_var_name)
+    get_json_query_path "${jsonQueryRef}"
+    local jsonQuery=$(get_str_from_ref "${jsonQueryRef}")
+    local startUpServicesKeyName="startUpServices"
+    ${qjsBin} ${jsonQuery} "${bootConfigContent}" -q "${startUpServicesKeyName}" -k > "${swapFile}"
+    local serviceNameList=($(get_swap_content "${swapFile}"))
+
+    # loop all commands from the config content and load the cli
+    local serviceName
+    for  serviceName in ${serviceNameList}; do
+      ${qjsBin} ${jsonQuery} "${bootConfigContent}" -q "${startUpServicesKeyName}.${serviceName}" > "${swapFile}"
+      local serviceCli=$(get_swap_content "${swapFile}")
+      eval "${serviceCli}"
+      if [[ $? -eq 0 ]]; then
+        log SERVICE "${inputCliName}.${serviceName} service started."
+      else
+        log ERROR "${inputCliName}.${serviceName} service start failed."
+      fi
     done
 }
 
