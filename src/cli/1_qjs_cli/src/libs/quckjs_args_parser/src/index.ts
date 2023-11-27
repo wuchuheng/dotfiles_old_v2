@@ -143,8 +143,8 @@ function parseArgs(
 //   "option4 value",
 // ];
 // const commandConfigs: CommandType = {
-//   name: "qjs.base64Decode",
-//   description: "qjs.base64Decode <arg1: base64 encode string> [options]",
+//   name: "qjs.decodeBase64",
+//   description: "qjs.decodeBase64 <arg1: base64 encode string> [options]",
 //   args: [
 //     {
 //       name: "arg1",

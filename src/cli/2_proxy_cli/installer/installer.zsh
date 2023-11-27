@@ -34,11 +34,11 @@ _check_proxy_config_or_create() {
 
   # get the base64 parser cli
   local base64DecodeCliRef=$(generate_unique_var_name)
-  get_executable_cli qjs.base64Decode "${base64DecodeCliRef}"
-  local base64DecodeCli=$(get_str_from_ref "${base64DecodeCliRef}")
+  get_executable_cli qjs.decodeBase64 "${base64DecodeCliRef}"
+  local decodeBase64Cli=$(get_str_from_ref "${base64DecodeCliRef}")
 
   # parse the base64 text to json and save to the config file.
-  eval "${base64DecodeCli} ${base64Txt} > ${configJsonPath}"
+  eval "${decodeBase64Cli} ${base64Txt} > ${configJsonPath}"
 
   return ${TRUE}
 }

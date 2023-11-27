@@ -8,23 +8,7 @@
 import parseArgs  from "./libs/quckjs_args_parser/dist/index.js";
 import * as std from 'std';
 import JSON5 from "./libs/json5.mjs";
-
-/**
- *
- *read file with a file name and return the content
- * @param filename
- * @returns string
- */
-const readFile = (filename) => {
-    let file = std.open(filename, 'r');
-    if (file) {
-        let contents = file.readAsString();
-        file.close();
-        return contents;
-    } else {
-        throw new Error(`Could not open file: ${filename}`);
-    }
-}
+import {readFile} from "./libs/std.mjs";
 
 /**
  * get the CommandConfig object

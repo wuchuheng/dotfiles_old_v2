@@ -9,8 +9,6 @@ import @/src/utils/log.zsh # {log}
 function qjs_cli_uninstaller() {
   log INFO "Uninstalling qjs CLI cli tool..."
   unalias "qjs"
-  unalias base64Decode
-
   return "${TRUE}"
 }
 
