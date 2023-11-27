@@ -334,7 +334,7 @@ function load_all_cli_from_boot_config() {
       if [[ ${cliName} == "__DEFAULT__"  ]]; then
         aliasName="${inputCliName}"
       fi
-      local aliasConf=${aliasName}="'${cli}'"
+      local aliasConf="${aliasName}=\"'${cli}'\""
       alias "${aliasConf}"
       log CLI "${aliasName} cli loaded"
     done
