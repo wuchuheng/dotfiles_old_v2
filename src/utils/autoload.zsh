@@ -63,7 +63,6 @@ function get_a_part_of_code() {
 function import() {
   local RED='\033[0;31m'
   local NC='\033[0m'
-  local timestamp=$(date +"%Y-%m-%d %T")
   local file_path=$1
   local fist_chart=${file_path:0:1}
   source_file=""
@@ -76,7 +75,7 @@ function import() {
         # source_file=${file_path:2}
         ;;
     /)
-	# To load file from a absolute path in OS.
+	      # To load file from the absolute path in OS.
         source_file=${file_path}
       ;;
     .)

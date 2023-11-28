@@ -42,7 +42,9 @@ _get_new_ref_name() {
   local preFile=$2
   local cacheDir=$(_get_cache_dir)
   local refNameNO=$( ls "${cacheDir}" | grep "${refName}" | wc -l )
-  ((refNameNO++))
+  # remove the space chars in string
+  refNameNO="${refNameNO##*( )}"
+  refNameNO=$((refNameNO + 1))
   local newRefName="${refName}_${refNameNO}"
   echo "${preFile}" >> "${cacheDir}/${newRefName}"
   echo "pid: $$" >> "${cacheDir}/${newRefName}"
@@ -94,8 +96,7 @@ function generate_unique_var_name() {
     prefFile="_${prefFile:1}"
   fi
   local refName="${prefFile}_${preNumberLine}"
-
-   echo $(_get_new_ref_name "${refName}" "${prev_file_line}")
+  _get_new_ref_name "${refName}" "${prev_file_line}"
 }
 
 ##

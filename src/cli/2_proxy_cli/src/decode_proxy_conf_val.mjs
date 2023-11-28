@@ -1,10 +1,12 @@
-import parseArgs, { ErrorType } from "./libs/quckjs_args_parser/dist/index.js";
+import parseArgs, {
+  ErrorType,
+} from "../../1_qjs_cli/src/libs/quckjs_args_parser/dist/index.js";
 import * as std from "std";
-import { readFile } from "./libs/std.mjs";
-import { convertVariableNameJson5 } from "./libs/convert_variable_name_json5.mjs";
+import { readFile } from "../../1_qjs_cli/src/libs/std.mjs";
+import { convertVariableNameJson5 } from "../../1_qjs_cli/src/libs/convert_variable_name_json5.mjs";
 
 const commandConf = {
-  name: "qjs.decodeProxyConfVal",
+  name: "proxy.decodeProxyConfVal",
   description: "decode the proxy conf variable",
   args: [
     {
@@ -16,9 +18,16 @@ const commandConf = {
   ],
   options: [
     {
-      name: "CLI_ROOT_PATH",
-      description: "the cli root path",
-      alias: "c",
+      name: "ERROR_LOG_FILE_PATH",
+      description: "the error log file path",
+      alias: "e",
+      type: "string",
+      required: true,
+    },
+    {
+      name: "SUCCESSFUL_LOG_FILE_PATH",
+      description: "successful log file path",
+      alias: "s",
       type: "string",
       required: true,
     },

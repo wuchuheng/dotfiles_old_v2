@@ -14,7 +14,6 @@
     qjs: "${ CLI_ROOT_PATH }/bin/qjs_${OS_NAME}_${MACHINE_NAME}",
     decodeBase64: "${ commands.qjs } ${ CLI_ROOT_PATH }/src/decodeBase64.mjs",
     encodeBase64: "${ commands.qjs } ${ CLI_ROOT_PATH }/src/encodeBase64.mjs",
-    decodeProxyConfVal: "${ commands.qjs } ${ CLI_ROOT_PATH }/src/decode_proxy_conf_val.mjs",
   },
   //
   startUpServices: {},

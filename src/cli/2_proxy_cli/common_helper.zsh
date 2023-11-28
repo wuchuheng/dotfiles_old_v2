@@ -28,3 +28,63 @@ function get_proxy_config_path() {
 
   return $?
 }
+
+##
+# get the success log file path
+# @use _get_log_file_path <cli name> <log type: success | error> <log file path ref>
+# @return <boolean>
+##
+function _get_log_file_path() {
+  assert_not_empty "$1"
+  assert_not_empty "$2"
+  [[ "$2" != "success" && "$2" != "error" ]] && assert_equal "true" "false"
+  assert_not_empty "$3"
+  local inputCliName="$1"
+
+  local cliPathRef=$(generate_unique_var_name)
+  get_cli_path_by_name "${inputCliName}" "${cliPathRef}"
+  local cliPath=$(get_str_from_ref "${cliPathRef}")
+  local logType="$2"
+  local logFile="${cliPath}/runtime/log/$(date +%Y-%m-%d)/${logType}.log"
+
+  # if the log file is not exist, create it
+  [[ ! -d $(dirname ${logFile}) ]] && mkdir -p $(dirname ${logFile})
+  [[ ! -f ${logFile} ]] && touch ${logFile}
+
+  local outputLogFileRef="$3"
+  assign_str_to_ref "${logFile}" "${outputLogFileRef}"
+
+  return $?
+}
+
+##
+# get the success proxy log file path
+# @use get_success_proxy_log_file_path <cli name> <log file path ref>
+# @return <boolean>
+##
+function get_success_proxy_log_file_path() {
+  assert_not_empty "$1"
+  assert_not_empty "$2"
+
+  local inputCliName="$1"
+  local outputLogFileRef="$2"
+  _get_log_file_path "${inputCliName}" "success" "${outputLogFileRef}"
+
+  return $?
+}
+
+##
+# get the error proxy log file path
+# @use get_error_proxy_log_file_path <cli name> <log file path ref>
+# @return <boolean>
+##
+function get_error_proxy_log_file_path() {
+  assert_not_empty "$1"
+  assert_not_empty "$2"
+
+  local inputCliName="$1"
+  local outputLogFileRef="$2"
+  _get_log_file_path "${inputCliName}" "error" "${outputLogFileRef}"
+
+  return $?
+}
