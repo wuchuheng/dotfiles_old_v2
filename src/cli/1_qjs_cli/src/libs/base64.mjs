@@ -5,6 +5,8 @@ function getChars() {
 function decodeBase64(base64String) {
     const chars = getChars();
     let output = "";
+    base64String = base64String.replace(/=+$/, ''); // Remove any '=' padding
+
     for (let bc = 0, bs, buffer, i = 0;
          buffer = base64String.charAt(i++);
          ~buffer && (bs = bc % 4 ? bs * 64 + buffer : buffer,
@@ -17,14 +19,25 @@ function decodeBase64(base64String) {
 
 function encodeBase64(str) {
     const chars = getChars();
-    const charCodes = str.split('').map(c => c.charCodeAt(0));
-    const binStr = charCodes.map(c => c.toString(2).padStart(8, '0')).join('');
-    const chunks = binStr.match(/.{1,6}/g).map(bin => parseInt(bin, 2));
-    const padding = '=='.slice(0, (3 - str.length % 3) % 3);
-    const base64Str = chunks.map(c => chars[c]).join('') + padding;
+    let output = '';
+    let binStr = '';
 
-    return base64Str;
+    for (let i = 0; i < str.length; i++) {
+        binStr += str.charCodeAt(i).toString(2).padStart(8, '0');
+    }
+
+    for (let i = 0; i < binStr.length; i += 6) {
+        const chunk = binStr.substring(i, i + 6).padEnd(6, '0');
+        output += chars[parseInt(chunk, 2)];
+    }
+
+    while (output.length % 4) {
+        output += '=';
+    }
+
+    return output;
 }
+
 
 
 export {decodeBase64, encodeBase64}

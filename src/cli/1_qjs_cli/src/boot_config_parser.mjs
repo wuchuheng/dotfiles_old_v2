@@ -1,7 +1,7 @@
 /**
  *  get the bin path with the cli name
  *  @author wuchuheng<root@wuchuheng.com>
- *  @use qjs command_config_parser.mjs -c "config.json" -m "<cpuHardwareType>" -o "<OS name>" -cli_name <cli name> -p <prefix path for the command json> -output_file <output file>
+ *  @use qjs boot_config_parser.mjs -c "config.json" -m "<cpuHardwareType>" -o "<OS name>" -cli_name <cli name> -p <prefix path for the command json> -output_file <output file>
  *  @print <the bin path>
  *  @date 2023/11/19 03:46
  */
@@ -42,6 +42,20 @@ const commandConfigs = {
             required: true,
             description: "The cli root path",
         },
+        {
+            type: "string",
+            name: "APP_BASE_PATH",
+            alias: "a",
+            required: true,
+            description: "The app base path",
+        },
+        {
+            type: "string",
+            name: "QJS_BIN_PATH",
+            alias: "q",
+            required: true,
+            description: "the qjs bin path",
+        }
     ],
 };
 const args = scriptArgs.slice(1)

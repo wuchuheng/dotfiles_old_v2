@@ -4,6 +4,8 @@
  * @param {string} CLI_ROOT_PATH the absolute path of the cli directory.
  * @param {string} MACHINE_NAME the machine hardware name, like: x86_64, arm64, etc.
  * @param {string} OS_NAME the OS name, like: Darwin, Linux, etc.
+ * @param {string} APP_BASE_PATH the root path of the app.
+ * @param {string} QJS_BIN_PATH the qjs bin path.
  */
 {
   "commands": {

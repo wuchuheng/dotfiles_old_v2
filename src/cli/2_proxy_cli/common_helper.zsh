@@ -2,77 +2,29 @@
 
 import @/src/utils/string_cache.zsh #{setStringValue, setStringValueWithPointer, getStringValue}
 import @/src/utils/debug_helper.zsh #{assert_not_empty}
-import @/src/utils/ref_variable_helper.zsh # { assign_str_to_ref }
+import @/src/utils/ref_variable_helper.zsh # { assign_str_to_ref, generate_unique_var_name }
 import @/src/utils/os_helper.zsh # {get_os_name}
+import @/src/utils/cli_helper.zsh # {get_cli_path_by_name}
+
 
 ##
-# get the cli runtime space.
-# @Use get_tmp_runtime_space
-# @Echo "<a directory path>"
+# get the proxy config path
+# @use get_proxy_config_path <cli name> <config path ref>
+# @return <boolean>
+# @example: get_proxy_config_path 'qjs' 'configPathRef'
 ##
-function get_proxy_cli_runtime_space() {
-  local cliRuntimeDir="$(getCliRuntimeDirectory)/proxy_cli"
-  if [[ ! -d ${cliRuntimeDir} ]]; then
-    mkdir -p ${cliRuntimeDir}
-  fi
+function get_proxy_config_path() {
+  assert_not_empty "$1"
+  assert_not_empty "$2"
+  local inputCliName="$1"
 
-  echo "${cliRuntimeDir}"
-}
+  local cliPathRef=$(generate_unique_var_name)
+  get_cli_path_by_name "${inputCliName}" "${cliPathRef}"
+  local cliPath=$(get_str_from_ref "${cliPathRef}")
+  local configJson5File="${cliPath}/proxy_config.json5"
 
-##
-# set key map value.
-# @use set_key_map_value_for_tmp <key> <value>
-# @Return <boolean>
-##
-function set_key_map_value_for_proxy_cli() {
-  local key="${1}"
-  local value=$2
-  local cacheSpaceName=$(getCliRuntimeDirectory)/tmp
-
-  setStringValue "${key}" "${value}" "${cacheSpaceName}"
+  local outputConfigPathRef="$2"
+  assign_str_to_ref "${configJson5File}" "${outputConfigPathRef}"
 
   return $?
 }
-
-##
-# set key map value with reference.
-# @Use set_key_map_value_with_ref_for_tmp <key> <value ref>
-# @Return <boolean>
-##
-function set_key_map_value_with_ref_for_proxy_cli() {
-  local key="${1}"
-  local valueRef=$2
-  local cacheSpaceName=$(getCliRuntimeDirectory)/proxy_cli
-
-  setStringValueWithPointer "${key}" "${valueRef}" "${cacheSpaceName}"
-
-  return $?
-}
-
-##
-# get value with key for tmp cli
-# @Use get_key_map_value_for_tmp <key>
-# @Echo <value>
-# @Return <boolean>
-##
-function get_key_map_value_for_proxy_cli() {
-  local key="${1}"
-  local cacheSpaceName=$(getCliRuntimeDirectory)/proxy_cli
-
-  getStringValue "${key}" "${cacheSpaceName}"
-  return $?
-}
-
-##
-# check the cache key exists or not.
-# @Use check_key_map_exists_for_proxy_cli <key>
-# @Return <boolean>
-##
-function check_key_map_exists_for_proxy_cli() {
-  local key="${1}"
-  local cacheSpaceName=$(getCliRuntimeDirectory)/proxy_cli
-
-  getStringValue "${key}" "${cacheSpaceName}"
-  return $?
-}
-

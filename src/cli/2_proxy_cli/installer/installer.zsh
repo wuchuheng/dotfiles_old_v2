@@ -25,12 +25,12 @@ _check_proxy_config_or_create() {
   local configJsonPath="${proxyCliPath}/proxy_config.json5"
 
   # convert the env to base64Text
-  local vmessUrl=$( get_env "PROXY_CLI_VMESS_URL" )
+  local vmessUrl=$( get_env "PROXY_CLI_CONFIG" )
   if [[ -z "${vmessUrl}" ]]; then
     assert_not_empty "${vmessUrl}"
     return "${FALSE}"
   fi
-  local base64Txt=${vmessUrl#vmess://}
+  local base64Txt=${vmessUrl}
 
   # get the base64 parser cli
   local base64DecodeCliRef=$(generate_unique_var_name)

@@ -214,6 +214,12 @@ function get_executable_cli() {
   local jsonQuery=$(get_str_from_ref "${jsonQueryRef}")
 
   ${qjsBinPath} ${jsonQuery} "${bootConfigContent}" -q commands.${subCli} > "${swapFile}"
+  # if the command execute failed then return false
+  if [[ $? -ne 0 ]]; then
+    get_swap_content "${swapFile}"
+    log ERROR "get ${subCli} cli content failed."
+    return "${FALSE}"
+  fi
   local result=$(get_swap_content "${swapFile}")
 
   assign_str_to_ref "${result}" "${outputResultStrRef}"
@@ -263,12 +269,18 @@ function get_boot_config_content() {
 
   # get the parsed config contents of boot config
   local swapFile=$(create_swap_file)
-  local bootConfigParserJsPath="${qjsCliPath}/src/command_config_parser.mjs"
+  local bootConfigParserJsPath="${qjsCliPath}/src/boot_config_parser.mjs"
   ${qjsBin} ${bootConfigParserJsPath} ${bootConfigPath} \
     -OS "$(uname -s)" \
     -m "$(uname -m)" \
+    -q "${qjsBin}" \
+    -a "${APP_BASE_PATH}" \
     -c "${cliNamePath}" \
     > "${swapFile}"
+    if [[ $? -ne 0 ]]; then
+      log ERROR "get boot config content failed."
+      return "${FALSE}"
+    fi
   local bootConfigContent=$(get_swap_content "${swapFile}")
 
   assign_str_to_ref "${bootConfigContent}" "${outPutStrRef}"
@@ -305,20 +317,30 @@ function load_all_cli_from_boot_config() {
     get_json_query_path "${jsonQueryRef}"
     local jsonQuery=$(get_str_from_ref "${jsonQueryRef}")
     ${qjsBin} ${jsonQuery} "${bootConfigContent}" -q commands -k > "${swapFile}"
+    if [[ $? -ne 0 ]]; then
+      get_swap_content "${swapFile}"
+      log ERROR "get all cli name failed."
+      return "${FALSE}"
+    fi
     local commandNameList=($(get_swap_content "${swapFile}"))
 
     # loop all commands from the config content and load the cli
     local cliName
     for  cliName in ${commandNameList}; do
       ${qjsBin} ${jsonQuery} "${bootConfigContent}" -q "commands.${cliName}" > "${swapFile}"
+      if [[ $? -ne 0 ]]; then
+        get_swap_content "${swapFile}"
+        log ERROR "get ${cliName} cli content failed."
+        return "${FALSE}"
+      fi
       local cli=$(get_swap_content "${swapFile}")
-      aliasName="${inputCliName}.${cliName}"
+      local aliasName="${inputCliName}.${cliName}"
       if [[ ${cliName} == "__DEFAULT__"  ]]; then
         aliasName="${inputCliName}"
       fi
       local aliasConf=${aliasName}="${cli}"
       alias "${aliasConf}"
-      log CLI "${aliasName} cli loaded"
+      log CLI "${aliasName} loaded"
     done
 }
 
@@ -372,12 +394,23 @@ function load_all_service_from_boot_config() {
     local jsonQuery=$(get_str_from_ref "${jsonQueryRef}")
     local startUpServicesKeyName="startUpServices"
     ${qjsBin} ${jsonQuery} "${bootConfigContent}" -q "${startUpServicesKeyName}" -k > "${swapFile}"
+    if [[ $? -ne 0 ]]; then
+      get_swap_content "${swapFile}"
+      log ERROR "get all service name failed."
+      return "${FALSE}"
+    fi
     local serviceNameList=($(get_swap_content "${swapFile}"))
 
     # loop all commands from the config content and load the cli
     local serviceName
     for  serviceName in ${serviceNameList}; do
       ${qjsBin} ${jsonQuery} "${bootConfigContent}" -q "${startUpServicesKeyName}.${serviceName}" > "${swapFile}"
+      # if the command execute failed then return false
+      if [[ $? -ne 0 ]]; then
+        get_swap_content "${swapFile}"
+        log ERROR "get ${serviceName} service content failed."
+        return "${FALSE}"
+      fi
       local serviceCli=$(get_swap_content "${swapFile}")
       eval "${serviceCli}"
       if [[ $? -eq 0 ]]; then

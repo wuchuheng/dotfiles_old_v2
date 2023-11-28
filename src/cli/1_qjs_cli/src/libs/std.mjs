@@ -24,4 +24,19 @@ const readFile = (filename) => {
     }
 }
 
-export {readFile}
+/**
+ *
+ * @param fileName
+ * @param content
+ */
+const writeFile  = (fileName, content) => {
+    let file = std.open(fileName, 'w+');
+    if (file) {
+        file.puts(content);
+        file.close();
+    } else {
+        throw new Error(`Could not open file: ${fileName}`);
+    }
+}
+
+export {readFile, writeFile}

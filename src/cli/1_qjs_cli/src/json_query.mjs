@@ -1,7 +1,7 @@
 /**
  *  The Json query tool.
  *  @author wuchuheng<root@wuchuheng.com>
- *  @use qjs command_config_parser.mjs -c "config.json" -m "<cpuHardwareType>" -o "<OS name>" -cli_name <cli name> -p <prefix path for the command json> -output_file <output file>
+ *  @use qjs boot_config_parser.mjs -c "config.json" -m "<cpuHardwareType>" -o "<OS name>" -cli_name <cli name> -p <prefix path for the command json> -output_file <output file>
  *  @print <the bin path>
  *  @date 2023/11/26 21:27
  */

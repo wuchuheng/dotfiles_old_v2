@@ -174,32 +174,6 @@ function _initCLIDirectory() {
 }
 
 ##
-# generate the cli bootloader file
-# @Use _generateCLIBootloaderFile "<cli bootloader file path>" "<cli name>"
-# @return <boolean>
-##
-function _generateCLIBootloaderFile() {
-  local cliBootLoaderFile=$1
-  local cliName=$2
-  cat > "$cliBootLoaderFile" << EOF
-#!/usr/bin/env zsh
-
-# This is the entry file for ${cliName} CLI tool
-# Write the main logic of the CLI tool here
-# Add appropriate comments to explain the purpose and functionality of the file
-
-import @/src/utils/log.zsh #{log}
-
-function ${cliName}_cli_boot() {
-  alias ${cliName}='echo "hello ${cliName}"'
-  log INFO "${cliName} cli loaded."
-}
-
-EOF
-  log ' CREATE' "${cliBootLoaderFile:${#APP_BASE_PATH} + 1}"
-}
-
-##
 # generate the provider file to uninstall the cli
 # @Use _generateUninstallationProviderFile "<cli uninstallation provider file path>" "<cli name>"
 # @return <boolean>
@@ -315,6 +289,8 @@ function _generate_cli_boot_config_json5_file() {
  * @param {string} CLI_ROOT_PATH the absolute path of the cli directory.
  * @param {string} MACHINE_NAME the machine hardware name, like: x86_64, arm64, etc.
  * @param {string} OS_NAME the OS name, like: Darwin, Linux, etc.
+ * @param {string} APP_BASE_PATH the root path of the app.
+ * @param {string} QJS_BIN_PATH the qjs bin path.
  */
 {
   // These clis can be used directly when the zsh shell is started.
