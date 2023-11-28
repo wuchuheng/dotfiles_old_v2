@@ -4,7 +4,7 @@ on:
   workflow_call: # This makes the workflow reusable
 
 env:
-  INSTALLATION_URL: 'https://raw.githubusercontent.com/wuchuheng/dotfiles/blob/${{ GITHUB_REF#refs/tags/ }}/src/tools/install.sh'  # Set a global environment variable
+  INSTALLATION_URL: "https://raw.githubusercontent.com/wuchuheng/dotfiles/blob/${{ GITHUB_REF#refs/tags/ }}/src/tools/install.sh" # Set a global environment variable
   SUCCESSFUL_LOG: '\033[0;32mPASS\033[0m'
 
 jobs:
@@ -259,7 +259,7 @@ jobs:
       matrix:
         image: ${{fromJson(needs.setup_matrix_for_ubuntuOS.outputs.matrix)}}
     container:
-        image: ${{ matrix.image}}
+      image: ${{ matrix.image}}
     steps:
       - name: Apt update
         run: apt update
@@ -267,15 +267,15 @@ jobs:
         run: apt install -y curl
       - name: Install dotfiles by curl on ubuntu.
         run: |
-            set -e
-            export TERM=xterm
-            curl -fsSL ${INSTALLATION_URL} | bash
+          set -e
+          export TERM=xterm
+          curl -fsSL ${INSTALLATION_URL} | bash
       - name: Install make
         run: apt install -y make
       - name: Check the installation of dotfiles was successful or not
         run: |
-            cd dotfiles
-            make check_dotfiles_installed
+          cd dotfiles
+          make check_dotfiles_installed
   wget_installation_on_ubuntu:
     needs:
       - setup_matrix_for_ubuntuOS

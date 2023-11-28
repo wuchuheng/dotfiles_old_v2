@@ -22,7 +22,7 @@ jobs:
         run: git submodule update --init
       - name: Set tar file name
         id: vars
-        run: | 
+        run: |
           projectName=$(basename $PWD)
           echo "TAR_FILE=${projectName}-${GITHUB_REF#refs/tags/}.tar.gz" >> $GITHUB_ENV
           echo "ZIP_FILE=${projectName}-${GITHUB_REF#refs/tags/}.zip" >> $GITHUB_ENV

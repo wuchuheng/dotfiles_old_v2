@@ -87,8 +87,6 @@ jobs:
             make install_test
           "
 
-
-
   # Jobs for MacOS
   unit_test_on_macOS:
     name: Unit test on macOS
@@ -111,7 +109,6 @@ jobs:
       - name: Unit test
         run: |
           make install_test
-
 
   # Jobs for UbuntuOS
   setup_matrix_for_ubuntuOS:
