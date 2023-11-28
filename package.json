@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prettier": "prettier --write ."
+    "prettier": "prettier --write .",
+    "lint:fix": "eslint --fix 'src/**/*.{ts,mjs,ts}'"
   },
   "engines": {
     "node": ">=20.10.0"
@@ -15,6 +16,10 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^6.13.1",
+    "@typescript-eslint/parser": "^6.13.1",
+    "eslint": "^8.54.0",
+    "eslint-config-prettier": "^9.0.0",
     "prettier": "^3.1.0"
   }
 }

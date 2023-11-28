@@ -1,7 +1,6 @@
 import parseArgs, { ErrorType } from "./libs/quckjs_args_parser/dist/index.js";
 import * as std from "std";
 import { readFile } from "./libs/std.mjs";
-import JSON5 from "./libs/json5.mjs";
 import { convertVariableNameJson5 } from "./libs/convert_variable_name_json5.mjs";
 
 const commandConf = {
