@@ -95,6 +95,6 @@ function $(get_func_name:check_key_map_exists_for ${cliName})() {
 
 EOF
 
-  log CREATE "${cliHelperLibraryFile:${#APP_BASE_PATH} + 1}"
+  log ' CREATE' "${cliHelperLibraryFile:${#APP_BASE_PATH} + 1}"
 }
 

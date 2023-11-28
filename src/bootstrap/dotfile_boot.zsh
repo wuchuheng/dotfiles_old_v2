@@ -24,9 +24,6 @@ for numberCliDirName in "${cliDirList[@]}"; do
 
   # if the cli was not installed, then install it.
   if [[ "${isInstallation}" -eq "${TRUE}" ]]; then
-    local cliBootFilePathRef=$(generate_unique_var_name)
-    get_cli_boot_file_path "${numberCliDirName}" "${cliBootFilePathRef}"
-    local cliBootFilePath=$(get_str_from_ref "${cliBootFilePathRef}")
 
     # get cli name without number.
     local cliNameRef=$(generate_unique_var_name)

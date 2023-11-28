@@ -125,10 +125,6 @@ function get_cli_installer_file_path() {
   local cliDirectory=$1
   local outputResultRefName=$2
 
-  local cliNameRefName=$(generate_unique_var_name)
-  get_cli_name_by_number_cli_dir "${cliDirectory}" "${cliNameRefName}"
-  local cliName=$(get_str_from_ref "${cliNameRefName}")
-
   local CLI_PATH=$(getCliPath)
   local result=${CLI_PATH}/${cliDirectory}/installer/installer.zsh
   assign_str_to_ref "${result}" "${outputResultRefName}"
@@ -279,19 +275,68 @@ EOF
 }
 
 ##
-# get the file path of bootloader for cli.
-# @Use get_cli_boot_file_path "<cli directory>" "<resultStrRef>"
-# @Return <boolean>
+# get the boot config json5 path
+# @use get_cli_boot_config_json5_path "<cli directory>" "<resultStrRef>"
+# @return <boolean>
 ##
-function get_cli_boot_file_path() {
-  local numberCliName=$1
-  local bootFileRefName=$2
-  local cliBootLoaderFile=$(getCliPath)/${numberCliName}/bootloader.zsh
+function get_cli_boot_config_json5_path() {
+  assert_not_empty "$1"
+  local inputNumberCliName=$1
+  local outputResultRef=$2
+  local cliBootConfigJson5Path=$(getCliPath)/${inputNumberCliName}/boot_config.json5
 
-  assign_str_to_ref "${cliBootLoaderFile}" "${bootFileRefName}"
+  assign_str_to_ref "${cliBootConfigJson5Path}" "${outputResultRef}"
 
-  return "${TRUE}"
+  return "$?"
 }
+
+##
+# create a boot config json5 file for cli
+# @use _create_cli_boot_config_json5_file "<cli directory>"
+# @return <boolean>
+##
+function _generate_cli_boot_config_json5_file() {
+  assert_not_empty "$1"
+  local inputNumberCliName=$1
+  local cliBootConfigJson5PathRef=$(generate_unique_var_name)
+  get_cli_boot_config_json5_path "${inputNumberCliName}" "${cliBootConfigJson5PathRef}"
+  local cliBootConfigJson5Path=$(get_str_from_ref "${cliBootConfigJson5PathRef}")
+
+  # get the cli name
+  local cliNameRef=$(generate_unique_var_name)
+  get_cli_name_by_number_cli_dir "${inputNumberCliName}" "${cliNameRef}"
+  local cliName=$(get_str_from_ref "${cliNameRef}")
+  local cliNameWithout_cli="${cliName:0:-4}"
+
+  cat >"${cliBootConfigJson5Path}" <<EOF
+/**
+ * the variable names
+ *
+ * @param {string} CLI_ROOT_PATH the absolute path of the cli directory.
+ * @param {string} MACHINE_NAME the machine hardware name, like: x86_64, arm64, etc.
+ * @param {string} OS_NAME the OS name, like: Darwin, Linux, etc.
+ */
+{
+  // These clis can be used directly when the zsh shell is started.
+  "commands": {
+    // default is a specific key name while the command "${cliNameWithout_cli}" called in command line
+    "__DEFAULT__": "\${ commands.${cliNameWithout_cli} }",
+    "${cliNameWithout_cli}": "echo 'The cli ${cliNameWithout_cli} is called.'"
+  },
+  // the services will be started when the zsh shell is started.
+  "startUpServices": {
+    // like hello service, it will be started when the zsh shell is started.
+    "hello": "echo 'hello service is started.'"
+  }
+}
+EOF
+  if [[ $? == 0 ]]; then
+    log ' CREATE' "${cliBootConfigJson5Path:${#APP_BASE_PATH} + 1}"
+  else
+    log 'ERROR' "create the ${cliBootConfigJson5Path:${#APP_BASE_PATH} + 1} failed"
+  fi
+}
+
 
 ##
 # create a cli runtime directory
@@ -338,7 +383,7 @@ function create_cli_runtime_dir() {
   # link the runtime of the cli to the root directory of the cli.
   ln -s "${linkPath}" "${cliPath}/runtime"
   if [[ $? -eq ${TRUE} ]] ; then
-    log INFO " CREATE the runtime path for ${cliName:0:-4} cli"
+    log ' INFO' " CREATE the runtime path for ${cliName:0:-4} cli"
   else
     log ERROR " CREATED failed the runtime path for ${cliName:0:-4} cli"
   fi
@@ -362,11 +407,8 @@ function create_cli() {
   local cliInstallationProviderFile=$(get_str_from_ref "${cliInstallationProviderFileRef}")
   _generateInstallationProvider "${cliInstallationProviderFile}" "${CLI_NAME}"
 
-  # Generate the bootloader file for cli.
-  local cliBootLoaderFileRef=$(generate_unique_var_name)
-  get_cli_boot_file_path "${numberCliName}" "${cliBootLoaderFileRef}"
-  local cliBootLoaderFile=$(get_str_from_ref "${cliBootLoaderFileRef}")
-  _generateCLIBootloaderFile "${cliBootLoaderFile}" "${CLI_NAME}"
+  # Generate the boot config json5 for cli.
+  _generate_cli_boot_config_json5_file "${numberCliName}"
 
   # Generate the cli uninstallation provider file
   local cliUninstallationProviderFileRefName=$(generate_unique_var_name)
