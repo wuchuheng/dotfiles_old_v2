@@ -284,7 +284,7 @@ function _generate_cli_boot_config_json5_file() {
 
   cat >"${cliBootConfigJson5Path}" <<EOF
 /**
- * the variable names
+ * the variable names during compilation
  *
  * @param {string} CLI_ROOT_PATH the absolute path of the cli directory.
  * @param {string} MACHINE_NAME the machine hardware name, like: x86_64, arm64, etc.
@@ -293,10 +293,10 @@ function _generate_cli_boot_config_json5_file() {
  * @param {string} QJS_BIN_PATH the qjs bin path.
  */
 {
-  // These clis can be used directly when the zsh shell is started.
+  // These cli can be used directly when the zsh shell is started.
   "commands": {
     // default is a specific key name while the command "${cliNameWithout_cli}" called in command line
-    "__DEFAULT__": "\${ commands.${cliNameWithout_cli} }",
+    "__DEFAULT__": "\${{ commands.${cliNameWithout_cli} }}",
     "${cliNameWithout_cli}": "echo 'The cli ${cliNameWithout_cli} is called.'"
   },
   // the services will be started when the zsh shell is started.

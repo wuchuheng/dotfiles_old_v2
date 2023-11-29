@@ -1,5 +1,5 @@
 /**
- * the variable names
+ * the variable names during compilation
  *
  * @param {string} CLI_ROOT_PATH the absolute path of the cli directory.
  * @param {string} MACHINE_NAME the machine hardware name, like: x86_64, arm64, etc.
@@ -10,15 +10,15 @@
 {
   commands: {
     // default is a specific key name while the command "proxy" called in command line
-    __DEFAULT__: "${ commands.proxy }",
-    proxy: "${ CLI_ROOT_PATH }/bin/v2ray_${OS_NAME}_${MACHINE_NAME}",
-    updateConfigToEnv: "${QJS_BIN_PATH} ${ CLI_ROOT_PATH }/src/updateConfigToEnv.js \
-        --config-path ${ CLI_ROOT_PATH }/proxy_config.json5 \
-        --env-path ${ APP_BASE_PATH }/.env \
+    __DEFAULT__: "${{ commands.proxy }}",
+    proxy: "${{ CLI_ROOT_PATH }}/bin/v2ray_${{ OS_NAME }}_${{ MACHINE_NAME }}",
+    updateConfigToEnv: "${{ QJS_BIN_PATH }} ${{ CLI_ROOT_PATH }}/src/updateConfigToEnv.js \
+        --config-path ${{ CLI_ROOT_PATH }}/proxy_config.json5 \
+        --env-path ${{ APP_BASE_PATH }}/.env \
         --key PROXY_CLI_CONFIG",
-    decodeProxyConfVal: "${ QJS_BIN_PATH } ${ CLI_ROOT_PATH }/src/decode_proxy_conf_val.mjs",
-    printCli: "APP_BASE_PATH='${ APP_BASE_PATH }' zsh ${ CLI_ROOT_PATH }/src/boot/print_cli.zsh",
-    setProxy: "proxyCmd=$(${commands.printCli}) && eval $proxyCmd && log INFO 'set proxy successful '",
+    decodeProxyConfVal: "${{ QJS_BIN_PATH }} ${{ CLI_ROOT_PATH }}/src/decode_proxy_conf_val.mjs",
+    printCli: "APP_BASE_PATH='${{ APP_BASE_PATH }}' zsh ${{ CLI_ROOT_PATH }}/src/boot/print_cli.zsh",
+    setProxy: "proxyCmd=$(${commands.printCli }}) && eval $proxyCmd && log INFO 'set proxy successful '",
     unsetProxy: "\
       unset http_proxy && \
       unset https_proxy && \
@@ -28,12 +28,12 @@
   },
   startUpServices: {
     proxyTask: " \
-        CLI_ROOT_PATH='${ CLI_ROOT_PATH }' \
-        APP_BASE_PATH='${ APP_BASE_PATH }' \
-        DECODE_PROXY_CONF_VAL_CLI='${ commands.decodeProxyConfVal }' \
-        PROXY_CLI='${ commands.proxy }' \
-        zsh ${ CLI_ROOT_PATH }/src/boot/start.zsh \
+        CLI_ROOT_PATH='${{ CLI_ROOT_PATH }}' \
+        APP_BASE_PATH='${{ APP_BASE_PATH }}' \
+        DECODE_PROXY_CONF_VAL_CLI='${{ commands.decodeProxyConfVal }}' \
+        PROXY_CLI='${{ commands.proxy }}' \
+        zsh ${{ CLI_ROOT_PATH }}/src/boot/start.zsh \
     ",
-    shellProxy: "proxyCmd=$(${commands.printCli});eval $proxyCmd",
+    shellProxy: "proxyCmd=$(${{ commands.printCli }});eval $proxyCmd",
   },
 }
