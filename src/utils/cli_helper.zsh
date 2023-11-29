@@ -59,18 +59,27 @@ function get_cli_name_by_number_cli_dir() {
   assert_not_empty "${2}"
   local numberCliDir=$1
   local outputStrRef=$2
-  globalListRef=()
-  split_str_with_point "${numberCliDir}" "_" globalListRef
-  globalListRef=("${globalListRef[@]:1}")
-  globalStrRef=''
-  join '_' globalListRef globalStrRef
-  unset globalListRef
-  eval "
-    ${outputStrRef}=\"${globalStrRef}\"
-  "
-  unset globalStrRef
 
-  return "${TRUE}"
+  local listRef=$(generate_unique_var_name)
+  split_str_with_point "${numberCliDir}" "_" "${listRef}"
+  local cliNameSlice=($(get_list_from_ref "${listRef}"))
+  cliNameSlice=(${cliNameSlice[@]:1})
+
+  # Remove the suffix character cli
+  cliNameSlice=(${cliNameSlice})
+  cliNameSlice=("${cliNameSlice[@]:0:$#cliNameSlice-1}")
+
+  # convert the slice list to string with '_'
+  local result=''
+  local cliNameSliceValue
+  for cliNameSliceValue in ${cliNameSlice[@]}; do
+      result="${result}_${cliNameSliceValue}"
+  done
+  result=${result:1}
+
+  assign_str_to_ref "${result}" "${outputStrRef}"
+
+  return "$?"
 }
 
 ##
@@ -137,7 +146,7 @@ function get_cli_path_by_name() {
     get_cli_name_by_number_cli_dir "${numberCliName}" "${cliNameRef}"
     local cliName=$(get_str_from_ref "${cliNameRef}")
 
-    if [[ ${cliName} == ${inputCliName}_cli ]]; then
+    if [[ ${cliName} == ${inputCliName} ]]; then
       assign_str_to_ref "${cliNamePath}" "${outPutStrRef}"
       return "${TRUE}"
     fi

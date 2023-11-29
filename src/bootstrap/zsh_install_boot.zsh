@@ -15,6 +15,7 @@ import @/src/templates/create_cli_template/create_cli_helper.zsh #{get_cli_unins
 import ./boot_helper.zsh # { check_cli_by_number_dir }
 import @/src/services/insert_dotfile_config_into_zshrc_service.zsh #{insertDotfileConfigIntoZshrcService}
 import @/src/utils/cli_helper.zsh #{getCliDirList}
+import @/src/templates/create_cli_template/create_cli_helper.zsh #{check_runtime_dir_or_create}
 import @/src/utils/load_env.zsh # {set_env_type, load_env}
 
 load_env "${APP_BASE_PATH}/.env"
@@ -30,6 +31,10 @@ for numberCliDirName in "${cliDirList[@]}"; do
   # check the cli is installation or not.
   check_cli_by_number_dir "${numberCliDirName}"
   local isInstallation=$?
+
+  # check the cli runtime directory or create it.
+  check_runtime_dir_or_create "${numberCliDirName}"
+
   # if the cli was not installed, then install it.
   if [[ "${isInstallation}" -eq "${FALSE}" ]]; then
     local cliInstallationProviderFilePathRef=$(generate_unique_var_name)
@@ -46,7 +51,7 @@ for numberCliDirName in "${cliDirList[@]}"; do
 
     # trigger the installation provider.
     local isInstallBrokenRef=$(generate_unique_var_name)
-    ${cliName}_installer "${isInstallBrokenRef}"
+    ${cliName}_cli_installer "${isInstallBrokenRef}"
     local isInstallBroken=$(get_str_from_ref "${isInstallBrokenRef}")
     if [[ ${isInstallBroken} -eq ${TRUE} ]]; then
       break;

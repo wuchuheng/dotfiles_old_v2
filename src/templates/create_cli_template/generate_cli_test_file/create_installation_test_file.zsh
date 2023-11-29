@@ -16,8 +16,6 @@ function get_installation_test_file() {
   local numberCliName=$1
   local cliPath=$(getCliPath)
 
-  local cliNameRefName=$(generate_unique_var_name)
-  get_cli_name_by_number_cli_dir "${numberCliName}" "${cliNameRefName}"
 
   local installationTestFile=${cliPath}/${numberCliName}/__test__/installation_tests/1_installation.test.zsh
   if [[ ! -d "$(dirname ${installationTestFile})" ]]; then
@@ -42,7 +40,7 @@ function create_installation_test_file() {
   get_cli_name_by_number_cli_dir "${numberCliName}" "${cliNameRef}"
   local cliName=$(get_str_from_ref "${cliNameRef}")
 
-  local testFuncName="${cliName}_installation_test"
+  local testFuncName="${cliName}_cli_installation_test"
   cat > "${installationTestFile}" << EOF
 #!/usr/bin/env zsh
 

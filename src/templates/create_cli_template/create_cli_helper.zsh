@@ -280,7 +280,6 @@ function _generate_cli_boot_config_json5_file() {
   local cliNameRef=$(generate_unique_var_name)
   get_cli_name_by_number_cli_dir "${inputNumberCliName}" "${cliNameRef}"
   local cliName=$(get_str_from_ref "${cliNameRef}")
-  local cliNameWithout_cli="${cliName:0:-4}"
 
   cat >"${cliBootConfigJson5Path}" <<EOF
 /**
@@ -295,9 +294,9 @@ function _generate_cli_boot_config_json5_file() {
 {
   // These cli can be used directly when the zsh shell is started.
   "commands": {
-    // default is a specific key name while the command "${cliNameWithout_cli}" called in command line
-    "__DEFAULT__": "\${{ commands.${cliNameWithout_cli} }}",
-    "${cliNameWithout_cli}": "echo 'The cli ${cliNameWithout_cli} is called.'"
+    // default is a specific key name while the command "${cliName}" called in command line
+    "__DEFAULT__": "\${{ commands.${cliName} }}",
+    "${cliName}": "echo 'The cli ${cliName} is called.'"
   },
   // the services will be started when the zsh shell is started.
   "startUpServices": {
@@ -316,9 +315,9 @@ EOF
 
 ##
 # create a cli runtime directory
-# @use create_cli_runtime_dir <numCliDir>
+# @use check_runtime_dir_or_create <numCliDir>
 ##
-function create_cli_runtime_dir() {
+function check_runtime_dir_or_create() {
   assert_not_empty "$1"
   local numCliDir="$1"
   # get cli name
@@ -328,23 +327,22 @@ function create_cli_runtime_dir() {
 
   # get the cli path for the current cli
   local cliPathRef=$(generate_unique_var_name)
-  get_cli_path_by_name "${cliName:0:-4}" "${cliPathRef}"
+  get_cli_path_by_name "${cliName}" "${cliPathRef}"
   local cliPath=$(get_str_from_ref "${cliPathRef}")
   assert_not_empty "${cliPath}"
 
   # create the runtime directory for cli
-  local cliRuntimeDir="$(getCliRuntimeDirectory)/${cliName}"
+  local cliRuntimeDir="$(getCliRuntimeDirectory)/${cliName}_cli"
   if [[ ! -d ${cliRuntimeDir} ]]; then
     mkdir -p "${cliRuntimeDir}"
   fi
 
   # get the path level count between ${cliPath} to the dotfiles root path
   local relativeCliRuntimeDir=${cliRuntimeDir:${#APP_BASE_PATH} + 1}
-  local levelFromCliPathToRoot=0;
   local levelFromCliPathToRootCountRef=$(generate_unique_var_name);
   split_str_with_point "${cliPath:${#APP_BASE_PATH} + 1}" "/" "${levelFromCliPathToRootCountRef}"
   local levelFromCliPathToRootCount=$(get_str_from_ref "${levelFromCliPathToRootCountRef}")
-  levelFromCliPathToRootSlice=($(get_list_from_ref "${levelFromCliPathToRootCountRef}"))
+  local levelFromCliPathToRootSlice=($(get_list_from_ref "${levelFromCliPathToRootCountRef}"))
   levelFromCliPathToRootCount=${#levelFromCliPathToRootSlice[@]}
 
   # get generate the path to link from ${cliPath} to cli_runtime
@@ -356,12 +354,17 @@ function create_cli_runtime_dir() {
   assert_not_empty "${linkPath}"
   linkPath="${linkPath}${relativeCliRuntimeDir}"
 
-  # link the runtime of the cli to the root directory of the cli.
-  ln -s "${linkPath}" "${cliPath}/runtime"
-  if [[ $? -eq ${TRUE} ]] ; then
-    log ' INFO' " CREATE the runtime path for ${cliName:0:-4} cli"
-  else
-    log ERROR " CREATED failed the runtime path for ${cliName:0:-4} cli"
+  # if the soft link file not existed and then create it.
+  local softLinkPath="${cliPath}/runtime"
+  if [[ ! -L ${softLinkPath} ]]; then
+    # link the runtime of the cli to the root directory of the cli.
+    ln -s "${linkPath}" "${softLinkPath}"
+#    echo "ln -s \"${linkPath}\" \"${softLinkPath}\""
+    if [[ $? -eq ${TRUE} ]] ; then
+      log ' INFO' " CREATE the runtime path for ${cliName} cli"
+    else
+      log ERROR " CREATED failed the runtime path for ${cliName} cli"
+    fi
   fi
 }
 
@@ -408,5 +411,5 @@ function create_cli() {
   create_uninstallation_test_file "${numberCliName}"
 
   # create the runtime directory for the new cli
-  create_cli_runtime_dir "${numberCliName}"
+  check_runtime_dir_or_create "${numberCliName}"
 }

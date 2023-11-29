@@ -41,7 +41,7 @@ for numberCliDirName in "${cliDirList[@]}"; do
     local cliName=$(get_str_from_ref "${cliNameRef}")
 
     # trigger the installation provider.
-    ${cliName}_uninstaller
+    ${cliName}_cli_uninstaller
   fi
 done
 

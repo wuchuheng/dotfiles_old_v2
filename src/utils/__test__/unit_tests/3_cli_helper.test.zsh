@@ -11,7 +11,7 @@ function get_cli_name_by_number_cli_dir_test() {
   get_cli_name_by_number_cli_dir "${testNumberCliDir}" globalCliDirNameStrRef
   local receiveStrValue="${globalCliDirNameStrRef}"
   unset globalCliDirNameStrRef
-  except_str 'tmp_cli' "${receiveStrValue}"
+  except_str 'tmp' "${receiveStrValue}"
 }
 
 # call hello_world_test() function，and pass the testing callback with the testing name and testing description.

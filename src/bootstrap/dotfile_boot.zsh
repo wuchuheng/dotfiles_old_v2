@@ -31,8 +31,8 @@ for numberCliDirName in "${cliDirList[@]}"; do
     local cliName=$(get_str_from_ref "${cliNameRef}")
 
     # load all cli from boot config.
-    load_all_cli_from_boot_config "${cliName:0:-4}"
+    load_all_cli_from_boot_config "${cliName}"
     # load all service from boot config.
-    load_all_service_from_boot_config "${cliName:0:-4}"
+    load_all_service_from_boot_config "${cliName}"
   fi
 done

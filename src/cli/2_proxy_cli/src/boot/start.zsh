@@ -47,7 +47,6 @@ function star_proxy_service() {
   local numberCliNameDir=${CLI_ROOT_PATH:${#cliPath} + 1}
   get_cli_name_by_number_cli_dir "${numberCliNameDir}" "${cliNameRef}"
   local cliName=$(get_str_from_ref "${cliNameRef}")
-  cliName=${cliName:0:-4}
 
   local successLogFilePathRef=$(generate_unique_var_name)
   get_success_proxy_log_file_path "${cliName}" "${successLogFilePathRef}"

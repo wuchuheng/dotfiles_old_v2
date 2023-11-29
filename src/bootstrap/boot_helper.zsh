@@ -21,7 +21,7 @@ function check_cli_by_number_dir() {
   local cliName=$(get_str_from_ref "${cliNameRef}")
 
   # trigger the installation checker.
-  ${cliName}_installation_checker
+  ${cliName}_cli_installation_checker
 
   if [[ $? == 0 ]]; then
     return ${TRUE}

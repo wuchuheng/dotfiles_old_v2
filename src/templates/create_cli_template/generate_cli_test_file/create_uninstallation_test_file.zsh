@@ -40,7 +40,7 @@ function create_uninstallation_test_file() {
   get_cli_name_by_number_cli_dir "${numberCliName}" "${cliNameRef}"
   local cliName=$(get_str_from_ref "${cliNameRef}")
 
-  local testFuncName="${cliName}_uninstallation_test"
+  local testFuncName="${cliName}_cli_uninstallation_test"
   cat > "${uninstallationTestFile}" << EOF
 #!/usr/bin/env zsh
 

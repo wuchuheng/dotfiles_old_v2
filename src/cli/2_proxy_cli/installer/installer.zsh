@@ -7,11 +7,6 @@ import @/src/utils/debug_helper.zsh #{assert_not_empty}
 import @/src/utils/cli_helper.zsh #{get_current_cli_path, get_cli_path_by_name}
 import @/src/utils/load_env.zsh  #{get_env}
 
-##
-# decompose the linux proxy cli binary file.
-# @use _decompose_linux_proxy_cli_binary_file
-# @return <boolean>
-
 
 ##
 # check the proxy config existed or create a new config.
