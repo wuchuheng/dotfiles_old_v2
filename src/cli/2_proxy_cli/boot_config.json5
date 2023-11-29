@@ -16,15 +16,24 @@
         --config-path ${ CLI_ROOT_PATH }/proxy_config.json5 \
         --env-path ${ APP_BASE_PATH }/.env \
         --key PROXY_CLI_CONFIG",
-    decodeProxyConfVal: "${ QJS_BIN_PATH } ${ CLI_ROOT_PATH }/src/decode_proxy_conf_val.mjs"
+    decodeProxyConfVal: "${ QJS_BIN_PATH } ${ CLI_ROOT_PATH }/src/decode_proxy_conf_val.mjs",
+    printCli: "APP_BASE_PATH='${ APP_BASE_PATH }' zsh ${ CLI_ROOT_PATH }/src/boot/print_cli.zsh",
+    setProxy: "proxyCmd=$(${commands.printCli}) && eval $proxyCmd && log INFO 'set proxy successful '",
+    unsetProxy: "\
+      unset http_proxy && \
+      unset https_proxy && \
+      unset ALL_PROXY && \
+      log INFO 'unset proxy successful'\
+    "
   },
   startUpServices: {
-    "proxy": " \
+    proxyTask: " \
         CLI_ROOT_PATH='${ CLI_ROOT_PATH }' \
         APP_BASE_PATH='${ APP_BASE_PATH }' \
         DECODE_PROXY_CONF_VAL_CLI='${ commands.decodeProxyConfVal }' \
         PROXY_CLI='${ commands.proxy }' \
         zsh ${ CLI_ROOT_PATH }/src/boot/start.zsh \
     ",
+    shellProxy: "proxyCmd=$(${commands.printCli});eval $proxyCmd",
   },
 }

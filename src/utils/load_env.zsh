@@ -1,6 +1,7 @@
 #!/usr/bin/env zsh
 
 import @/src/utils/log.zsh # {log}
+import @/src/utils/debug_helper.zsh #{assert_not_empty}
 
 ##
 # load env with env file path
@@ -33,6 +34,7 @@ function load_env() {
 # @Return <boolean>
 ##
 function get_env() {
+  assert_not_empty "$1"
   local env_var_name=$1
   local default_value=${2:-''}
   local env_var_value=$(eval echo \$$env_var_name)

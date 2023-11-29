@@ -20,18 +20,6 @@ import ../../common_helper.zsh #{get_success_proxy_log_file_path}
 import @/src/utils/cli_helper.zsh #{get_cli_name_by_number_cli_dir}
 import @/src/utils/debug_helper.zsh #{assert_not_empty}
 
-
-##
-# print the command to set the proxy env in cli
-# @use print_set_proxy_env_command
-# @return <void>
-##
-function print_set_proxy_env_command() {
-  local httpProxyPort=2089
-  local sock5ProxyPort=2080
-  echo "export http_proxy=http://127.0.0.1:${httpProxyPort};export https_proxy=http://127.0.0.1:${httpProxyPort};export ALL_PROXY=socks5://127.0.0.1:${sock5ProxyPort}"
-}
-
 ##
 # check the proxy service was started or not
 # @use check_proxy_service_is_started
@@ -41,8 +29,7 @@ function check_proxy_service_is_started() {
   local taskLineCount=$( ps aux | grep "${PROXY_CLI}" | wc -l )
   taskLineCount="${taskLineCount##*( )}"
   if [[ ${taskLineCount} -gt 1  ]]; then
-    log SERVICE "proxy is start"
-    print_set_proxy_env_command
+    log INFO "proxy is start"
     return "${TRUE}"
   else
     return "${FALSE}"
@@ -79,8 +66,7 @@ function star_proxy_service() {
      > ${configFilePath}"
   eval "nohup ${PROXY_CLI} run -c ${configFilePath} > ${CLI_ROOT_PATH}/runtime/log/nohup.log 2>&1 &"
   if [[ $? -eq ${TRUE} ]]; then
-    log SERVICE "start proxy service success"
-    print_set_proxy_env_command
+    log INFO "start proxy service success"
     return "${TRUE}"
   else
     log ERROR "start proxy service failed"
@@ -92,6 +78,5 @@ check_proxy_service_is_started
 if [[ $? -ne ${TRUE} ]]; then
   star_proxy_service
 fi
-
-
+return $?
 

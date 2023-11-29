@@ -5,7 +5,7 @@ import @/src/utils/debug_helper.zsh #{assert_not_empty}
 import @/src/utils/ref_variable_helper.zsh # { assign_str_to_ref, generate_unique_var_name }
 import @/src/utils/os_helper.zsh # {get_os_name}
 import @/src/utils/cli_helper.zsh # {get_cli_path_by_name}
-
+import @/src/utils/load_env.zsh #{get_env}
 
 ##
 # get the proxy config path
@@ -87,4 +87,14 @@ function get_error_proxy_log_file_path() {
   _get_log_file_path "${inputCliName}" "error" "${outputLogFileRef}"
 
   return $?
+}
+
+##
+#
+function print_proxy_command() {
+  local httpPort=$(get_env "PROXY_CLI_HTTP_PORT" 2089)
+  local sock5Port=$(get_env "PROXY_CLI_SOCK5_PORT" 2080)
+  assert_not_empty "${httpPort}"
+  assert_not_empty "${sock5Port}"
+  echo "export http_proxy=http://127.0.0.1:${httpPort};export https_proxy=http://127.0.0.1:${httpPort};export ALL_PROXY=socks5://127.0.0.1:${sock5Port}"
 }
