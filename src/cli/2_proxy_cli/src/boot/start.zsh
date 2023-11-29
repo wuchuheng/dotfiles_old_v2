@@ -63,14 +63,9 @@ function star_proxy_service() {
      --ERROR_LOG_FILE_PATH ${errorLogFilePath} \
      --SUCCESSFUL_LOG_FILE_PATH ${successLogFilePath} \
      > ${configFilePath}"
+  assert_cmd_ok
   eval "nohup ${PROXY_CLI} run -c ${configFilePath} > ${CLI_ROOT_PATH}/runtime/log/nohup.log 2>&1 &"
-  if [[ $? -eq ${TRUE} ]]; then
-    log INFO "start proxy service success"
-    return "${TRUE}"
-  else
-    log ERROR "start proxy service failed"
-    return "${FALSE}"
-  fi
+  assert_cmd_ok
 }
 
 check_proxy_service_is_started

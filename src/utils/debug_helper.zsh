@@ -16,3 +16,12 @@ assert_equal() {
     throw "arg1: ${arg1} is not equal to arg2: ${arg2}" 2
   fi
 }
+
+##
+# assert the previous cmd was ok or not
+#
+function assert_cmd_ok {
+    if [[ $? -ne ${TRUE} ]]; then
+       throw "Previous command failed with status $?." 2
+    fi
+}
