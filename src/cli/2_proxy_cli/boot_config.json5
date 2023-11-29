@@ -18,7 +18,7 @@
         --key PROXY_CLI_CONFIG",
     decodeProxyConfVal: "${{ QJS_BIN_PATH }} ${{ CLI_ROOT_PATH }}/src/decode_proxy_conf_val.mjs",
     printCli: "APP_BASE_PATH='${{ APP_BASE_PATH }}' zsh ${{ CLI_ROOT_PATH }}/src/boot/print_cli.zsh",
-    setProxy: "proxyCmd=$(${commands.printCli }}) && eval $proxyCmd && log INFO 'set proxy successful '",
+    setProxy: "proxyCmd=$(${{ commands.printCli }}) && eval $proxyCmd && log INFO 'set proxy successful '",
     unsetProxy: "\
       unset http_proxy && \
       unset https_proxy && \
