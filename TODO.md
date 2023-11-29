@@ -6,3 +6,4 @@
 4. [ ] Break the process of installation when the cli installer executed failed
 5. [ ] refactor the import function
 6. [ ] add oh-my-zsh 
+7. [ ] config the .env key name in zsh-boot.json , like, a specific key name not empty.
